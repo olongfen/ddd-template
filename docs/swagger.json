@@ -1,0 +1,73 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/api/v1/demo": {
+            "get": {
+                "description": "send a string msg",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Demo"
+                ],
+                "summary": "say hello",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "message",
+                        "name": "msg",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/application.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "application.Result": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "业务码 等于0时表示业务逻辑执行成功,其他表示业务逻辑失败",
+                    "type": "integer"
+                },
+                "data": {
+                    "description": "数据对象",
+                    "type": "object"
+                },
+                "message": {
+                    "description": "信息",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

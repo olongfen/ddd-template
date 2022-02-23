@@ -1,0 +1,44 @@
+definitions:
+  application.Result:
+    properties:
+      code:
+        description: 业务码 等于0时表示业务逻辑执行成功,其他表示业务逻辑失败
+        type: integer
+      data:
+        description: 数据对象
+        type: object
+      message:
+        description: 信息
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/demo:
+    get:
+      consumes:
+      - application/json
+      description: send a string msg
+      parameters:
+      - description: message
+        in: query
+        name: msg
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/application.Result'
+            - properties:
+                code:
+                  type: integer
+                data:
+                  type: string
+              type: object
+      summary: say hello
+      tags:
+      - Demo
+swagger: "2.0"
