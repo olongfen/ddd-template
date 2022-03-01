@@ -1,4 +1,4 @@
-package application
+package restful
 
 import (
 	"ddd-template/application/errorx"

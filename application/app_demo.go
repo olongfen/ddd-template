@@ -1,22 +1,37 @@
 package application
 
 import (
-	"github.com/gin-gonic/gin"
+	"context"
+	"ddd-template/domain/service"
+	"go.uber.org/zap"
 )
 
+type DemoServer interface {
+	SayHello(ctx context.Context, msg string) string
+}
+
+type DemoServerImpl struct {
+	demoService *service.DemoService
+	log         *zap.Logger
+}
+
+//
+// NewDemoServer
+// #Description: new
+// #param demo *service.DemoService
+// #return DemoServer
+func NewDemoServer(demo *service.DemoService, logger *zap.Logger) DemoServer {
+	return &DemoServerImpl{demo, logger}
+}
+
+//
 // SayHello
-// @Tags Demo
-// @Summary say hello
-// @Description sends a string msg
-// @Accept application/json
-// @Produce application/json
-// @Param msg query string false "message"
-// @Router /api/v1/demo  [get]
-// @Success 200 {object} Result{code=int,data=string}
-func (s *ServerImpl) SayHello(ctx *gin.Context) {
-	msg := ctx.Query("msg")
-	res := s.demoService.SayHello(ctx.Request.Context(), msg)
-	SendSuccess(ctx, res)
-	//Fail(ctx, core.Error(errorx.AdminCreateError, errorx.Text(errorx.AdminCreateError)))
+// #Description: demo server use case
+// #receiver s *DemoServerImpl
+// #param ctx context.Context
+// #param msg string
+// #return string
+func (s *DemoServerImpl) SayHello(ctx context.Context, msg string) string {
+	return s.demoService.SayHello(ctx, msg)
 
 }

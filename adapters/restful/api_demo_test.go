@@ -1,8 +1,9 @@
-package application
+package restful
 
 import (
 	"context"
 	repo_mock "ddd-template/adapters/mock/repo"
+	"ddd-template/application"
 	"ddd-template/domain/service"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
@@ -14,25 +15,25 @@ import (
 	"testing"
 )
 
-func TestServerImpl_SayHello(t *testing.T) {
+func TestDemoCtl_SayHello(t *testing.T) {
 	mockCtl := gomock.NewController(t)
 	defer mockCtl.Finish()
 	mockRepo := repo_mock.NewMockDemoInterface(mockCtl)
 	logger, _ := zap.NewProduction()
 	demo := service.NewDemoService(mockRepo, logger)
-	app := NewServer(demo, logger)
+	app := NewDemoCtl(application.NewDemoServer(demo, logger), logger)
 	w := httptest.NewRecorder()
 	_, engine := gin.CreateTestContext(w)
 	uri := "/api/v1/test/demo"
 	engine.GET(uri, app.SayHello)
-	mockRepo.EXPECT().SayHello(context.Background(), "hello").Return("hello" + " world")
-	req, _ := http.NewRequest("GET", uri+"?msg=hello", nil)
+	mockRepo.EXPECT().SayHello(context.Background(), "888").Return("888 " + "hello")
+	req, _ := http.NewRequest("GET", uri+"?msg=888", nil)
 	engine.ServeHTTP(w, req)
 	assert.EqualValues(t, w.Code, 200)
 	res := gin.H{}
 	json.NewDecoder(w.Body).Decode(&res)
+	logger.Sugar().Info("WWWWWWWWWWWWWWWWWWWWWW", res)
 	assert.EqualValues(t, res["code"], 0)
-	logger.Sugar().Info(res)
-	assert.EqualValues(t, res["data"], "hello"+" world")
+	assert.EqualValues(t, res["data"], "888 "+"hello")
 
 }

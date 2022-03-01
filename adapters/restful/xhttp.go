@@ -1,7 +1,6 @@
 package restful
 
 import (
-	"ddd-template/application"
 	"ddd-template/infra/conf"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
@@ -10,13 +9,13 @@ import (
 	"go.uber.org/zap"
 )
 
-var ProviderSet = wire.NewSet(NewRest)
+var ProviderSet = wire.NewSet(NewRest, NewDemoCtl)
 
 type Rest struct {
-	engine *gin.Engine
-	addr   string
-	app    application.Server
-	log    *zap.Logger
+	engine  *gin.Engine
+	addr    string
+	demoCtl *DemoCtl
+	log     *zap.Logger
 }
 
 //
@@ -24,10 +23,10 @@ type Rest struct {
 // #Description: new rest server
 // #param cfg *conf.Configs
 // #param e *gin.Engine
-// #param app application.Server
+// #param demoCtl application.DemoServer
 // #return *Rest
-func NewRest(cfg conf.Configs, e *gin.Engine, app application.Server, logger *zap.Logger) *Rest {
-	return &Rest{engine: e, addr: cfg.Server.Http.Addr, app: app, log: logger}
+func NewRest(cfg conf.Configs, e *gin.Engine, demoCtl *DemoCtl, logger *zap.Logger) *Rest {
+	return &Rest{engine: e, addr: cfg.Server.Http.Addr, demoCtl: demoCtl, log: logger}
 }
 
 //
@@ -38,7 +37,7 @@ func NewRest(cfg conf.Configs, e *gin.Engine, app application.Server, logger *za
 func (r *Rest) Router() *Rest {
 	group := r.engine.Group("/api/v1")
 	group.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	group.GET("/demo", r.app.SayHello)
+	group.GET("/demo", r.demoCtl.SayHello)
 	return r
 }
 

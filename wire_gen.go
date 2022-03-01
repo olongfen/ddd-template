@@ -28,7 +28,8 @@ func Init(cfg conf.Configs, log *zap.Logger) *restful.Rest {
 	db := database.NewDatabase(cfg)
 	demoInterface := repositry.NewDemoDependencyImpl(db, log)
 	demoService := service.NewDemoService(demoInterface, log)
-	server := application.NewServer(demoService, log)
-	rest := restful.NewRest(cfg, engine, server, log)
+	demoServer := application.NewDemoServer(demoService, log)
+	demoCtl := restful.NewDemoCtl(demoServer, log)
+	rest := restful.NewRest(cfg, engine, demoCtl, log)
 	return rest
 }
