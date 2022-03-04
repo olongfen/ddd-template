@@ -24,7 +24,8 @@ func TestDemoCtl_SayHello(t *testing.T) {
 	w := httptest.NewRecorder()
 	_, engine := gin.CreateTestContext(w)
 	uri := "/demo"
-	NewDemoCtl(engine, serve.NewDemoServer(mockRepo, logger), logger)
+	ctl := NewDemoCtl(serve.NewDemoServer(mockRepo, logger), logger)
+	engine.GET(uri, ctl.SayHello)
 	data := &entities.Demo{
 		Message: "888 " + "hello",
 	}
@@ -34,7 +35,7 @@ func TestDemoCtl_SayHello(t *testing.T) {
 	assert.EqualValues(t, w.Code, 200)
 	res := gin.H{}
 	json.NewDecoder(w.Body).Decode(&res)
-	logger.Sugar().Info("WWWWWWWWWWWWWWWWWWWWWW", res)
+	logger.Sugar().Info("data:   ", res)
 	assert.EqualValues(t, res["code"], 0)
 	assert.EqualValues(t, res["data"].(map[string]interface{})["message"], "888 hello")
 
