@@ -1,7 +1,10 @@
 package dependency
 
-import "context"
+import (
+	"context"
+	"ddd-template/domain/entities"
+)
 
 type DemoInterface interface {
-	SayHello(ctx context.Context,msg string) string
+	SayHello(ctx context.Context, msg string) *entities.Demo
 }

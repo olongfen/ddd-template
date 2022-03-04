@@ -1,8 +1,7 @@
-package database
+package repositry
 
 import (
-	"ddd-template/infra/conf"
-	"github.com/google/wire"
+	"ddd-template/common/conf"
 	"go.uber.org/zap"
 
 	"go.opentelemetry.io/otel"
@@ -12,9 +11,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 )
-
-// ProviderSet is database providers.
-var ProviderSet = wire.NewSet(NewDatabase)
 
 // GormSpanKey 包内静态变量
 const GormSpanKey = "__gorm_span"

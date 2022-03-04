@@ -6,6 +6,7 @@ package repo_mock
 
 import (
 	context "context"
+	entities "ddd-template/domain/entities"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,10 +36,10 @@ func (m *MockDemoInterface) EXPECT() *MockDemoInterfaceMockRecorder {
 }
 
 // SayHello mocks base method.
-func (m *MockDemoInterface) SayHello(ctx context.Context, msg string) string {
+func (m *MockDemoInterface) SayHello(ctx context.Context, msg string) *entities.Demo {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SayHello", ctx, msg)
-	ret0, _ := ret[0].(string)
+	ret0, _ := ret[0].(*entities.Demo)
 	return ret0
 }
 

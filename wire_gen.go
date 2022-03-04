@@ -9,11 +9,9 @@ package main
 import (
 	"ddd-template/adapters/repositry"
 	"ddd-template/adapters/restful"
-	"ddd-template/application"
-	"ddd-template/domain/service"
-	"ddd-template/infra/conf"
-	"ddd-template/infra/database"
-	"ddd-template/infra/xgin"
+	"ddd-template/app"
+	"ddd-template/app/serve"
+	"ddd-template/common/conf"
 	"go.uber.org/zap"
 )
 
@@ -23,13 +21,12 @@ import (
 
 // Injectors from wire.go:
 
-func Init(cfg conf.Configs, log *zap.Logger) *restful.Rest {
-	engine := xgin.NewEngine(cfg)
-	db := database.NewDatabase(cfg)
+func Init(cfg conf.Configs, log *zap.Logger) *app.Application {
+	httpServer := restful.NewHttpServer()
+	db := repositry.NewDatabase(cfg)
 	demoInterface := repositry.NewDemoDependencyImpl(db, log)
-	demoService := service.NewDemoService(demoInterface, log)
-	demoServer := application.NewDemoServer(demoService, log)
-	demoCtl := restful.NewDemoCtl(demoServer, log)
-	rest := restful.NewRest(cfg, engine, demoCtl, log)
-	return rest
+	demoServer := serve.NewDemoServer(demoInterface, log)
+	demoHandler := restful.NewDemoCtl(demoServer, log)
+	application := app.NewApp(httpServer, demoHandler)
+	return application
 }

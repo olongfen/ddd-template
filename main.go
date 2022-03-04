@@ -1,9 +1,9 @@
 package main
 
 import (
+	"ddd-template/common/conf"
+	"ddd-template/common/xlog"
 	_ "ddd-template/docs"
-	"ddd-template/infra/conf"
-	"ddd-template/infra/xlog"
 	"flag"
 	"go.uber.org/zap"
 )
@@ -27,6 +27,7 @@ func main() {
 	} else {
 		logger = xlog.NewProduceLogger()
 	}
-	xhttp := Init(cfg, logger)
-	xhttp.Router().Start()
+	app := Init(cfg, logger)
+	app.Handles("/api/v1")
+	app.Run(conf.Get().Server.Http.Addr)
 }

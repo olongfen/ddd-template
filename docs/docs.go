@@ -26,7 +26,7 @@ var doc = `{
     "paths": {
         "/api/v1/demo": {
             "get": {
-                "description": "send a string msg",
+                "description": "sends a string msg",
                 "consumes": [
                     "application/json"
                 ],
@@ -51,7 +51,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/application.Result"
+                                    "$ref": "#/definitions/restful.Result"
                                 },
                                 {
                                     "type": "object",
@@ -60,7 +60,7 @@ var doc = `{
                                             "type": "integer"
                                         },
                                         "data": {
-                                            "type": "string"
+                                            "$ref": "#/definitions/dto.DemoInfo"
                                         }
                                     }
                                 }
@@ -72,7 +72,24 @@ var doc = `{
         }
     },
     "definitions": {
-        "application.Result": {
+        "dto.DemoInfo": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "restful.Result": {
             "type": "object",
             "properties": {
                 "code": {

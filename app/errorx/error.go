@@ -1,6 +1,9 @@
 package errorx
 
-import "github.com/pkg/errors"
+import (
+	"fmt"
+	"github.com/pkg/errors"
+)
 
 var _ BusinessError = (*businessError)(nil)
 
@@ -22,6 +25,8 @@ type BusinessError interface {
 
 	// Message 获取错误描述
 	Message() string
+	// Error
+	Error() string
 
 	// StackError 获取带堆栈的错误信息
 	StackError() error
@@ -54,6 +59,10 @@ func Error(businessCode int, message string, httpCode ...int) BusinessError {
 }
 
 func (e *businessError) i() {}
+
+func (e *businessError) Error() string {
+	return fmt.Sprintf(`stack: %s, business: %s`, e.stackError.Error(), e.message)
+}
 
 func (e *businessError) WithError(err error) BusinessError {
 	e.stackError = errors.WithStack(err)

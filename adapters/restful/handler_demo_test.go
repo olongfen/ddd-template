@@ -2,9 +2,9 @@ package restful
 
 import (
 	"context"
-	repo_mock "ddd-template/adapters/mock/repo"
-	"ddd-template/application"
-	"ddd-template/domain/service"
+	"ddd-template/adapters/repo_mock"
+	"ddd-template/app/serve"
+	"ddd-template/domain/entities"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
@@ -20,13 +20,15 @@ func TestDemoCtl_SayHello(t *testing.T) {
 	defer mockCtl.Finish()
 	mockRepo := repo_mock.NewMockDemoInterface(mockCtl)
 	logger, _ := zap.NewProduction()
-	demo := service.NewDemoService(mockRepo, logger)
-	app := NewDemoCtl(application.NewDemoServer(demo, logger), logger)
+
 	w := httptest.NewRecorder()
 	_, engine := gin.CreateTestContext(w)
-	uri := "/api/v1/test/demo"
-	engine.GET(uri, app.SayHello)
-	mockRepo.EXPECT().SayHello(context.Background(), "888").Return("888 " + "hello")
+	uri := "/demo"
+	NewDemoCtl(engine, serve.NewDemoServer(mockRepo, logger), logger)
+	data := &entities.Demo{
+		Message: "888 " + "hello",
+	}
+	mockRepo.EXPECT().SayHello(context.Background(), "888").Return(data)
 	req, _ := http.NewRequest("GET", uri+"?msg=888", nil)
 	engine.ServeHTTP(w, req)
 	assert.EqualValues(t, w.Code, 200)
@@ -34,6 +36,6 @@ func TestDemoCtl_SayHello(t *testing.T) {
 	json.NewDecoder(w.Body).Decode(&res)
 	logger.Sugar().Info("WWWWWWWWWWWWWWWWWWWWWW", res)
 	assert.EqualValues(t, res["code"], 0)
-	assert.EqualValues(t, res["data"], "888 "+"hello")
+	assert.EqualValues(t, res["data"].(map[string]interface{})["message"], "888 hello")
 
 }

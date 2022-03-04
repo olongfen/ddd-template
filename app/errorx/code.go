@@ -1,7 +1,7 @@
 package errorx
 
 import (
-	"ddd-template/infra/conf"
+	"ddd-template/common/conf"
 	_ "embed"
 )
 

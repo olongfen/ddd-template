@@ -3,6 +3,7 @@ package repositry
 import (
 	"context"
 	"ddd-template/domain/dependency"
+	"ddd-template/domain/entities"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -19,8 +20,10 @@ type demoDependencyImpl struct {
 // #param ctx context.Context
 // #param msg string
 // #return string
-func (d *demoDependencyImpl) SayHello(ctx context.Context, msg string) string {
-	return msg + " hello"
+func (d *demoDependencyImpl) SayHello(ctx context.Context, msg string) *entities.Demo {
+	res := new(entities.Demo)
+	res.Message = msg + " hello"
+	return res
 }
 
 //

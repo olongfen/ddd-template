@@ -1,7 +1,7 @@
 package xlog
 
 import (
-	"ddd-template/infra/conf"
+	"ddd-template/common/conf"
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

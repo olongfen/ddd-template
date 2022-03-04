@@ -1,7 +1,7 @@
 package restful
 
 import (
-	"ddd-template/application/errorx"
+	"ddd-template/app/errorx"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,7 +24,14 @@ func SendSuccess(ctx *gin.Context, data interface{}) {
 // SendFail
 // #Description: response fail
 // #param ctx *gin.Context
-// #param err errorx.BusinessError
-func SendFail(ctx *gin.Context, err errorx.BusinessError) {
-	ctx.AbortWithStatusJSON(err.HTTPCode(), Result{Code: err.BusinessCode(), Message: err.Message()})
+// #param err error
+func SendFail(ctx *gin.Context, err error) {
+	switch err.(type) {
+	case errorx.BusinessError:
+		e := err.(errorx.BusinessError)
+		ctx.AbortWithStatusJSON(e.HTTPCode(), Result{Code: e.BusinessCode(), Message: e.Error()})
+	default:
+		ctx.AbortWithStatusJSON(200, Result{Code: -1, Message: err.Error()})
+	}
+
 }
