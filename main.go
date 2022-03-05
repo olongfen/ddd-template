@@ -29,5 +29,5 @@ func main() {
 	}
 	app := Init(cfg, logger)
 	app.Handles("/api/v1")
-	app.Run(conf.Get().Server.Http.Addr)
+	logger.Sugar().Fatal(app.Run(conf.Get().Server.Http.Addr))
 }

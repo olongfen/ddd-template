@@ -27,6 +27,6 @@ func Init(cfg conf.Configs, log *zap.Logger) *app.Application {
 	demoInterface := repositry.NewDemoDependencyImpl(db, log)
 	demoServer := serve.NewDemoServer(demoInterface, log)
 	demoHandler := restful.NewDemoCtl(demoServer, log)
-	application := app.NewApp(httpServer, demoHandler)
+	application := app.NewApp(httpServer, demoHandler, log)
 	return application
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/google/wire"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"go.uber.org/zap"
 )
 
 var ProviderSet = wire.NewSet(NewApp)
@@ -12,10 +13,11 @@ var ProviderSet = wire.NewSet(NewApp)
 type Application struct {
 	http        HttpServer
 	demoHandler DemoHandler
+	log         *zap.Logger
 }
 
-func NewApp(rest HttpServer, demoHandler DemoHandler) *Application {
-	return &Application{http: rest, demoHandler: demoHandler}
+func NewApp(rest HttpServer, demoHandler DemoHandler, logger *zap.Logger) *Application {
+	return &Application{http: rest, demoHandler: demoHandler, log: logger}
 }
 
 //
