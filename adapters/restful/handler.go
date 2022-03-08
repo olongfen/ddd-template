@@ -2,7 +2,7 @@ package restful
 
 import (
 	"ddd-template/app"
-	"ddd-template/app/dto"
+	"ddd-template/app/schema"
 	"ddd-template/app/serve"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -36,12 +36,12 @@ func (r *DemoHandler) Handles(g gin.IRouter) {
 // @Produce application/json
 // @Param msg query string false "message"
 // @Router /api/v1/demo  [get]
-// @Success 200 {object} Result{code=int,data=dto.DemoInfo}
+// @Success 200 {object} Result{code=int,data=schema.DemoInfo}
 func (r *DemoHandler) SayHello(ctx *gin.Context) {
 	msg := ctx.Query("msg")
 	var (
 		err error
-		res *dto.DemoInfo
+		res *schema.DemoInfo
 	)
 	defer func() {
 		if err != nil {
