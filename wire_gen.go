@@ -9,6 +9,7 @@ package main
 import (
 	"ddd-template/adapters/repositry"
 	"ddd-template/adapters/restful"
+	"ddd-template/adapters/rpcx"
 	"ddd-template/app"
 	"ddd-template/app/serve"
 	"ddd-template/common/conf"
@@ -22,11 +23,13 @@ import (
 // Injectors from wire.go:
 
 func Init(cfg conf.Configs, log *zap.Logger) *app.Application {
-	httpServer := restful.NewHttpServer()
+	httpServer := restful.NewHttpServer(cfg)
 	db := repositry.NewDatabase(cfg)
 	demoInterface := repositry.NewDemoDependencyImpl(db, log)
 	demoServer := serve.NewDemoServer(demoInterface, log)
 	demoHandler := restful.NewDemoCtl(demoServer, log)
-	application := app.NewApp(httpServer, demoHandler, log)
+	greeterServer := rpcx.NewDemoGrpcServer(demoServer, log)
+	grpcServer := rpcx.NewGrpc(greeterServer)
+	application := app.NewApp(httpServer, demoHandler, grpcServer, log)
 	return application
 }

@@ -6,6 +6,7 @@ package main
 import (
 	"ddd-template/adapters/repositry"
 	"ddd-template/adapters/restful"
+	"ddd-template/adapters/rpcx"
 	"ddd-template/app"
 	"ddd-template/app/serve"
 	"ddd-template/common/conf"
@@ -14,6 +15,6 @@ import (
 )
 
 func Init(cfg conf.Configs, log *zap.Logger) *app.Application {
-	wire.Build(app.ProviderSet, restful.ProviderSet, serve.ProviderSet, repositry.ProviderSet)
+	wire.Build(app.ProviderSet, rpcx.ProviderSet, restful.ProviderSet, serve.ProviderSet, repositry.ProviderSet)
 	return nil
 }

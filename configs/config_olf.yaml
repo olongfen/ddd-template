@@ -3,16 +3,12 @@ server:
     host: 0.0.0.0
     port: 8818
     addr: 0.0.0.0:8818
-  grpc:
-    host: 0.0.0.0
-    port: 8918
 
 database:
-  driver: postgres
-  source: postgres://business:business@0.0.0.0:54323/business?sslmode=disable
+    driver: postgres
+    source: postgres://postgres:123456@0.0.0.0:5432/postgres?sslmode=disable
 jaegerhost: 127.0.0.1
 environment: dev
-debug: true
 log:
   filename: ./log/ddd-template.log
   maxsize: 20

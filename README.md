@@ -1,6 +1,10 @@
 # ddd-template
 六边形领域驱动项目架构模板，完善中
 
+## rpc
+```shell
+protoc --go_out=.   --go-grpc_out=.  adapters/rpcx/pb/hello.proto 
+```
 
 # UNIT TEST
 

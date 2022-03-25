@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 )
 
 type DemoHandler interface {
@@ -12,4 +13,9 @@ type DemoHandler interface {
 type HttpServer interface {
 	gin.IRouter
 	Run(addr ...string) error
+}
+
+type GrpcServer interface {
+	Run(addr string) error
+	SetOptions(opts ...grpc.ServerOption) GrpcServer
 }

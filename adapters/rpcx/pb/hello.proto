@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package="adapters/rpcx/pb";
+package pb;
+import "google/protobuf/timestamp.proto";
+
+service Greeter {
+  // SayHello
+  rpc SayHello(HelloRequest) returns (DemoInfo) {}
+}
+
+
+message HelloRequest {
+  string msg = 1;
+}
+
+
+message DemoInfo {
+  int32 id =1;
+google.protobuf.Timestamp createdAt =2;
+google.protobuf.Timestamp updatedAt=3;
+string message = 4;
+
+}

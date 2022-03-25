@@ -11,6 +11,7 @@ type Configs struct {
 	Database    Database
 	JaegerHost  string
 	Environment string
+	Debug       bool
 	ServiceId   int32
 	ServiceName string
 	Language    string
@@ -36,8 +37,14 @@ type HTTP struct {
 	Port int
 }
 
+type GRpc struct {
+	Host string
+	Port int
+}
+
 type Server struct {
 	Http HTTP
+	GRpc GRpc
 }
 
 func InitConf(confPath string) {
