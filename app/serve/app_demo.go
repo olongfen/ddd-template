@@ -2,7 +2,7 @@ package serve
 
 import (
 	"context"
-	"ddd-template/app/schema"
+	"ddd-template/common/schema"
 	"ddd-template/domain/dependency"
 	"ddd-template/domain/entities"
 	"github.com/google/wire"
@@ -40,7 +40,7 @@ func (s *demoServerImpl) SayHello(ctx context.Context, msg string) (res *schema.
 		data *entities.Demo
 	)
 	data = s.repo.SayHello(ctx, msg)
-	if res, err = schema.DemoEnt2Dto(*data); err != nil {
+	if res, err = data.ToSchema(); err != nil {
 		s.log.Error(err.Error())
 		return
 	}

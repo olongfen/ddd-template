@@ -2,8 +2,8 @@ package restful
 
 import (
 	"ddd-template/app"
-	"ddd-template/app/schema"
 	"ddd-template/app/serve"
+	"ddd-template/common/schema"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )

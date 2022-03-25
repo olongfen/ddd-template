@@ -6,7 +6,7 @@ server:
 
 database:
     driver: postgres
-    source: postgres://postgres:123456@192.168.8.18:5432/postgres?sslmode=disable
+    source: postgres://postgres:123456@0.0.0.0:5432/postgres?sslmode=disable
 jaegerhost: 127.0.0.1
 environment: dev
 log:
