@@ -3,7 +3,8 @@ package conf
 import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"go.uber.org/zap"
+	"log"
+	"os"
 )
 
 type Configs struct {
@@ -51,17 +52,21 @@ func InitConf(confPath string) {
 	var (
 		err error
 	)
+	_, err = os.Stat(confPath)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	viper.SetConfigType("yaml")
 	viper.SetConfigFile(confPath)
 	_ = viper.ReadInConfig()
 	if err = viper.Unmarshal(conf); err != nil {
-		zap.L().Sugar().Fatal(err.Error())
+		log.Fatal(err.Error())
 	}
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		zap.L().Sugar().Infof("Config file:%s Op:%s\n", e.Name, e.Op)
+		log.Printf("Config file:%s Op:%s\n", e.Name, e.Op)
 		if err = viper.Unmarshal(conf); err != nil {
-			zap.L().Sugar().Fatal(err)
+			log.Fatal(err)
 		}
 	})
 }

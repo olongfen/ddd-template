@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:13
+    container_name: ddd_db
+    restart: always
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=business
+      - POSTGRES_PASSWORD=business
+      - POSTGRES_DB=business
+      - ALLOW_IP_RANGE=0.0.0.0/0
