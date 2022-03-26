@@ -5,8 +5,6 @@ import (
 	_ "ddd-template/docs"
 	"fmt"
 	"github.com/google/wire"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"go.uber.org/zap"
 	"sync"
 )
@@ -14,27 +12,13 @@ import (
 var ProviderSet = wire.NewSet(NewApp)
 
 type Application struct {
-	http        HttpServer
-	grpc        GrpcServer
-	demoHandler DemoHandler
-	log         *zap.Logger
+	http HttpServer
+	grpc GrpcServer
+	log  *zap.Logger
 }
 
-func NewApp(rest HttpServer, demoHandler DemoHandler, rpc GrpcServer, logger *zap.Logger) *Application {
-	return &Application{http: rest, demoHandler: demoHandler, grpc: rpc, log: logger}
-}
-
-//
-// Handles
-// #Description: 所有的接口统一在app这里处理
-// #receiver a *Application
-// #param basePath string
-// #return *Application
-func (a *Application) Handles(basePath string) *Application {
-	group := a.http.Group(basePath)
-	group.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	a.demoHandler.Handles(group)
-	return a
+func NewApp(rest HttpServer, rpc GrpcServer, logger *zap.Logger) *Application {
+	return &Application{http: rest, grpc: rpc, log: logger}
 }
 
 //
@@ -51,7 +35,7 @@ func (a *Application) Run(cfg conf.Server) {
 	go func() {
 		defer wg.Done()
 		a.log.Sugar().Infof("http server run in: %s", cfg.Http.Addr)
-		if err = a.http.Run(cfg.Http.Addr); err != nil {
+		if err = a.http.Run("/api/v1", cfg.Http.Addr); err != nil {
 			a.log.Fatal(err.Error())
 		}
 	}()

@@ -44,7 +44,7 @@ func (g *GrpcServerImpl) Run(addr string) error {
 // #receiver g *GrpcServerImpl
 // #param opts ...grpc.ServerOption
 // #return app.GrpcServer
-func (g *GrpcServerImpl) SetOptions(opts ...grpc.ServerOption) app.GrpcServer {
+func (g *GrpcServerImpl) SetOptions(opts ...grpc.ServerOption) *GrpcServerImpl {
 	if len(opts) > 0 {
 		g.opts = append(g.opts, opts...)
 	}

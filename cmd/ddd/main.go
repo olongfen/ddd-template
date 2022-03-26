@@ -39,7 +39,6 @@ func initAction(c *cli.Context) (err error) {
 		logger = xlog.NewProduceLogger()
 	}
 	app := Init(cfg, logger)
-	app.Handles("/api/v1")
 	app.Run(conf.Get().Server)
 	return
 }

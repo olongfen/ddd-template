@@ -1,7 +1,6 @@
 package restful
 
 import (
-	"ddd-template/app"
 	"ddd-template/app/serve"
 	"ddd-template/common/schema"
 	"github.com/gin-gonic/gin"
@@ -18,7 +17,7 @@ type DemoHandler struct {
 // #Description: demo controller
 // #param server app.DemoServer
 // #param logger *zap.Logger
-func NewDemoCtl(server serve.DemoServer, logger *zap.Logger) app.DemoHandler {
+func NewDemoCtl(server serve.DemoServer, logger *zap.Logger) *DemoHandler {
 	handler := &DemoHandler{server: server, log: logger}
 	return handler
 }
