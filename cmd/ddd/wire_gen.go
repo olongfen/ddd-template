@@ -16,10 +16,6 @@ import (
 	"go.uber.org/zap"
 )
 
-import (
-	_ "ddd-template/docs"
-)
-
 // Injectors from wire.go:
 
 func Init(cfg conf.Configs, log *zap.Logger) *app.Application {

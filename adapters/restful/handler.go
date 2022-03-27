@@ -7,7 +7,12 @@ import (
 	"go.uber.org/zap"
 )
 
-type DemoHandler struct {
+type DemoHandler interface {
+	SayHello(ctx *gin.Context)
+	DoHandles(g gin.IRouter)
+}
+
+type DemoHandlerImpl struct {
 	server serve.DemoServer
 	log    *zap.Logger
 }
@@ -17,12 +22,12 @@ type DemoHandler struct {
 // #Description: demo controller
 // #param server app.DemoServer
 // #param logger *zap.Logger
-func NewDemoCtl(server serve.DemoServer, logger *zap.Logger) *DemoHandler {
-	handler := &DemoHandler{server: server, log: logger}
+func NewDemoCtl(server serve.DemoServer, logger *zap.Logger) DemoHandler {
+	handler := &DemoHandlerImpl{server: server, log: logger}
 	return handler
 }
 
-func (r *DemoHandler) DoHandles(g gin.IRouter) {
+func (r *DemoHandlerImpl) DoHandles(g gin.IRouter) {
 	group := g.Group("/demo")
 	group.GET("/", r.SayHello)
 }
@@ -36,7 +41,7 @@ func (r *DemoHandler) DoHandles(g gin.IRouter) {
 // @Param msg query string false "message"
 // @Router /api/v1/demo  [get]
 // @Success 200 {object} Result{code=int,data=schema.DemoInfo}
-func (r *DemoHandler) SayHello(ctx *gin.Context) {
+func (r *DemoHandlerImpl) SayHello(ctx *gin.Context) {
 	msg := ctx.Query("msg")
 	var (
 		err error

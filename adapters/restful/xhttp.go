@@ -14,10 +14,10 @@ var ProviderSet = wire.NewSet(NewDemoCtl, NewHTTPServerImpl)
 
 type HTTPServerImpl struct {
 	*gin.Engine
-	demoHandler *DemoHandler
+	demoHandler DemoHandler
 }
 
-func NewHTTPServerImpl(cfg conf.Configs, demoCtl *DemoHandler) app.HttpServer {
+func NewHTTPServerImpl(cfg conf.Configs, demoCtl DemoHandler) app.HttpServer {
 	h := new(HTTPServerImpl)
 	if !cfg.Debug {
 		gin.SetMode(gin.ReleaseMode)
