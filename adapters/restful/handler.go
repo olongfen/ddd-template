@@ -22,7 +22,7 @@ func NewDemoCtl(server serve.DemoServer, logger *zap.Logger) *DemoHandler {
 	return handler
 }
 
-func (r *DemoHandler) Handles(g gin.IRouter) {
+func (r *DemoHandler) DoHandles(g gin.IRouter) {
 	group := g.Group("/demo")
 	group.GET("/", r.SayHello)
 }

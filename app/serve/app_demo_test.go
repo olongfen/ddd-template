@@ -4,7 +4,7 @@ import (
 	"context"
 	"ddd-template/adapters/repo_mock"
 
-	"ddd-template/app/schema"
+	"ddd-template/common/schema"
 	"ddd-template/domain/entities"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"

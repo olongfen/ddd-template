@@ -3,7 +3,7 @@ package restful
 import (
 	"ddd-template/app"
 	"ddd-template/common/conf"
-	"github.com/gin-contrib/cors"
+	_ "ddd-template/docs"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -26,15 +26,13 @@ func NewHTTPServerImpl(cfg conf.Configs, demoCtl *DemoHandler) app.HttpServer {
 	}
 	h.demoHandler = demoCtl
 	h.Engine = gin.Default()
-	corsCfg := cors.DefaultConfig()
-	corsCfg.AllowAllOrigins = true
-	h.Engine.Use(cors.New(corsCfg))
 	return h
 }
 
 func (h *HTTPServerImpl) Run(basePath, addr string) error {
+	h.Engine.Use(corsHandler())
 	group := h.Group(basePath)
 	group.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	h.demoHandler.Handles(group)
+	h.demoHandler.DoHandles(group)
 	return h.Engine.Run(addr)
 }

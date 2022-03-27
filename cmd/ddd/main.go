@@ -3,7 +3,6 @@ package main
 import (
 	"ddd-template/common/conf"
 	"ddd-template/common/xlog"
-	_ "ddd-template/docs"
 	cli "github.com/urfave/cli/v2"
 	"go.uber.org/zap"
 	"log"
