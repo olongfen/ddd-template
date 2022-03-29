@@ -3,8 +3,11 @@ package rpcx
 import (
 	"ddd-template/adapters/rpcx/pb"
 	"ddd-template/app"
+	"ddd-template/common/conf"
 	"github.com/google/wire"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/grpclog"
 	"net"
 )
 
@@ -39,25 +42,20 @@ func (g *GrpcServerImpl) Run(addr string) error {
 }
 
 //
-// SetOptions
-// #Description: 设置server插件
-// #receiver g *GrpcServerImpl
-// #param opts ...grpc.ServerOption
-// #return app.GrpcServer
-func (g *GrpcServerImpl) SetOptions(opts ...grpc.ServerOption) *GrpcServerImpl {
-	if len(opts) > 0 {
-		g.opts = append(g.opts, opts...)
-	}
-	return g
-}
-
-//
 // NewGrpc
 // #Description: new
 // #param opts ...grpc.ServerOption
 // #return app.GrpcServer
-func NewGrpc(d pb.GreeterServer) app.GrpcServer {
+func NewGrpc(d pb.GreeterServer, cfg conf.GRpc) app.GrpcServer {
 	g := &GrpcServerImpl{}
 	g.handlerDemo = d
+	if cfg.TLS {
+		creds, err := credentials.NewServerTLSFromFile(cfg.PEMFile, cfg.KeyFile)
+		if err != nil {
+			grpclog.Fatalf("Failed to generate credentials %v", err)
+		}
+		g.opts = append(g.opts, grpc.Creds(creds))
+
+	}
 	return g
 }

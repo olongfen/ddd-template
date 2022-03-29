@@ -1,7 +1,7 @@
 package restful
 
 import (
-	"ddd-template/app/errorx"
+	"ddd-template/common/errorx"
 	"github.com/gin-gonic/gin"
 )
 

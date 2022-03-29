@@ -1,5 +1,16 @@
 definitions:
-  dto.DemoInfo:
+  restful.Result:
+    properties:
+      code:
+        description: 业务码 等于0时表示业务逻辑执行成功,其他表示业务逻辑失败
+        type: integer
+      data:
+        description: 数据对象
+      message:
+        description: 信息
+        type: string
+    type: object
+  schema.DemoInfo:
     properties:
       created_at:
         type: string
@@ -8,18 +19,6 @@ definitions:
       message:
         type: string
       updated_at:
-        type: string
-    type: object
-  restful.Result:
-    properties:
-      code:
-        description: 业务码 等于0时表示业务逻辑执行成功,其他表示业务逻辑失败
-        type: integer
-      data:
-        description: 数据对象
-        type: object
-      message:
-        description: 信息
         type: string
     type: object
 info:
@@ -47,7 +46,7 @@ paths:
                 code:
                   type: integer
                 data:
-                  $ref: '#/definitions/dto.DemoInfo'
+                  $ref: '#/definitions/schema.DemoInfo'
               type: object
       summary: say hello
       tags:

@@ -70,6 +70,9 @@ const (
 	CronListError    CodeType = 20403
 	CronDetailError  CodeType = 20404
 	CronExecuteError CodeType = 20405
+
+	GRPCUnauthenticated   CodeType = 20501
+	GRPCTokenCheckInvalid CodeType = 2502
 )
 
 func Text(code CodeType) string {

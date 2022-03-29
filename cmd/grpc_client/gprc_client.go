@@ -23,15 +23,17 @@ import (
 	"context"
 	"ddd-template/adapters/rpcx/pb"
 	"flag"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/grpclog"
 	"log"
 	"time"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
 	defaultName = "go go go "
+	OpenTLS     = false
 )
 
 var (
@@ -39,10 +41,40 @@ var (
 	name = flag.String("name", defaultName, "Name to greet")
 )
 
+// customCredential 自定义认证
+type customCredential struct{}
+
+// GetRequestMetadata 实现自定义认证接口
+func (c customCredential) GetRequestMetadata(ctx context.Context, uri ...string) (map[string]string, error) {
+	return map[string]string{
+		"appid":  "1",
+		"appkey": "123456",
+	}, nil
+}
+
+// RequireTransportSecurity 自定义认证是否开启TLS
+func (c customCredential) RequireTransportSecurity() bool {
+	return OpenTLS
+}
+
 func main() {
 	flag.Parse()
+	var opts []grpc.DialOption
+	if OpenTLS {
+		// TLS连接
+		creds, err := credentials.NewClientTLSFromFile("./configs/server.crt", "olongfen.top")
+		if err != nil {
+			grpclog.Fatalf("Failed to create TLS credentials %v", err)
+		}
+		opts = append(opts, grpc.WithTransportCredentials(creds))
+	} else {
+		opts = append(opts, grpc.WithInsecure())
+	}
+
+	// 使用自定义认证
+	opts = append(opts, grpc.WithPerRPCCredentials(new(customCredential)))
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(*addr, opts...)
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

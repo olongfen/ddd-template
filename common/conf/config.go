@@ -39,8 +39,17 @@ type HTTP struct {
 }
 
 type GRpc struct {
-	Host string
-	Port int
+	PEMFile string
+	KeyFile string
+	TLS     bool
+	Host    string
+	Port    int
+	Clients []GRPCClient
+}
+
+type GRPCClient struct {
+	AppID  string
+	AppKey string
 }
 
 type Server struct {
