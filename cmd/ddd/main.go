@@ -37,6 +37,7 @@ func initAction(c *cli.Context) (err error) {
 	} else {
 		logger = xlog.NewProduceLogger()
 	}
+	xlog.Log = logger
 	app := Init(cfg, logger)
 	app.Run(conf.Get().Server)
 	return

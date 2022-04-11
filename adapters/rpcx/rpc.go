@@ -46,11 +46,11 @@ func (g *GrpcServerImpl) Run(addr string) error {
 // #Description: new
 // #param opts ...grpc.ServerOption
 // #return app.GrpcServer
-func NewGrpc(d pb.GreeterServer, cfg conf.GRpc) app.GrpcServer {
+func NewGrpc(d pb.GreeterServer, cfg conf.Configs) app.GrpcServer {
 	g := &GrpcServerImpl{}
 	g.handlerDemo = d
-	if cfg.TLS {
-		creds, err := credentials.NewServerTLSFromFile(cfg.PEMFile, cfg.KeyFile)
+	if cfg.Server.GRpc.TLS {
+		creds, err := credentials.NewServerTLSFromFile(cfg.Server.GRpc.PEMFile, cfg.Server.GRpc.KeyFile)
 		if err != nil {
 			grpclog.Fatalf("Failed to generate credentials %v", err)
 		}

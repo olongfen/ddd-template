@@ -15,10 +15,10 @@ import (
 // GormSpanKey 包内静态变量
 const GormSpanKey = "__gorm_span"
 const (
-	tableNamePrefix        = "information_analysis_"
-	RepositoryMethodCtxTag = "information_analysis_repository_method"
-	CallBackBeforeName     = "information_analysis_opentracing:before"
-	CallBackAfterName      = "information_analysis_opentracing:after"
+	tableNamePrefix        = "ddd_template_"
+	RepositoryMethodCtxTag = "ddd_template_repository_method"
+	CallBackBeforeName     = "ddd_template_opentracing:before"
+	CallBackAfterName      = "ddd_template_opentracing:after"
 )
 
 //

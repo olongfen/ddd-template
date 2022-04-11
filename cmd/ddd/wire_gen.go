@@ -25,7 +25,7 @@ func Init(cfg conf.Configs, log *zap.Logger) *app.Application {
 	demoHandler := restful.NewDemoCtl(demoServer, log)
 	httpServer := restful.NewHTTPServerImpl(cfg, demoHandler)
 	greeterServer := rpcx.NewDemoGrpcServer(demoServer, log)
-	grpcServer := rpcx.NewGrpc(greeterServer, cfg.Server.GRpc)
+	grpcServer := rpcx.NewGrpc(greeterServer, cfg)
 	application := app.NewApp(httpServer, grpcServer, log)
 	return application
 }

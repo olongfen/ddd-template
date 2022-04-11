@@ -14,6 +14,8 @@ import (
 	"time"
 )
 
+var Log = NewDevelopment()
+
 func encodeJSON() zapcore.Encoder {
 	encoderConfig := zap.NewProductionEncoderConfig()
 
