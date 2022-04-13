@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option go_package="api/v1";
+package v1;
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+
+service Greeter {
+  rpc SayHello(HelloRequest) returns (DemoInfo) {
+    option (google.api.http) = {
+      get:"/"
+    };
+  }
+}
+
+
+message HelloRequest {
+  // @gotags: form:"msg"
+  string msg = 1;
+}
+
+
+message DemoInfo {
+  int32 id =1;
+  // 创建时间
+  int64 createdAt =2;
+  // 更新时间
+  int64 updatedAt=3;
+  // 消息
+  string message = 4;
+
+}

@@ -16,12 +16,12 @@ server:
 
 database:
   driver: postgres
-  source: postgres://business:business@0.0.0.0:54323/business?sslmode=disable
+  source: postgres://business:business@0.0.0.0:5432/business?sslmode=disable
 jaegerhost: 127.0.0.1
 environment: dev
 debug: true
 log:
-  filename: ./log/ddd-template.log
+  filename: ./log/server-template.log
   maxsize: 20
   maxbackups: 30
   maxages: 30

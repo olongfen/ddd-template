@@ -21,7 +21,7 @@ package main
 
 import (
 	"context"
-	"ddd-template/adapters/rpcx/pb"
+	"ddd-template/api/v1"
 	"flag"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
@@ -79,12 +79,12 @@ func main() {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := pb.NewGreeterClient(conn)
+	c := v1.NewGreeterClient(conn)
 
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.SayHello(ctx, &pb.HelloRequest{Msg: *name})
+	r, err := c.SayHello(ctx, &v1.HelloRequest{Msg: *name})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}

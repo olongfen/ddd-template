@@ -21,7 +21,7 @@ jaegerhost: 127.0.0.1
 environment: dev
 debug: true
 log:
-  filename: ./log/ddd-template.log
+  filename: ./log/server-template.log
   maxsize: 20
   maxbackups: 30
   maxages: 30

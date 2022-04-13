@@ -3,7 +3,7 @@
 
 ## rpc
 ```shell
-protoc --go_out=.   --go-grpc_out=.  adapters/rpcx/pb/hello.proto 
+protoc --go_out=.   --go-grpc_out=.  adapters/rpcx/pb/v1.proto 
 ```
 
 # UNIT TEST

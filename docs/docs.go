@@ -43,7 +43,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/restful.Result"
+                                    "$ref": "#/definitions/v1.GreeterHTTPServerResp"
                                 },
                                 {
                                     "type": "object",
@@ -52,7 +52,7 @@ const docTemplate = `{
                                             "type": "integer"
                                         },
                                         "data": {
-                                            "$ref": "#/definitions/schema.DemoInfo"
+                                            "$ref": "#/definitions/v1.DemoInfo"
                                         }
                                     }
                                 }
@@ -64,37 +64,34 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "restful.Result": {
+        "v1.DemoInfo": {
             "type": "object",
             "properties": {
-                "code": {
-                    "description": "业务码 等于0时表示业务逻辑执行成功,其他表示业务逻辑失败",
+                "createdAt": {
+                    "description": "创建时间",
                     "type": "integer"
-                },
-                "data": {
-                    "description": "数据对象"
-                },
-                "message": {
-                    "description": "信息",
-                    "type": "string"
-                }
-            }
-        },
-        "schema.DemoInfo": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
                 "message": {
+                    "description": "消息",
                     "type": "string"
                 },
-                "updated_at": {
-                    "type": "string"
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "integer"
                 }
+            }
+        },
+        "v1.GreeterHTTPServerResp": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "message": {}
             }
         }
     }
