@@ -2,9 +2,9 @@ package repositry
 
 import (
 	"context"
+	"ddd-template/internal/common/conf"
 	"ddd-template/internal/common/xlog"
 	"ddd-template/internal/domain"
-	"ddd-template/internal/initialization/conf"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"

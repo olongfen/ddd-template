@@ -14,13 +14,12 @@ import (
 	"ddd-template/internal/app/service"
 	"ddd-template/internal/app/usecase"
 	"ddd-template/internal/initialization"
-	"ddd-template/internal/initialization/conf"
 )
 
 // Injectors from wire.go:
 
 func NewServer(confPath string) (*app.Application, error) {
-	configs := conf.InitConf(confPath)
+	configs := initialization.InitConf(confPath)
 	logger := initialization.InitLog(configs)
 	db := repositry.NewDB(configs, logger)
 	data := repositry.NewData(db, logger)
