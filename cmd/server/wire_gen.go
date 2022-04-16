@@ -15,16 +15,16 @@ import (
 	"ddd-template/internal/app/usecase"
 	"ddd-template/internal/initialization"
 	"ddd-template/internal/initialization/conf"
-	"ddd-template/internal/initialization/database"
 )
 
 // Injectors from wire.go:
 
 func NewServer(confPath string) (*app.Application, error) {
 	configs := conf.InitConf(confPath)
-	db := database.NewDatabase(configs)
 	logger := initialization.InitLog(configs)
-	iDemoRepo := repositry.NewDemoDependencyImpl(db, logger)
+	db := repositry.NewDB(configs, logger)
+	data := repositry.NewData(db, logger)
+	iDemoRepo := repositry.NewDemoDependency(data, logger)
 	iDemoUsecase := usecase.NewDemoServer(iDemoRepo, logger)
 	greeterServer := service.NewDemoService(iDemoUsecase, logger)
 	httpServer := restful.NewHTTPServer(greeterServer, configs)

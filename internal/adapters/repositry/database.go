@@ -1,12 +1,14 @@
-package database
+package repositry
 
 import (
+	"context"
+	"ddd-template/internal/common/xlog"
+	"ddd-template/internal/domain"
 	"ddd-template/internal/initialization/conf"
-	"go.uber.org/zap"
-
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
+	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -15,19 +17,47 @@ import (
 // GormSpanKey 包内静态变量
 const GormSpanKey = "__gorm_span"
 const (
-	tableNamePrefix        = "ddd_template_"
-	RepositoryMethodCtxTag = "ddd_template_repository_method"
-	CallBackBeforeName     = "ddd_template_opentracing:before"
-	CallBackAfterName      = "ddd_template_opentracing:after"
+	tableNamePrefix        = "ddd_"
+	RepositoryMethodCtxTag = "ddd_repository_method"
+	CallBackBeforeName     = "ddd_opentracing:before"
+	CallBackAfterName      = "ddd_opentracing:after"
 )
 
-//
-// NewDatabase
-// Description:
-// param c *conf.Configs
-// return res *gorm.DB
-// return err error
-func NewDatabase(c *conf.Configs) (res *gorm.DB) {
+type Data struct {
+	db  *gorm.DB
+	log *zap.Logger
+}
+
+type contextTxKey struct{}
+
+func NewTransaction(d *Data) domain.ITransaction {
+	return d
+}
+
+func (d *Data) ExecTx(ctx context.Context, fc func(context.Context) error) error {
+	return d.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		ctx = context.WithValue(ctx, contextTxKey{}, tx)
+		return fc(ctx)
+	})
+}
+
+func (d *Data) DB(ctx context.Context) *gorm.DB {
+	tx, ok := ctx.Value(contextTxKey{}).(*gorm.DB)
+	if ok {
+		return tx
+	}
+	return d.db
+}
+
+func NewData(db *gorm.DB, logger *zap.Logger) (ret *Data) {
+	return &Data{
+		db:  db,
+		log: logger,
+	}
+}
+
+// NewDB new
+func NewDB(c *conf.Configs, logger *zap.Logger) (res *gorm.DB) {
 	var (
 		err        error
 		db         *gorm.DB
@@ -41,24 +71,29 @@ func NewDatabase(c *conf.Configs) (res *gorm.DB) {
 	switch c.Database.Driver {
 	case "postgres":
 		if db, err = gorm.Open(postgres.Open(c.Database.Source), gormConfig); err != nil {
-			zap.L().Fatal(err.Error())
+			logger.Sugar().Fatal(err.Error())
 		}
 
 	}
 
 	if db == nil {
-		zap.L().Fatal("db do not init")
+		logger.Sugar().Fatal("data do not init")
 		return
 	}
 	err = db.Use(&OpentracingPlugin{})
 	if err != nil {
+		logger.Sugar().Fatal(err)
 		return
 	}
 	if conf.Get().Environment == "dev" {
 		db = db.Debug()
+		err = db.AutoMigrate(&domain.Demo{})
+		if err != nil {
+			xlog.Log.Sugar().Warn(err)
+			err = nil
+		}
 	}
-	res = db
-	return
+	return db
 }
 
 type OpentracingPlugin struct {
