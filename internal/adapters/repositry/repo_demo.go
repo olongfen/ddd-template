@@ -4,12 +4,11 @@ import (
 	"context"
 	"ddd-template/internal/domain"
 	"go.uber.org/zap"
-	"gorm.io/gorm"
 )
 
 type demoDependency struct {
-	db  *gorm.DB
-	log *zap.Logger
+	data *Data
+	log  *zap.Logger
 }
 
 //
@@ -26,10 +25,10 @@ func (d *demoDependency) SayHello(ctx context.Context, msg string) *domain.Demo 
 }
 
 //
-// NewDemoDependencyImpl
+// NewDemoDependency
 // #Description: new
 // #param db *gorm.DB
 // #return dependency.IDemoRepo
-func NewDemoDependencyImpl(db *gorm.DB, logger *zap.Logger) domain.IDemoRepo {
-	return &demoDependency{db: db, log: logger}
+func NewDemoDependency(data *Data, logger *zap.Logger) domain.IDemoRepo {
+	return &demoDependency{data: data, log: logger}
 }

@@ -4,4 +4,4 @@ import (
 	"github.com/google/wire"
 )
 
-var Set = wire.NewSet(NewDemoDependencyImpl, NewTransaction, NewData, NewDB)
+var Set = wire.NewSet(NewDemoDependency, NewTransaction, NewData, NewDB)

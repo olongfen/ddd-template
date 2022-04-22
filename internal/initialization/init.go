@@ -2,8 +2,10 @@ package initialization
 
 import (
 	"ddd-template/internal/common/conf"
+	"ddd-template/internal/common/xlog"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 	"log"
 	"os"
 )
@@ -32,4 +34,17 @@ func InitConf(confPath string) *conf.Configs {
 		}
 	})
 	return c
+}
+
+func InitLog(cfg *conf.Configs) *zap.Logger {
+	var (
+		logger *zap.Logger
+	)
+	if cfg.Environment == "dev" {
+		logger = xlog.NewDevelopment()
+	} else {
+		logger = xlog.NewProduceLogger()
+	}
+	xlog.Log = logger
+	return logger
 }

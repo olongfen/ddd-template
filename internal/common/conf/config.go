@@ -51,7 +51,7 @@ type Server struct {
 }
 
 func Get() *Configs {
-	return conf
+	return Confs
 }
 
-var conf = new(Configs)
+var Confs = new(Configs)
