@@ -1,12 +1,5 @@
 package conf
 
-import (
-	"github.com/fsnotify/fsnotify"
-	"github.com/spf13/viper"
-	"log"
-	"os"
-)
-
 type Configs struct {
 	Server      Server
 	Database    Database
@@ -55,30 +48,6 @@ type GRPCClient struct {
 type Server struct {
 	Http HTTP
 	GRpc GRpc
-}
-
-func InitConf(confPath string) *Configs {
-	var (
-		err error
-	)
-	_, err = os.Stat(confPath)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	viper.SetConfigType("yaml")
-	viper.SetConfigFile(confPath)
-	_ = viper.ReadInConfig()
-	if err = viper.Unmarshal(conf); err != nil {
-		log.Fatal(err.Error())
-	}
-	viper.WatchConfig()
-	viper.OnConfigChange(func(e fsnotify.Event) {
-		log.Printf("Config file:%s Op:%s\n", e.Name, e.Op)
-		if err = viper.Unmarshal(conf); err != nil {
-			log.Fatal(err)
-		}
-	})
-	return conf
 }
 
 func Get() *Configs {

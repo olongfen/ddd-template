@@ -3,8 +3,8 @@ package rpcx
 import (
 	"ddd-template/api/v1"
 	"ddd-template/internal/app"
+	"ddd-template/internal/common/conf"
 	"ddd-template/internal/common/xlog"
-	"ddd-template/internal/initialization/conf"
 	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

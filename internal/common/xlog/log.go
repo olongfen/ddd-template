@@ -2,7 +2,7 @@ package xlog
 
 import (
 	"context"
-	"ddd-template/internal/initialization/conf"
+	"ddd-template/internal/common/conf"
 	"errors"
 	"fmt"
 	"go.uber.org/zap"

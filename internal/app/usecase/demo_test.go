@@ -19,7 +19,8 @@ func TestDemoServer_SayHello(t *testing.T) {
 	defer mockCtl.Finish()
 	mockRepo := mock_domain.NewMockIDemoRepo(mockCtl)
 	logger, _ := zap.NewDevelopment()
-	srv := NewDemoServer(mockRepo, logger)
+	tx := mock_domain.NewMockITransaction(mockCtl)
+	srv := NewDemoServer(mockRepo, tx, logger)
 	data := &domain.Demo{
 		Model: gorm.Model{
 			ID:        1,
