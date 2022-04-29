@@ -7,8 +7,7 @@ proto_build:
 	--go-grpc_out ./api --go-grpc_opt=paths=source_relative \
 	--go-gin_out ./api --go-gin_opt=paths=source_relative \
 	./api/v1/*.proto \
-	&& protoc-go-inject-tag -input=./api/v1/v1.pb.go \
-	&& swag init -g swag.go
+	&& protoc-go-inject-tag -input=./api/v1/v1.pb.go
 
 mockgen:
 	cd ./internal && for file in `egrep -rnl "type.*?interface" ./domain | grep -v "_test" `; do \

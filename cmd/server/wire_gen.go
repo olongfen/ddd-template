@@ -7,7 +7,7 @@
 package main
 
 import (
-	"ddd-template/internal/adapters/repositry"
+	"ddd-template/internal/adapters/repository"
 	"ddd-template/internal/adapters/restful"
 	"ddd-template/internal/adapters/rpcx"
 	"ddd-template/internal/app"
@@ -21,10 +21,10 @@ import (
 func NewServer(confPath string) (*app.Application, error) {
 	configs := initialization.InitConf(confPath)
 	logger := initialization.InitLog(configs)
-	db := repositry.NewDB(configs, logger)
-	data := repositry.NewData(db, logger)
-	iDemoRepo := repositry.NewDemoDependency(data, logger)
-	iTransaction := repositry.NewTransaction(data)
+	db := repository.NewDB(configs, logger)
+	data := repository.NewData(db, logger)
+	iDemoRepo := repository.NewDemoDependency(data, logger)
+	iTransaction := repository.NewTransaction(data)
 	iDemoUsecase := usecase.NewDemoServer(iDemoRepo, iTransaction, logger)
 	greeterServer := service.NewDemoService(iDemoUsecase, logger)
 	httpServer := restful.NewHTTPServer(greeterServer, configs)

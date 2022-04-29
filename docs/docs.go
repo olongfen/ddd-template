@@ -16,9 +16,8 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/demo": {
+        "/api/v1/": {
             "get": {
-                "description": "sends a string msg",
                 "consumes": [
                     "application/json"
                 ],
@@ -28,7 +27,6 @@ const docTemplate = `{
                 "tags": [
                     "Demo"
                 ],
-                "summary": "say hello",
                 "parameters": [
                     {
                         "type": "string",
@@ -43,7 +41,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/v1.GreeterHTTPServerResp"
+                                    "$ref": "#/definitions/response.HTTPServerResponse"
                                 },
                                 {
                                     "type": "object",
@@ -58,12 +56,28 @@ const docTemplate = `{
                                 }
                             ]
                         }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
+        "response.HTTPServerResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "message": {}
+            }
+        },
         "v1.DemoInfo": {
             "type": "object",
             "properties": {
@@ -82,16 +96,6 @@ const docTemplate = `{
                     "description": "更新时间",
                     "type": "integer"
                 }
-            }
-        },
-        "v1.GreeterHTTPServerResp": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "data": {},
-                "message": {}
             }
         }
     }
