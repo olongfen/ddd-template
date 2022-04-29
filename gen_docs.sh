@@ -1,2 +1,2 @@
 #!/bin/bash
-swag init -g swag.go
+swag init  --parseDependency -g  swag.go

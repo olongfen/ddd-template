@@ -19,13 +19,14 @@ func NewDemoService(usecase domain.IDemoUsecase, logger *zap.Logger) v1.GreeterS
 
 // SayHello
 // @Tags Demo
-// @Summary say hello
-// @Description sends a string msg
+// @Summary
+// @Description
 // @Accept application/json
 // @Produce application/json
 // @Param msg query string false "message"
-// @Router /api/v1/demo  [get]
-// @Success 200 {object} v1.GreeterHTTPServerResp{code=int,data=v1.DemoInfo,}
+// @Router /api/v1/ [get]
+// @Success 200 {object}    response.HTTPServerResponse{code=int,data=v1.DemoInfo} "处理成功code为0,失败code为其他"
+// @Failure 500 {object}    interface{}  "服务器内部错误"
 func (d *DemoService) SayHello(ctx context.Context, req *v1.HelloRequest) (ret *v1.DemoInfo, err error) {
 	var (
 		data *domain.Demo

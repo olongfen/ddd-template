@@ -8,7 +8,6 @@ require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/golang/mock v1.6.0
 	github.com/google/wire v0.5.0
-	github.com/jinzhu/copier v0.3.5
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.10.1
 	github.com/stretchr/testify v1.7.0
@@ -18,6 +17,7 @@ require (
 	go.opentelemetry.io/otel v1.4.1
 	go.opentelemetry.io/otel/trace v1.4.1
 	go.uber.org/zap v1.21.0
+	google.golang.org/genproto v0.0.0-20220324131243-acbaeb5b85eb
 	google.golang.org/grpc v1.45.0
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
@@ -62,6 +62,7 @@ require (
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/olongfen/protoc-gen-go-gin v0.0.0-20220428023653-dd284e67c651 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
@@ -78,7 +79,6 @@ require (
 	golang.org/x/sys v0.0.0-20220327210214-530d0810a4d0 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.10 // indirect
-	google.golang.org/genproto v0.0.0-20220324131243-acbaeb5b85eb // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect

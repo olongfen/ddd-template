@@ -5,47 +5,17 @@ package v1
 import (
 	context "context"
 	gin "github.com/gin-gonic/gin"
+	response "github.com/olongfen/protoc-gen-go-gin/response"
 	metadata "google.golang.org/grpc/metadata"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the mohuishou/protoc-gen-go-gin package it is being compiled against.
-// context.metadata.
+// context.metadata.response.
 //gin.
 
 type GreeterHTTPServer interface {
 	SayHello(context.Context, *HelloRequest) (*DemoInfo, error)
-}
-
-type ErrorFunc func(ctx *gin.Context, err interface{}, status ...int)
-type SuccessFunc func(ctx *gin.Context, data interface{})
-
-type GreeterHTTPServerResp struct {
-	Code    int         `json:"code"`
-	Data    interface{} `json:"data"`
-	Message interface{} `json:"message"`
-}
-
-var (
-	defaultSuccess = func(ctx *gin.Context, data interface{}) {
-		ctx.AbortWithStatusJSON(200, GreeterHTTPServerResp{Code: 0, Data: data, Message: "success"})
-	}
-
-	defaultError = func(ctx *gin.Context, err interface{}, status ...int) {
-		code := 200
-		if len(status) > 0 {
-			code = status[0]
-		}
-		ctx.AbortWithStatusJSON(code, GreeterHTTPServerResp{Code: -1, Data: nil, Message: err})
-	}
-)
-
-func ResetSuccess(fc SuccessFunc) {
-	defaultSuccess = fc
-}
-
-func ResetError(fc ErrorFunc) {
-	defaultError = fc
 }
 
 func RegisterGreeterHTTPServer(r gin.IRouter, srv GreeterHTTPServer) {
@@ -65,7 +35,7 @@ func (s *Greeter) SayHello_0(ctx *gin.Context) {
 	var in HelloRequest
 
 	if err := ctx.ShouldBindQuery(&in); err != nil {
-		defaultError(ctx, err.Error())
+		response.Error(ctx, err.Error())
 		return
 	}
 
@@ -76,11 +46,11 @@ func (s *Greeter) SayHello_0(ctx *gin.Context) {
 	newCtx := metadata.NewIncomingContext(ctx, md)
 	out, err := s.server.(GreeterHTTPServer).SayHello(newCtx, &in)
 	if err != nil {
-		defaultError(ctx, err.Error())
+		response.Error(ctx, err.Error())
 		return
 	}
 
-	defaultSuccess(ctx, out)
+	response.Success(ctx, out)
 }
 
 func (s *Greeter) RegisterService() {
