@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	v1 "ddd-template/api/v1"
+	"ddd-template/internal/common/errorx"
 	"ddd-template/internal/domain"
 	"go.uber.org/zap"
 )
@@ -24,7 +25,7 @@ func NewDemoService(usecase domain.IDemoUsecase, logger *zap.Logger) v1.GreeterS
 // @Accept application/json
 // @Produce application/json
 // @Param msg query string false "message"
-// @Router /api/v1/ [get]
+// @Router /api/v1/hello [get]
 // @Success 200 {object} response.HTTPServerResponse{code=int,data=v1.DemoInfo}
 // @Failure 500 {object}    interface{}  "服务器内部错误"
 func (d *DemoService) SayHello(ctx context.Context, req *v1.HelloRequest) (ret *v1.DemoInfo, err error) {
@@ -34,6 +35,8 @@ func (d *DemoService) SayHello(ctx context.Context, req *v1.HelloRequest) (ret *
 	if data, err = d.usecase.SayHello(ctx, req.Msg); err != nil {
 		return
 	}
+	err = errorx.Error(errorx.AdminCreateError, errorx.Text(errorx.AdminCreateError))
+	return
 	ret = new(v1.DemoInfo)
 	ret.Message = data.Message
 	return

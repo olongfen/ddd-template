@@ -55,6 +55,6 @@ func (s *Greeter) SayHello_0(ctx *gin.Context) {
 
 func (s *Greeter) RegisterService() {
 
-	s.router.Handle("GET", "/", s.SayHello_0)
+	s.router.Handle("GET", "/hello", s.SayHello_0)
 
 }

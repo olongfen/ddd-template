@@ -35,7 +35,7 @@ func (h *HTTPServer) Run() error {
 	group := h.engine.Group("/api/v1")
 	group.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	xlog.Log.Sugar().Infof("http server run in: %s", h.cfg.Addr)
-	group1 := group.Group("/demo")
+	group1 := group.Group("/")
 	v1.RegisterGreeterHTTPServer(group1, h.demo)
 	return h.engine.Run(h.cfg.Addr)
 }

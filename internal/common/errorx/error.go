@@ -61,7 +61,10 @@ func Error(businessCode int, message string, httpCode ...int) BusinessError {
 func (e *businessError) i() {}
 
 func (e *businessError) Error() string {
-	return fmt.Sprintf(`stack: %s, business: %s`, e.stackError.Error(), e.message)
+	if e.stackError != nil {
+		return fmt.Sprintf(`stack: %s, business: %s`, e.stackError.Error(), e.message)
+	}
+	return fmt.Sprintf(`business: %s`, e.message)
 }
 
 func (e *businessError) WithError(err error) BusinessError {
