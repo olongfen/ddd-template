@@ -1,8 +1,8 @@
 package restful
 
 import (
+	_ "ddd-template/api/v1"
 	v1 "ddd-template/api/v1"
-	_ "ddd-template/docs"
 	"ddd-template/internal/app"
 	"ddd-template/internal/common/conf"
 	"ddd-template/internal/common/xlog"

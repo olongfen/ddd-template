@@ -39,3 +39,5 @@ make -f ./makefile proto_build
 ```shell
 make -f ./makefile mockgen
 ```
+## 感谢JetBrains的开源许可证书支持
+<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png?_gl=1*l2f4tq*_ga*MTE4NTc2NDE2MC4xNjU0MTM5MzQ0*_ga_9J976DJZ68*MTY1NDEzOTM0NC4xLjAuMTY1NDEzOTM0NC4w" alt="JetBrains" width="200">

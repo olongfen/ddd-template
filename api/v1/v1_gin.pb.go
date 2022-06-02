@@ -14,6 +14,8 @@ import (
 // context.metadata.response.
 //gin.
 
+//
+//
 type GreeterHTTPServer interface {
 	SayHello(context.Context, *HelloRequest) (*DemoInfo, error)
 }
