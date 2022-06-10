@@ -16,16 +16,14 @@ type BusinessError interface {
 
 	// WithAlert 设置告警通知
 	WithAlert() BusinessError
+	WithSupplementMsg(msg string) BusinessError
 
-	// BusinessCode 获取业务码
-	BusinessCode() int
-
-	// HTTPCode 获取 HTTP 状态码
-	HTTPCode() int
+	// Code 获取业务码
+	Code() int
 
 	// Message 获取错误描述
 	Message() string
-	// Error
+
 	Error() string
 
 	// StackError 获取带堆栈的错误信息
@@ -36,25 +34,18 @@ type BusinessError interface {
 }
 
 type businessError struct {
-	httpCode     int    // HTTP 状态码
-	businessCode int    // 业务码
-	message      string // 错误描述
-	stackError   error  // 含有堆栈信息的错误
-	isAlert      bool   // 是否告警通知
+	code          int    // 业务码
+	message       string // 错误描述
+	supplementMsg string // 补充的错误描述
+	stackError    error  // 含有堆栈信息的错误
+	isAlert       bool   // 是否告警通知
 }
 
-func Error(businessCode int, message string, httpCode ...int) BusinessError {
-	var (
-		status = 200
-	)
-	if len(httpCode) > 0 {
-		status = httpCode[0]
-	}
+func Error(businessCode int) BusinessError {
 	return &businessError{
-		httpCode:     status,
-		businessCode: businessCode,
-		message:      message,
-		isAlert:      false,
+		code:    businessCode,
+		message: Text(businessCode),
+		isAlert: false,
 	}
 }
 
@@ -62,9 +53,14 @@ func (e *businessError) i() {}
 
 func (e *businessError) Error() string {
 	if e.stackError != nil {
-		return fmt.Sprintf(`stack: %s, business: %s`, e.stackError.Error(), e.message)
+		return fmt.Sprintf(`stack: %s, business: %s, supplement: %s`, e.stackError.Error(), e.message, e.supplementMsg)
 	}
-	return fmt.Sprintf(`business: %s`, e.message)
+	return fmt.Sprintf(`business: %s,supplement: %s`, e.message, e.supplementMsg)
+}
+
+func (e *businessError) WithSupplementMsg(msg string) BusinessError {
+	e.supplementMsg = msg
+	return e
 }
 
 func (e *businessError) WithError(err error) BusinessError {
@@ -77,12 +73,8 @@ func (e *businessError) WithAlert() BusinessError {
 	return e
 }
 
-func (e *businessError) HTTPCode() int {
-	return e.httpCode
-}
-
-func (e *businessError) BusinessCode() int {
-	return e.businessCode
+func (e *businessError) Code() int {
+	return e.code
 }
 
 func (e *businessError) Message() string {

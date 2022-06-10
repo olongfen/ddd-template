@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	v1 "ddd-template/api/v1"
-	"ddd-template/internal/common/errorx"
 	"ddd-template/internal/domain"
 	"go.uber.org/zap"
 )
@@ -35,8 +34,6 @@ func (d *DemoService) SayHello(ctx context.Context, req *v1.HelloRequest) (ret *
 	if data, err = d.usecase.SayHello(ctx, req.Msg); err != nil {
 		return
 	}
-	err = errorx.Error(errorx.AdminCreateError, errorx.Text(errorx.AdminCreateError))
-	return
 	ret = new(v1.DemoInfo)
 	ret.Message = data.Message
 	return
