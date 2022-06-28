@@ -11,6 +11,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/utils"
+	"os"
 	"time"
 )
 
@@ -18,16 +19,22 @@ var Log = NewDevelopment()
 
 func encodeJSON() zapcore.Encoder {
 	encoderConfig := zap.NewProductionEncoderConfig()
-
 	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
 	return zapcore.NewJSONEncoder(encoderConfig)
 }
 
-func writer() zapcore.WriteSyncer {
+func writer(isInfo bool) zapcore.WriteSyncer {
 	logCfg := conf.Get().Log
+	var (
+		lofFile string
+	)
+	if isInfo {
+		lofFile = logCfg.Filename
+	} else {
+		lofFile = logCfg.ErrorFile
+	}
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   logCfg.Filename,
+		Filename:   lofFile,
 		MaxSize:    logCfg.MaxSize,    // 在进行切割之前，日志文件的最大大小（以MB为单位）
 		MaxBackups: logCfg.MaxBackups, // 保留旧文件的最大个数
 		MaxAge:     logCfg.MaxAges,    // 保留旧文件的最大天数
@@ -37,12 +44,25 @@ func writer() zapcore.WriteSyncer {
 }
 
 func NewProduceLogger() *zap.Logger {
-	core := zapcore.NewCore(encodeJSON(), writer(), zapcore.DebugLevel)
-	return zap.New(core, zap.AddCaller())
+	core := zapcore.NewCore(encodeJSON(), zapcore.NewMultiWriteSyncer(writer(true), os.Stdout), zap.LevelEnablerFunc(func(level zapcore.Level) bool {
+		return level < zap.ErrorLevel && level >= zap.DebugLevel
+	}))
+	coreErr := zapcore.NewCore(encodeJSON(), zapcore.NewMultiWriteSyncer(writer(false), os.Stdout), zap.LevelEnablerFunc(func(level zapcore.Level) bool {
+		return level >= zap.ErrorLevel
+	}))
+	return zap.New(zapcore.NewTee(core, coreErr), zap.AddCaller())
 }
 
 func NewDevelopment() *zap.Logger {
-	log, _ := zap.NewProduction()
+
+	cfg := zap.NewProductionEncoderConfig()
+	cfg.EncodeLevel = zapcore.LowercaseColorLevelEncoder
+	cfg.EncodeTime = zapcore.ISO8601TimeEncoder
+	cfg1 := zap.NewProductionConfig()
+	cfg1.EncoderConfig = cfg
+	cfg1.Encoding = "console"
+
+	log, _ := cfg1.Build()
 	return log
 }
 

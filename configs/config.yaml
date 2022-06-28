@@ -22,6 +22,7 @@ environment: dev
 debug: true
 log:
   filename: ./log/server-template.log
+  errorfile: ./log/error.log
   maxsize: 20
   maxbackups: 30
   maxages: 30

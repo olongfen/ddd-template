@@ -1,9 +1,11 @@
 package restful
 
 import (
+	"ddd-template/internal/common/xlog"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"olongfen/ddd-template/internal/common/xlog"
+	jsoniter "github.com/json-iterator/go"
+	"go.uber.org/zap"
 	"time"
 )
 
@@ -49,7 +51,8 @@ func format(f LogFormatter) gin.HandlerFunc {
 
 		param.Path = path
 
-		logClient.Sugar().Info(f(param))
+		logClient.Info("HTTP Request Message", zap.Any("detail", f(param)))
+		// logClient.Sugar().Info(f(param))
 	}
 }
 

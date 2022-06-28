@@ -14,6 +14,7 @@ type Configs struct {
 
 type Log struct {
 	Filename   string
+	ErrorFile  string
 	MaxSize    int
 	MaxBackups int
 	MaxAges    int

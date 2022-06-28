@@ -31,11 +31,10 @@ func NewHTTPServer(demo v1.GreeterServer, cfg *conf.Configs) app.HttpServer {
 }
 
 func (h *HTTPServer) Run() error {
-	h.engine.Use(corsHandler())
-	group := h.engine.Group("/api/v1")
-	group.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	h.engine.Use(corsHandler(), logger())
+	h.engine.GET("/api/v1/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	xlog.Log.Sugar().Infof("http server run in: %s", h.cfg.Addr)
-	group1 := group.Group("/")
+	group1 := h.engine.Group("/")
 	v1.RegisterGreeterHTTPServer(group1, h.demo)
 	return h.engine.Run(h.cfg.Addr)
 }

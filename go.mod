@@ -11,6 +11,7 @@ require (
 	github.com/golang/protobuf v1.5.2
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
+	github.com/json-iterator/go v1.1.12
 	github.com/olongfen/protoc-gen-go-gin v0.0.0-20220428023653-dd284e67c651
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.10.1
@@ -57,7 +58,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
-	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
