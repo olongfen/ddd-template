@@ -1,4 +1,4 @@
-package restful
+package xgin
 
 import (
 	"ddd-template/internal/common/xlog"

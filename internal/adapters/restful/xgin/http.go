@@ -1,7 +1,7 @@
-package restful
+package xgin
 
 import (
-	_ "ddd-template/api/v1"
+	_ "ddd-template/api"
 	v1 "ddd-template/api/v1"
 	"ddd-template/internal/app"
 	"ddd-template/internal/common/conf"
@@ -35,6 +35,6 @@ func (h *HTTPServer) Run() error {
 	h.engine.GET("/api/v1/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	xlog.Log.Sugar().Infof("http server run in: %s", h.cfg.Addr)
 	group1 := h.engine.Group("/")
-	v1.RegisterGreeterHTTPServer(group1, h.demo)
+	v1.RegisterGreeterGinHTTPServer(group1, h.demo)
 	return h.engine.Run(h.cfg.Addr)
 }

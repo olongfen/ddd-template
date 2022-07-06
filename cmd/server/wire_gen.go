@@ -8,7 +8,7 @@ package main
 
 import (
 	"ddd-template/internal/adapters/repository"
-	"ddd-template/internal/adapters/restful"
+	"ddd-template/internal/adapters/restful/xfiber"
 	"ddd-template/internal/adapters/rpcx"
 	"ddd-template/internal/app"
 	"ddd-template/internal/app/service"
@@ -27,7 +27,7 @@ func NewServer(confPath string) (*app.Application, error) {
 	iTransaction := repository.NewTransaction(data)
 	iDemoUsecase := usecase.NewDemoServer(iDemoRepo, iTransaction, logger)
 	greeterServer := service.NewDemoService(iDemoUsecase, logger)
-	httpServer := restful.NewHTTPServer(greeterServer, configs)
+	httpServer := xfiber.NewHTTPServer(greeterServer, configs)
 	grpcServer := rpcx.NewGrpc(greeterServer, configs)
 	application := app.NewApp(httpServer, grpcServer, logger)
 	return application, nil

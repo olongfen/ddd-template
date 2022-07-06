@@ -1,4 +1,4 @@
-package restful
+package xfiber
 
 import "github.com/google/wire"
 

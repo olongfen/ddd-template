@@ -104,7 +104,7 @@ service Greeter {
   };
   rpc SayHello(HelloRequest) returns (DemoInfo) {
     option (google.api.http) = {
-      get:"/hello"
+      get:"/hello/{action}"
     };
     option(grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
       summary: "SayHello"
@@ -118,8 +118,11 @@ service Greeter {
 
 
 message HelloRequest {
-  string msg = 1[ (gogoproto.moretags) = 'binding:"required"', (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+  string msg = 1[ (gogoproto.moretags) = 'query:"msg" form:"msg" validate:"required"', (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
     required: ["msg"]
+  }];
+  string action = 2 [ (gogoproto.moretags) = 'uri:"action" validate:"required"', (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    required: ["action"]
   }];
 }
 

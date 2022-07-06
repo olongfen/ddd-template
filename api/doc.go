@@ -1,17 +1,17 @@
-package v1
+package api
 
 import (
 	"embed"
 	"github.com/swaggo/swag"
 )
 
-//go:embed v1.swagger.json
+//go:embed generated_doc.swagger.json
 var f embed.FS
 
 var SwaggerInfo *swag.Spec
 
 func init() {
-	docTemplate, _ := f.ReadFile("v1.swagger.json")
+	docTemplate, _ := f.ReadFile("generated_doc.swagger.json")
 	SwaggerInfo = &swag.Spec{
 		Version:          "",
 		Host:             "",

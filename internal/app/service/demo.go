@@ -35,6 +35,6 @@ func (d *DemoService) SayHello(ctx context.Context, req *v1.HelloRequest) (ret *
 		return
 	}
 	ret = new(v1.DemoInfo)
-	ret.Message = data.Message
+	ret.Message = data.Message + "<<<action:>>>" + req.Action
 	return
 }
