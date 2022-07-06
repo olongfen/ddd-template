@@ -30,6 +30,15 @@ func NewHTTPServer(demo v1.GreeterServer, cfg *conf.Configs) app.HttpServer {
 	return h
 }
 
+/*
+func(ctx *fiber.Ctx) error {
+		c := ctx.UserContext()
+		c = context.WithValue(c, "id", "qqqqqqqqqqqqqqqqqqqqqqqq")
+		ctx.SetUserContext(c)
+		return ctx.Next()
+	}
+*/
+
 func (h *HTTPServer) Run() error {
 	h.engine.Use(cors.New())
 	h.engine.Get("/api/v1/docs/*", fiberSwagger.WrapHandler)

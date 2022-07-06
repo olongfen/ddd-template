@@ -4,6 +4,7 @@ package v1
 
 import (
 	context "context"
+	v10 "github.com/go-playground/validator/v10"
 	v2 "github.com/gofiber/fiber/v2"
 	response "github.com/olongfen/protoc-gen-go-http-frame/response"
 	metadata "google.golang.org/grpc/metadata"
@@ -13,6 +14,7 @@ import (
 // is compatible with the  github.com/olongfen/protoc-gen-go-http-frame package it is being compiled against.
 // context.metadata.response.
 //v2.
+//v10.
 
 //
 //
@@ -22,19 +24,22 @@ type GreeterFiberHTTPServer interface {
 
 func RegisterGreeterFiberHTTPServer(r v2.Router, srv GreeterFiberHTTPServer) {
 	s := GreeterFiber{
-		server: srv,
-		router: r,
+		server:   srv,
+		router:   r,
+		validate: v10.New(),
 	}
 	s.RegisterService()
 }
 
 type GreeterFiber struct {
-	server GreeterFiberHTTPServer
-	router v2.Router
+	server   GreeterFiberHTTPServer
+	router   v2.Router
+	validate *v10.Validate
 }
 
 func (s *GreeterFiber) SayHello_0(ctx *v2.Ctx) error {
 	var in HelloRequest
+
 	if err := ctx.ParamsParser(&in); err != nil {
 		return response.FiberRespFailFunc(ctx, err.Error())
 	}
@@ -43,11 +48,15 @@ func (s *GreeterFiber) SayHello_0(ctx *v2.Ctx) error {
 		return response.FiberRespFailFunc(ctx, err.Error())
 	}
 
+	err := s.validate.Struct(in)
+	if err != nil {
+		return response.FiberRespFailFunc(ctx, err.Error())
+	}
 	md := metadata.New(nil)
 	for k, v := range ctx.GetReqHeaders() {
 		md.Set(k, v)
 	}
-	newCtx := metadata.NewIncomingContext(ctx.Context(), md)
+	newCtx := metadata.NewIncomingContext(ctx.UserContext(), md)
 	out, err := s.server.(GreeterFiberHTTPServer).SayHello(newCtx, &in)
 	if err != nil {
 		return response.FiberRespFailFunc(ctx, err.Error())
