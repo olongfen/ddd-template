@@ -1,2 +1,2 @@
 #!/bin/bash
-swag init  --parseDependency -g  cmd/server/main.go
+swag init --parseDependency -o ./api -ot json -g   ./cmd/server/main.go
