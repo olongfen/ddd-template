@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"ddd-template/internal/app"
 	"ddd-template/internal/domain"
 	"go.uber.org/zap"
 )
@@ -9,7 +10,7 @@ import (
 type demoServerImpl struct {
 	repo domain.IDemoRepo
 	log  *zap.Logger
-	tx   domain.ITransaction
+	tx   app.ITransaction
 }
 
 //
@@ -17,7 +18,7 @@ type demoServerImpl struct {
 // #Description: new
 // #param demo dependency.IDemoRepo
 // #return IDemoUsecase
-func NewDemoServer(demo domain.IDemoRepo, tx domain.ITransaction, logger *zap.Logger) domain.IDemoUsecase {
+func NewDemoServer(demo domain.IDemoRepo, tx app.ITransaction, logger *zap.Logger) domain.IDemoUsecase {
 	return &demoServerImpl{demo, logger, tx}
 }
 

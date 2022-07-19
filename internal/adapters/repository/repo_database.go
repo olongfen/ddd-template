@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"ddd-template/internal/app"
 	"ddd-template/internal/common/conf"
 	"ddd-template/internal/common/xlog"
 	"ddd-template/internal/domain"
@@ -30,7 +31,7 @@ type Data struct {
 
 type contextTxKey struct{}
 
-func NewTransaction(d *Data) domain.ITransaction {
+func NewTransaction(d *Data) app.ITransaction {
 	return d
 }
 
