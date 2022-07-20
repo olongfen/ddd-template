@@ -10,7 +10,7 @@
 - deployment 部署脚本
 - docs 文档
 - internal
-    - infrastructure 基础设施
+    - infra 基础设施
         - mock mock代码
     - app 
         - controller
