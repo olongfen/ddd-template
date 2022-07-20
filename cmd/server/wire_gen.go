@@ -7,10 +7,10 @@
 package main
 
 import (
-	"ddd-template/internal/adapters/repository"
-	"ddd-template/internal/adapters/restful/xfiber"
-	"ddd-template/internal/adapters/rpcx"
 	"ddd-template/internal/app"
+	"ddd-template/internal/app/controller/restful/xfiber"
+	"ddd-template/internal/app/controller/rpcx"
+	"ddd-template/internal/app/repository"
 	"ddd-template/internal/app/service"
 	"ddd-template/internal/app/usecase"
 	"ddd-template/internal/initialization"

@@ -13,5 +13,5 @@ proto_build:
 mockgen:
 	cd ./internal && for file in `egrep -rnl "type.*?interface" ./domain | grep -v "_test" `; do \
 		echo $$file ; \
-		cd .. && mockgen -destination="./internal/adapters/mock/$$file" -source="./internal/$$file" && cd ./internal ; \
+		cd .. && mockgen -destination="./internal/infrastruct/mock/$$file" -source="./internal/$$file" && cd ./internal ; \
 	done

@@ -10,14 +10,15 @@
 - deployment 部署脚本
 - docs 文档
 - internal
-    - adapters
+    - infrastructure 基础设施
         - mock mock代码
-        - repository 数据存储接口实现
-        - restful http接口实现
-        - rpcx rpc接口实现
     - app 
-        - service http&rpc服务接口实现
-        - usecase 业务逻辑接口实现
+        - controller
+           - restful http接口实现
+           - rpcx rpc接口实现
+      - repository 数据存储接口实现
+      - service http&rpc服务接口实现
+      - usecase 业务逻辑接口实现
     - common 公用包
     - domain 领域设计
 - third_party protoc第三方依赖

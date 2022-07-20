@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 	v1 "ddd-template/api/v1"
-	mock_domain "ddd-template/internal/adapters/mock/domain"
 	"ddd-template/internal/domain"
+	mock_domain "ddd-template/internal/infrastructure/mock/domain"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"

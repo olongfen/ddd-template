@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	mock_domain "ddd-template/internal/adapters/mock/domain"
+	mock_domain "ddd-template/internal/infrastructure/mock/domain"
 
 	"ddd-template/internal/domain"
 
