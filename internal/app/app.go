@@ -6,20 +6,15 @@ import (
 )
 
 type Application struct {
-	http HttpServer
-	grpc GrpcServer
+	http HTTPServer
+	grpc RPCServer
 	log  *zap.Logger
 }
 
-func NewApp(rest HttpServer, rpc GrpcServer, logger *zap.Logger) *Application {
+func NewApp(rest HTTPServer, rpc RPCServer, logger *zap.Logger) *Application {
 	return &Application{http: rest, grpc: rpc, log: logger}
 }
 
-//
-// Run
-// #Description: run server
-// #receiver a *Application
-// #param cfg conf.Server
 func (a *Application) Run() {
 	var (
 		wg  = sync.WaitGroup{}
@@ -29,14 +24,14 @@ func (a *Application) Run() {
 	go func() {
 		defer wg.Done()
 
-		if err = a.http.Run(); err != nil {
+		if err = a.http.Handlers().Run(); err != nil {
 			a.log.Fatal(err.Error())
 		}
 	}()
 	go func() {
 		defer wg.Done()
 
-		if err = a.grpc.Run(); err != nil {
+		if err = a.grpc.Handlers().Run(); err != nil {
 			a.log.Fatal(err.Error())
 		}
 	}()

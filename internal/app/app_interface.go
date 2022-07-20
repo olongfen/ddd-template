@@ -2,12 +2,14 @@ package app
 
 import "context"
 
-type HttpServer interface {
+type HTTPServer interface {
 	Run() error
+	Handlers() HTTPServer
 }
 
-type GrpcServer interface {
+type RPCServer interface {
 	Run() error
+	Handlers() RPCServer
 }
 
 type ITransaction interface {

@@ -18,7 +18,16 @@ type HTTPServer struct {
 	demo   v1.GreeterServer
 }
 
-func NewHTTPServer(demo v1.GreeterServer, cfg *conf.Configs) app.HttpServer {
+func (h *HTTPServer) Handlers() app.HTTPServer {
+	h.engine.Use(cors.New())
+	h.engine.Get("/api/v1/docs/*", fiberSwagger.WrapHandler)
+	xlog.Log.Sugar().Infof("http server run in: %s", h.cfg.Addr)
+	group1 := h.engine.Group("/")
+	v1.RegisterGreeterFiberHTTPServer(group1, h.demo)
+	return h
+}
+
+func NewHTTPServer(demo v1.GreeterServer, cfg *conf.Configs) app.HTTPServer {
 	h := new(HTTPServer)
 	c := fiber.Config{
 		JSONEncoder: jsoniter.Marshal,
@@ -40,10 +49,5 @@ func(ctx *fiber.Ctx) error {
 */
 
 func (h *HTTPServer) Run() error {
-	h.engine.Use(cors.New())
-	h.engine.Get("/api/v1/docs/*", fiberSwagger.WrapHandler)
-	xlog.Log.Sugar().Infof("http server run in: %s", h.cfg.Addr)
-	group1 := h.engine.Group("/")
-	v1.RegisterGreeterFiberHTTPServer(group1, h.demo)
 	return h.engine.Listen(h.cfg.Addr)
 }

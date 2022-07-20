@@ -13,22 +13,10 @@ type demoServerImpl struct {
 	tx   app.ITransaction
 }
 
-//
-// NewDemoServer
-// #Description: new
-// #param demo dependency.IDemoRepo
-// #return IDemoUsecase
 func NewDemoServer(demo domain.IDemoRepo, tx app.ITransaction, logger *zap.Logger) domain.IDemoUsecase {
 	return &demoServerImpl{demo, logger, tx}
 }
 
-//
-// SayHello
-// #Description: demo server use case
-// #receiver s *demoServerImpl
-// #param ctx context.Context
-// #param msg string
-// #return string
 func (s *demoServerImpl) SayHello(ctx context.Context, msg string) (res *domain.Demo, err error) {
 	var (
 		data *domain.Demo

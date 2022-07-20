@@ -17,7 +17,16 @@ type HTTPServer struct {
 	demo   v1.GreeterServer
 }
 
-func NewHTTPServer(demo v1.GreeterServer, cfg *conf.Configs) app.HttpServer {
+func (h *HTTPServer) Handlers() app.HTTPServer {
+	h.engine.Use(corsHandler(), logger())
+	h.engine.GET("/api/v1/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	xlog.Log.Sugar().Infof("http server run in: %s", h.cfg.Addr)
+	group1 := h.engine.Group("/")
+	v1.RegisterGreeterGinHTTPServer(group1, h.demo)
+	return h
+}
+
+func NewHTTPServer(demo v1.GreeterServer, cfg *conf.Configs) app.HTTPServer {
 	h := new(HTTPServer)
 	if !cfg.Debug {
 		gin.SetMode(gin.ReleaseMode)
@@ -31,10 +40,5 @@ func NewHTTPServer(demo v1.GreeterServer, cfg *conf.Configs) app.HttpServer {
 }
 
 func (h *HTTPServer) Run() error {
-	h.engine.Use(corsHandler(), logger())
-	h.engine.GET("/api/v1/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	xlog.Log.Sugar().Infof("http server run in: %s", h.cfg.Addr)
-	group1 := h.engine.Group("/")
-	v1.RegisterGreeterGinHTTPServer(group1, h.demo)
 	return h.engine.Run(h.cfg.Addr)
 }

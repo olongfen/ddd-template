@@ -28,7 +28,7 @@ func NewServer(confPath string) (*app.Application, error) {
 	iDemoUsecase := usecase.NewDemoServer(iDemoRepo, iTransaction, logger)
 	greeterServer := service.NewDemoService(iDemoUsecase, logger)
 	httpServer := xfiber.NewHTTPServer(greeterServer, configs)
-	grpcServer := rpcx.NewGrpc(greeterServer, configs)
-	application := app.NewApp(httpServer, grpcServer, logger)
+	rpcServer := rpcx.NewGrpc(greeterServer, configs)
+	application := app.NewApp(httpServer, rpcServer, logger)
 	return application, nil
 }
