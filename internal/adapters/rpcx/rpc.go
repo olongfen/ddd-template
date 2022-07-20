@@ -22,6 +22,10 @@ type GrpcServer struct {
 	log         *zap.Logger
 }
 
+func (g *GrpcServer) Stop() {
+	g.server.Stop()
+}
+
 func (g *GrpcServer) Handlers() app.RPCServer {
 	addr := fmt.Sprintf("%s:%d", g.cfg.Host, g.cfg.Port)
 	lis, err := net.Listen("tcp", addr)

@@ -38,3 +38,8 @@ func (a *Application) Run() {
 	wg.Wait()
 	return
 }
+
+func (a *Application) Close() error {
+	a.grpc.Stop()
+	return nil
+}

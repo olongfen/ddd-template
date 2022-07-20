@@ -9,6 +9,7 @@ type HTTPServer interface {
 
 type RPCServer interface {
 	Run() error
+	Stop()
 	Handlers() RPCServer
 }
 
