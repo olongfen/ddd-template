@@ -5,21 +5,21 @@ import (
 	"github.com/pkg/errors"
 )
 
-var _ BusinessError = (*businessError)(nil)
+var _ BizError = (*bizError)(nil)
 
-type BusinessError interface {
+type BizError interface {
 	// i 为了避免被其他包实现
 	i()
 
 	// WithError 设置错误信息
-	WithError(err error) BusinessError
+	WithError(err error) BizError
 
 	// WithAlert 设置告警通知
-	WithAlert() BusinessError
-	WithSupplementMsg(msg string) BusinessError
+	WithAlert() BizError
+	WithSupplementMsg(msg string) BizError
 
 	// Code 获取业务码
-	Code() int
+	Code() BizCode
 
 	// Message 获取错误描述
 	Message() string
@@ -33,58 +33,58 @@ type BusinessError interface {
 	IsAlert() bool
 }
 
-type businessError struct {
-	code          int    // 业务码
-	message       string // 错误描述
-	supplementMsg string // 补充的错误描述
-	stackError    error  // 含有堆栈信息的错误
-	isAlert       bool   // 是否告警通知
+type bizError struct {
+	code    BizCode // 业务码
+	message string  // 错误描述
+	sup     string  // 补充的错误描述
+	sta     error   // 含有堆栈信息的错误
+	isAlert bool    // 是否告警通知
 }
 
-func Error(businessCode int) BusinessError {
-	return &businessError{
-		code:    businessCode,
-		message: Text(businessCode),
+func NewError(bizCode BizCode) BizError {
+	return &bizError{
+		code:    bizCode,
+		message: Text(bizCode),
 		isAlert: false,
 	}
 }
 
-func (e *businessError) i() {}
+func (e *bizError) i() {}
 
-func (e *businessError) Error() string {
-	if e.stackError != nil {
-		return fmt.Sprintf(`stack: %s, business: %s, supplement: %s`, e.stackError.Error(), e.message, e.supplementMsg)
+func (e *bizError) Error() string {
+	if e.sta != nil {
+		return fmt.Sprintf(`sta: %s\n biz: %s\n sup: %s\n`, e.sta.Error(), e.message, e.sup)
 	}
-	return fmt.Sprintf(`business: %s,supplement: %s`, e.message, e.supplementMsg)
+	return fmt.Sprintf(`biz: %s\n sup: %s\n`, e.message, e.sup)
 }
 
-func (e *businessError) WithSupplementMsg(msg string) BusinessError {
-	e.supplementMsg = msg
+func (e *bizError) WithSupplementMsg(msg string) BizError {
+	e.sup = msg
 	return e
 }
 
-func (e *businessError) WithError(err error) BusinessError {
-	e.stackError = errors.WithStack(err)
+func (e *bizError) WithError(err error) BizError {
+	e.sta = errors.WithStack(err)
 	return e
 }
 
-func (e *businessError) WithAlert() BusinessError {
+func (e *bizError) WithAlert() BizError {
 	e.isAlert = true
 	return e
 }
 
-func (e *businessError) Code() int {
+func (e *bizError) Code() BizCode {
 	return e.code
 }
 
-func (e *businessError) Message() string {
+func (e *bizError) Message() string {
 	return e.message
 }
 
-func (e *businessError) StackError() error {
-	return e.stackError
+func (e *bizError) StackError() error {
+	return e.sta
 }
 
-func (e *businessError) IsAlert() bool {
+func (e *bizError) IsAlert() bool {
 	return e.isAlert
 }

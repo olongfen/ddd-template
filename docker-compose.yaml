@@ -13,4 +13,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=business
       - POSTGRES_DB=business
+      - TZ=Asia/Shanghai
+      - PGTZ=Asia/Shanghai
       - ALLOW_IP_RANGE=0.0.0.0/0

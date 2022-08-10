@@ -24,17 +24,15 @@ type GreeterFiberHTTPServer interface {
 
 func RegisterGreeterFiberHTTPServer(r v2.Router, srv GreeterFiberHTTPServer) {
 	s := GreeterFiber{
-		server:   srv,
-		router:   r,
-		validate: v10.New(),
+		server: srv,
+		router: r,
 	}
 	s.RegisterService()
 }
 
 type GreeterFiber struct {
-	server   GreeterFiberHTTPServer
-	router   v2.Router
-	validate *v10.Validate
+	server GreeterFiberHTTPServer
+	router v2.Router
 }
 
 func (s *GreeterFiber) SayHello_0(ctx *v2.Ctx) error {
@@ -48,7 +46,8 @@ func (s *GreeterFiber) SayHello_0(ctx *v2.Ctx) error {
 		return response.FiberRespFailFunc(ctx, err.Error())
 	}
 
-	err := s.validate.Struct(in)
+	validate := v10.New()
+	err := validate.Struct(in)
 	if err != nil {
 		return response.FiberRespFailFunc(ctx, err.Error())
 	}
