@@ -1,11 +1,33 @@
 {
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "schemes": [
+        "HTTP",
+        "HTTPS"
+    ],
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "demo",
+        "title": "demo",
+        "contact": {
+            "name": "olongfen",
+            "email": "olongfen@gmail.com"
+        },
+        "version": "1.0"
     },
+    "basePath": "/api/v1",
     "paths": {
-        "/api/v1/demo/{id}": {
+        "/demo/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "hello",
                 "tags": [
                     "demo"
@@ -78,6 +100,13 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

@@ -1,3 +1,6 @@
+basePath: /api/v1
+consumes:
+- application/json
 definitions:
   response.Response:
     properties:
@@ -16,9 +19,14 @@ definitions:
         type: string
     type: object
 info:
-  contact: {}
+  contact:
+    email: olongfen@gmail.com
+    name: olongfen
+  description: demo
+  title: demo
+  version: "1.0"
 paths:
-  /api/v1/demo/{id}:
+  /demo/{id}:
     get:
       description: hello
       parameters:
@@ -45,7 +53,19 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - BearerAuth: []
       summary: hello
       tags:
       - demo
+produces:
+- application/json
+schemes:
+- HTTP
+- HTTPS
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

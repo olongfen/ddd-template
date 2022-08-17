@@ -32,6 +32,18 @@ func initAction(c *cli.Context) (err error) {
 	return
 }
 
+// @title demo
+// @version 1.0
+// @description demo
+// @Schemes HTTP HTTPS
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @Accept application/json
+// @Produce application/json
+// @contact.name olongfen
+// @contact.email olongfen@gmail.com
+// @BasePath /api/v1
 func main() {
 	app := cli.NewApp()
 	app.Action = initAction

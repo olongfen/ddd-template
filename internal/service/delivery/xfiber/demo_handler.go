@@ -5,6 +5,7 @@ import (
 	"ddd-template/internal/common/utils"
 	"ddd-template/internal/domain"
 	"ddd-template/internal/schema"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -26,8 +27,9 @@ func (d *DemoHandler) Handler(f fiber.Router) {
 // @Summary hello
 // @Description hello
 // @Param id path int true "id"
-// @router /api/v1/demo/{id} [get]
+// @router /demo/{id} [get]
 // @Success 200 {object} response.Response{data=schema.DemoResp}
+// @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
 func (d *DemoHandler) Get(ctx *fiber.Ctx) (err error) {
@@ -36,6 +38,7 @@ func (d *DemoHandler) Get(ctx *fiber.Ctx) (err error) {
 		data  schema.DemoResp
 		id    int
 	)
+	fmt.Println("aaaaaaa", ctx.GetReqHeaders())
 	defer func() {
 		if err != nil {
 			err = response.RespFailFunc(ctx, err.Error())
