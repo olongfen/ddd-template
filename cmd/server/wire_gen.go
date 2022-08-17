@@ -8,17 +8,15 @@ package main
 
 import (
 	"ddd-template/internal/app"
-	"ddd-template/internal/app/controller/restful/xfiber"
-	"ddd-template/internal/app/controller/rpcx"
-	"ddd-template/internal/app/repository"
-	"ddd-template/internal/app/service"
-	"ddd-template/internal/app/usecase"
 	"ddd-template/internal/initialization"
+	"ddd-template/internal/service/delivery/xfiber"
+	"ddd-template/internal/service/repository"
+	"ddd-template/internal/service/usecase"
 )
 
 // Injectors from wire.go:
 
-func NewServer(confPath string) (*app.Application, error) {
+func NewServer(confPath string) error {
 	configs := initialization.InitConf(confPath)
 	logger := initialization.InitLog(configs)
 	db := repository.NewDB(configs, logger)
@@ -26,9 +24,7 @@ func NewServer(confPath string) (*app.Application, error) {
 	iDemoRepo := repository.NewDemoDependency(data, logger)
 	iTransaction := repository.NewTransaction(data)
 	iDemoUsecase := usecase.NewDemoServer(iDemoRepo, iTransaction, logger)
-	greeterServer := service.NewDemoService(iDemoUsecase, logger)
-	httpServer := xfiber.NewHTTPServer(greeterServer, configs)
-	rpcServer := rpcx.NewGrpc(greeterServer, configs)
-	application := app.NewApp(httpServer, rpcServer, logger)
-	return application, nil
+	demoHandler := xfiber.NewDemoHandler(iDemoUsecase)
+	error2 := app.NewApp(configs, logger, demoHandler)
+	return error2
 }

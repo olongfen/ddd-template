@@ -5,16 +5,14 @@ package main
 
 import (
 	"ddd-template/internal/app"
-	"ddd-template/internal/app/controller/restful/xfiber"
-	"ddd-template/internal/app/controller/rpcx"
-	"ddd-template/internal/app/repository"
-	"ddd-template/internal/app/service"
-	"ddd-template/internal/app/usecase"
 	"ddd-template/internal/initialization"
+	"ddd-template/internal/service/delivery/xfiber"
+	"ddd-template/internal/service/repository"
+	"ddd-template/internal/service/usecase"
 	"github.com/google/wire"
 )
 
-func NewServer(confPath string) (*app.Application, error) {
-	panic(wire.Build(app.Set, rpcx.Set, xfiber.Set, service.Set, usecase.Set,
+func NewServer(confPath string) error {
+	panic(wire.Build(app.Set, xfiber.Set, usecase.Set,
 		repository.Set, initialization.Set))
 }

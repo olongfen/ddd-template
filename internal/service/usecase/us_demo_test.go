@@ -2,14 +2,14 @@ package usecase
 
 import (
 	"context"
-	mock_domain "ddd-template/internal/infrastructure/mock/domain"
+	"ddd-template/internal/common/utils"
+	mock_domain "ddd-template/internal/infra/mock/domain"
 
 	"ddd-template/internal/domain"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
-	"gorm.io/gorm"
 	"testing"
 	"time"
 )
@@ -22,10 +22,10 @@ func TestDemoServer_SayHello(t *testing.T) {
 	tx := mock_domain.NewMockITransaction(mockCtl)
 	srv := NewDemoServer(mockRepo, tx, logger)
 	data := &domain.Demo{
-		Model: gorm.Model{
+		Model: utils.Model{
 			ID:        1,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
+			CreatedAt: utils.JSONTime{Time: time.Now()},
+			UpdatedAt: utils.JSONTime{Time: time.Now()},
 		},
 		Message: "888 " + "hello",
 	}

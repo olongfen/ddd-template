@@ -1,0 +1,31 @@
+definitions:
+  response.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message: {}
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/demo/hello:
+    get:
+      description: hello
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: hello
+      tags:
+      - demo
+swagger: "2.0"

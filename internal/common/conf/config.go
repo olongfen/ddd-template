@@ -1,13 +1,9 @@
 package conf
 
 type Configs struct {
-	Server      Server
+	HTTP        HTTP
 	Database    Database
-	JaegerHost  string
 	Environment string
-	Debug       bool
-	ServiceId   int32
-	ServiceName string
 	Language    string
 	Log         Log
 }
@@ -30,25 +26,6 @@ type HTTP struct {
 	Addr string
 	Host string
 	Port int
-}
-
-type GRpc struct {
-	PEMFile string
-	KeyFile string
-	TLS     bool
-	Host    string
-	Port    int
-	Clients []GRPCClient
-}
-
-type GRPCClient struct {
-	AppID  string
-	AppKey string
-}
-
-type Server struct {
-	Http HTTP
-	GRpc GRpc
 }
 
 func Get() *Configs {

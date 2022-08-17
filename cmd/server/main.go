@@ -1,7 +1,6 @@
 package main
 
 import (
-	"ddd-template/internal/app"
 	"ddd-template/internal/common/xlog"
 	"github.com/urfave/cli/v2"
 	"log"
@@ -26,13 +25,10 @@ var (
 
 func initAction(c *cli.Context) (err error) {
 	var flagconf = c.String(confFlag)
-	var application *app.Application
 	defer func() {
 		_ = xlog.Log.Sync()
-		_ = application.Close()
 	}()
-	app, _ := NewServer(flagconf)
-	app.Run()
+	NewServer(flagconf)
 	return
 }
 
