@@ -23,7 +23,7 @@ func (d *DemoHandler) Handler(f fiber.Router) {
 // @tags demo
 // @Summary hello
 // @Description hello
-// @Param enumint query int false "int emums"   Enums(1, 2, 3)
+// @Param type query int false "int emums"   Enums(1, 2, 3)
 // @router /api/v1/demo/hello [get]
 // @Success 200 {object} response.Response
 // @Failure 404 {object} string

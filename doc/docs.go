@@ -32,7 +32,7 @@ const docTemplate = `{
                         ],
                         "type": "integer",
                         "description": "int emums",
-                        "name": "enumint",
+                        "name": "type",
                         "in": "query"
                     }
                 ],

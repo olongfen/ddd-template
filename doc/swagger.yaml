@@ -19,7 +19,7 @@ paths:
         - 2
         - 3
         in: query
-        name: enumint
+        name: type
         type: integer
       responses:
         "200":
