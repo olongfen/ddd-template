@@ -1,6 +1,8 @@
 package response
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
 type Response struct {
 	Code    int         `json:"code"`
@@ -8,16 +10,16 @@ type Response struct {
 	Message interface{} `json:"message"`
 }
 
-type FiberRespFunc func(ctx *fiber.Ctx, data interface{}, status ...int) error
+type Func func(ctx *fiber.Ctx, data interface{}, status ...int) error
 
-func SetFiberRespSuccessFunc(fc FiberRespFunc) {
-	FiberRespSuccessFunc = fc
+func SetResponseSuccessFunc(fc Func) {
+	RespSuccessFunc = fc
 }
-func SetFiberRespFailFunc(fc FiberRespFunc) {
-	FiberRespFailFunc = fc
+func SetResponseFailFunc(fc Func) {
+	RespFailFunc = fc
 }
 
-var FiberRespSuccessFunc FiberRespFunc = func(ctx *fiber.Ctx, data interface{}, status ...int) error {
+var RespSuccessFunc Func = func(ctx *fiber.Ctx, data interface{}, status ...int) error {
 	var (
 		code = 200
 	)
@@ -27,12 +29,12 @@ var FiberRespSuccessFunc FiberRespFunc = func(ctx *fiber.Ctx, data interface{}, 
 	return ctx.Status(code).JSON(&Response{Code: 0, Data: data})
 }
 
-var FiberRespFailFunc FiberRespFunc = func(ctx *fiber.Ctx, data interface{}, status ...int) error {
+var RespFailFunc Func = func(ctx *fiber.Ctx, msg interface{}, status ...int) error {
 	var (
 		code = 200
 	)
 	if len(status) > 0 {
 		code = status[0]
 	}
-	return ctx.Status(code).JSON(&Response{Code: -1, Data: data})
+	return ctx.Status(code).JSON(&Response{Code: -1, Message: msg})
 }

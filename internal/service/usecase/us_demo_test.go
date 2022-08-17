@@ -29,16 +29,17 @@ func TestDemoServer_SayHello(t *testing.T) {
 		},
 		Message: "888 " + "hello",
 	}
-	mockRepo.EXPECT().SayHello(context.Background(), "1818").Return(data)
+	ctx := context.Background()
+	mockRepo.EXPECT().Get(gomock.Any(), gomock.Any()).DoAndReturn(func(ctx context.Context, d *domain.Demo) error {
+		*d = *data
+		return nil
+	})
 	var (
 		res *domain.Demo
 		err error
 	)
-	if res, err = srv.SayHello(context.Background(), "1818"); err != nil {
+	if res, err = srv.Get(ctx, 1); err != nil {
 		t.Fatal(err)
 	}
-	assert.EqualValues(t, data.Message, res.Message)
-	assert.EqualValues(t, data.ID, res.ID)
-	assert.EqualValues(t, data.UpdatedAt, res.UpdatedAt)
-	assert.EqualValues(t, data.CreatedAt, res.CreatedAt)
+	assert.EqualValues(t, *data, *res)
 }

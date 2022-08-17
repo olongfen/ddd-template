@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/demo/hello": {
+        "/api/v1/demo/{id}": {
             "get": {
                 "description": "hello",
                 "tags": [
@@ -25,22 +25,30 @@ const docTemplate = `{
                 "summary": "hello",
                 "parameters": [
                     {
-                        "enum": [
-                            1,
-                            2,
-                            3
-                        ],
                         "type": "integer",
-                        "description": "int emums",
-                        "name": "type",
-                        "in": "query"
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.DemoResp"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "404": {
@@ -68,6 +76,19 @@ const docTemplate = `{
                 },
                 "data": {},
                 "message": {}
+            }
+        },
+        "schema.DemoResp": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "integer"
+                },
+                "message": {
+                    "description": "消息",
+                    "type": "string"
+                }
             }
         }
     }

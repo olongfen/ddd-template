@@ -6,11 +6,11 @@ import (
 )
 
 type IDemoRepo interface {
-	SayHello(ctx context.Context, msg string) *Demo
+	Get(ctx context.Context, demo *Demo) error
 }
 
-type IDemoUsecase interface {
-	SayHello(ctx context.Context, msg string) (*Demo, error)
+type IDemoUseCase interface {
+	Get(ctx context.Context, id uint) (demo *Demo, err error)
 }
 
 type Demo struct {

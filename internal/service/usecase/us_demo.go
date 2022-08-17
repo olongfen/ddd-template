@@ -13,16 +13,16 @@ type demoServerImpl struct {
 	tx   app.ITransaction
 }
 
-func NewDemoServer(demo domain.IDemoRepo, tx app.ITransaction, logger *zap.Logger) domain.IDemoUsecase {
+func NewDemoServer(demo domain.IDemoRepo, tx app.ITransaction, logger *zap.Logger) domain.IDemoUseCase {
 	return &demoServerImpl{demo, logger, tx}
 }
 
-func (s *demoServerImpl) SayHello(ctx context.Context, msg string) (res *domain.Demo, err error) {
-	var (
-		data *domain.Demo
-	)
-	data = s.repo.SayHello(ctx, msg)
-	res = data
+func (s *demoServerImpl) Get(ctx context.Context, id uint) (ret *domain.Demo, err error) {
+	ret = new(domain.Demo)
+	ret.ID = id
+	if err = s.repo.Get(ctx, ret); err != nil {
+		return
+	}
 	return
 
 }

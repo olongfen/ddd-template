@@ -6,26 +6,37 @@ definitions:
       data: {}
       message: {}
     type: object
+  schema.DemoResp:
+    properties:
+      createdAt:
+        description: 创建时间
+        type: integer
+      message:
+        description: 消息
+        type: string
+    type: object
 info:
   contact: {}
 paths:
-  /api/v1/demo/hello:
+  /api/v1/demo/{id}:
     get:
       description: hello
       parameters:
-      - description: int emums
-        enum:
-        - 1
-        - 2
-        - 3
-        in: query
-        name: type
+      - description: id
+        in: path
+        name: id
+        required: true
         type: integer
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.Response'
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.DemoResp'
+              type: object
         "404":
           description: Not Found
           schema:
