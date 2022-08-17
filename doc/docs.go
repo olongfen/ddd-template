@@ -23,6 +23,19 @@ const docTemplate = `{
                     "demo"
                 ],
                 "summary": "hello",
+                "parameters": [
+                    {
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ],
+                        "type": "integer",
+                        "description": "int emums",
+                        "name": "enumint",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

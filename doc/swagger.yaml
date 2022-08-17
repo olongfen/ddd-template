@@ -12,6 +12,15 @@ paths:
   /api/v1/demo/hello:
     get:
       description: hello
+      parameters:
+      - description: int emums
+        enum:
+        - 1
+        - 2
+        - 3
+        in: query
+        name: enumint
+        type: integer
       responses:
         "200":
           description: OK
