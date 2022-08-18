@@ -47,8 +47,8 @@ func TestDemoRepo_SayHello(t *testing.T) {
 		Message: "wwwaaa",
 	}
 	rows := sqlmock.NewRows([]string{"id", "created_at", "message"}).AddRow(demo.ID, demo.CreatedAt, demo.Message)
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "demo_demos" WHERE "demo_demos"."deleted_at" IS NULL AND
-"demo_demos"."id" = $1 ORDER BY "demo_demos"."id" LIMIT 1
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "demos" WHERE "demos"."deleted_at" IS NULL AND
+"demos"."id" = $1 ORDER BY "demos"."id" LIMIT 1
 `)).WithArgs(1).WillReturnRows(rows)
 	_demo := new(domain.Demo)
 	_demo.ID = 1

@@ -22,6 +22,7 @@ func (d *DemoHandler) Handler(f fiber.Router) {
 }
 
 // Get
+// @Id demo-get-one
 // @tags demo
 // @Summary hello
 // @Description hello

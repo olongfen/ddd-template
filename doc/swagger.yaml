@@ -29,6 +29,7 @@ paths:
   /demo/{id}:
     get:
       description: hello
+      operationId: demo-get-one
       parameters:
       - description: id
         in: path

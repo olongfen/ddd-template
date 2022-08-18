@@ -18,10 +18,10 @@ import (
 // GormSpanKey 包内静态变量
 const GormSpanKey = "__gorm_span"
 const (
-	tableNamePrefix        = "demo_"
-	RepositoryMethodCtxTag = "demo_repository_method"
-	CallBackBeforeName     = "demo_opentracing:before"
-	CallBackAfterName      = "demo_opentracing:after"
+	tableNamePrefix        = ""
+	RepositoryMethodCtxTag = "repository_method"
+	CallBackBeforeName     = "opentracing:before"
+	CallBackAfterName      = "opentracing:after"
 )
 
 type Data struct {
@@ -103,7 +103,7 @@ type OpentracingPlugin struct {
 var _ gorm.Plugin = &OpentracingPlugin{}
 
 func (op *OpentracingPlugin) Name() string {
-	return "informationAnalysisOpentracingPlugin"
+	return "opentracingPlugin"
 }
 
 func (op *OpentracingPlugin) Initialize(db *gorm.DB) (err error) {

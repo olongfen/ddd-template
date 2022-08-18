@@ -37,6 +37,7 @@ const docTemplate = `{
                     "demo"
                 ],
                 "summary": "hello",
+                "operationId": "demo-get-one",
                 "parameters": [
                     {
                         "type": "integer",
