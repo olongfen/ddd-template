@@ -40,7 +40,7 @@ func InitLog(cfg *conf.Configs) *zap.Logger {
 	var (
 		logger *zap.Logger
 	)
-	if cfg.Environment == "dev" {
+	if cfg.Log.Debug {
 		logger = xlog.NewDevelopment()
 	} else {
 		logger = xlog.NewProduceLogger()

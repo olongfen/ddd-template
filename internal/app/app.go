@@ -3,6 +3,7 @@ package app
 import (
 	_ "ddd-template/doc"
 	"ddd-template/internal/common/conf"
+	"ddd-template/internal/common/response"
 	"ddd-template/internal/service/delivery/xfiber"
 	"ddd-template/internal/service/delivery/xfiber/middleware"
 	"github.com/gofiber/fiber/v2"
@@ -38,7 +39,9 @@ func (a *application) startHTTP() {
 	cfg := fiber.Config{}
 	cfg.JSONEncoder = jsoniter.Marshal
 	cfg.JSONDecoder = jsoniter.Unmarshal
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		ErrorHandler: response.ErrorHandler,
+	})
 	app.Use(middleware.New(middleware.Config{Logger: a.logger}))
 	v1 := app.Group("/api/v1")
 	v1.Get("/docs/*", fiberSwagger.WrapHandler)

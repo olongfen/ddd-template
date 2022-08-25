@@ -28,4 +28,6 @@ const (
 	IllegalCertificate BizCode = 40002
 	// IllegalParameter 非法参数
 	IllegalParameter BizCode = 40003
+	// RecordNotFound 数据不存在
+	RecordNotFound BizCode = 40004
 )

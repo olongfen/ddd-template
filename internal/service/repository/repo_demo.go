@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"ddd-template/internal/common/errorx"
 	"ddd-template/internal/domain"
 	"go.uber.org/zap"
 )
@@ -13,7 +14,7 @@ type demoRepo struct {
 
 func (d *demoRepo) Get(ctx context.Context, demo *domain.Demo) error {
 	if err := d.data.DB(ctx).First(demo).Error; err != nil {
-		return err
+		return errorx.HandlerRecordNotFound(err)
 	}
 	return nil
 }

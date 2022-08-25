@@ -1,6 +1,7 @@
 package xfiber
 
 import (
+	"ddd-template/internal/common/errorx"
 	"ddd-template/internal/common/response"
 	"ddd-template/internal/common/utils"
 	"ddd-template/internal/domain"
@@ -38,14 +39,9 @@ func (d *DemoHandler) Get(ctx *fiber.Ctx) (err error) {
 		data  schema.DemoResp
 		id    int
 	)
-	defer func() {
-		if err != nil {
-			err = response.RespFailFunc(ctx, err.Error())
-		} else {
-			err = response.RespSuccessFunc(ctx, data)
-		}
-	}()
+
 	if id, err = ctx.ParamsInt("id"); err != nil {
+		err = errorx.NewError(errorx.IllegalParameter).WithError(err)
 		return
 	}
 	hello, err = d.us.Get(ctx.UserContext(), uint(id))
@@ -55,5 +51,5 @@ func (d *DemoHandler) Get(ctx *fiber.Ctx) (err error) {
 	if err = utils.Copier(hello, &data); err != nil {
 		return
 	}
-	return
+	return response.SuccessFunc(ctx, data)
 }

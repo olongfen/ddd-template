@@ -86,7 +86,7 @@ func NewDB(c *conf.Configs, logger *zap.Logger) (res *gorm.DB) {
 		logger.Sugar().Fatal(err)
 		return
 	}
-	if conf.Get().Environment == "dev" {
+	if conf.Get().Database.Dev {
 		db = db.Debug()
 		err = db.AutoMigrate(&domain.Demo{})
 		if err != nil {

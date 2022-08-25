@@ -1,11 +1,11 @@
 package conf
 
 type Configs struct {
-	HTTP        HTTP
-	Database    Database
-	Environment string
-	Language    string
-	Log         Log
+	HTTP     HTTP
+	Database Database
+	Debug    bool
+	Language string
+	Log      Log
 }
 
 type Log struct {
@@ -15,11 +15,13 @@ type Log struct {
 	MaxBackups int
 	MaxAges    int
 	Compress   bool
+	Debug      bool
 }
 
 type Database struct {
 	Driver string
 	Source string
+	Dev    bool
 }
 
 type HTTP struct {
