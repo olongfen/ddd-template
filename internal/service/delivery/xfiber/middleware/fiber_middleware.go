@@ -76,7 +76,7 @@ func New(config Config) fiber.Handler {
 		}
 
 		formatErr := ""
-		if chainErr != nil {
+		if chainErr != nil && c.Response().StatusCode() != fiber.StatusOK {
 			formatErr = chainErr.Error()
 			fields = append(fields, zap.String("error", formatErr))
 			config.Logger.With(fields...).Error(formatErr)
