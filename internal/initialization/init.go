@@ -50,15 +50,15 @@ func InitConf(confPath string) *conf.Configs {
 		file.Close()
 	} else {
 		var (
-			oldBytes []byte
-			newBytes []byte
-			oldCfg   = new(conf.Configs)
+			fileBytes  []byte
+			viperBytes []byte
+			fileCfg    = new(conf.Configs)
 		)
 		// 读取旧文件含有的配置
-		if oldBytes, err = os.ReadFile(confPath); err != nil {
+		if fileBytes, err = os.ReadFile(confPath); err != nil {
 			log.Fatalln(err)
 		}
-		if err = yaml.Unmarshal(oldBytes, oldCfg); err != nil {
+		if err = yaml.Unmarshal(fileBytes, fileCfg); err != nil {
 			log.Fatalln(err)
 		}
 		if err = mapstructure.Decode(viper.AllSettings(), c); err != nil {
@@ -66,13 +66,13 @@ func InitConf(confPath string) *conf.Configs {
 		}
 
 		// 自动添加新的字段
-		if err = utils.Copier(oldCfg, c); err != nil {
+		if err = utils.Copier(fileCfg, c); err != nil {
 			log.Fatalln(err)
 		}
-		if newBytes, err = yaml.Marshal(c); err != nil {
+		if viperBytes, err = yaml.Marshal(c); err != nil {
 			log.Fatalln(err)
 		}
-		writeToFile(confPath, newBytes)
+		writeToFile(confPath, viperBytes)
 
 	}
 
