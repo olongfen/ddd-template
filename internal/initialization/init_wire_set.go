@@ -4,4 +4,4 @@ import (
 	"github.com/google/wire"
 )
 
-var Set = wire.NewSet(InitLog, InitConf)
+var Set = wire.NewSet(InitLog, InitConf, InitI18N)

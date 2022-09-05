@@ -4,10 +4,14 @@ import (
 	"ddd-template/internal/common/conf"
 	"ddd-template/internal/common/utils"
 	"ddd-template/internal/common/xlog"
+	"encoding/json"
+	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/mitchellh/mapstructure"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"golang.org/x/text/language"
 	"gopkg.in/yaml.v2"
 	"log"
 	"os"
@@ -105,4 +109,16 @@ func InitLog(cfg *conf.Configs) *zap.Logger {
 	}
 	xlog.Log = logger
 	return logger
+}
+
+func InitI18N(cfg *conf.Configs) *i18n.Bundle {
+	bundle := i18n.NewBundle(language.English)
+	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
+	if len(cfg.Languages) == 0 {
+		panic("languages must be definition")
+	}
+	for _, v := range cfg.Languages {
+		bundle.MustLoadMessageFile(fmt.Sprintf("internal/common/xi18n/active.%s.json", v))
+	}
+	return bundle
 }

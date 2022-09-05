@@ -42,7 +42,7 @@ func (a *application) startHTTP() {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: response.ErrorHandler,
 	})
-	app.Use(middleware.New(middleware.Config{Logger: a.logger}))
+	app.Use(middleware.Languages, middleware.New(middleware.Config{Logger: a.logger}))
 	v1 := app.Group("/api/v1")
 	v1.Get("/docs/*", fiberSwagger.WrapHandler)
 	for _, handler := range a.handlers {

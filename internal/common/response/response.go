@@ -1,7 +1,7 @@
 package response
 
 import (
-	"ddd-template/internal/common/errorx"
+	"ddd-template/internal/common/xi18n"
 	"ddd-template/internal/common/xlog"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
@@ -28,7 +28,7 @@ var ErrorHandler = func(ctx *fiber.Ctx, err error) error {
 	if e, ok := err.(*fiber.Error); ok {
 		code = e.Code
 	}
-	if e, ok := err.(errorx.BizError); ok {
+	if e, ok := err.(xi18n.BizError); ok {
 		xlog.Log.Error("Business Error", zap.Error(e.StackError()))
 		code = fiber.StatusOK
 	}

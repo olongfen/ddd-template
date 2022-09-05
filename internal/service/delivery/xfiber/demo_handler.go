@@ -1,20 +1,22 @@
 package xfiber
 
 import (
-	"ddd-template/internal/common/errorx"
 	"ddd-template/internal/common/response"
 	"ddd-template/internal/common/utils"
+	xi18n2 "ddd-template/internal/common/xi18n"
 	"ddd-template/internal/domain"
 	"ddd-template/internal/schema"
 	"github.com/gofiber/fiber/v2"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 type DemoHandler struct {
-	us domain.IDemoUseCase
+	us   domain.IDemoUseCase
+	i18n *i18n.Bundle
 }
 
-func NewDemoHandler(us domain.IDemoUseCase) *DemoHandler {
-	return &DemoHandler{us: us}
+func NewDemoHandler(us domain.IDemoUseCase, i18n *i18n.Bundle) *DemoHandler {
+	return &DemoHandler{us: us, i18n: i18n}
 }
 
 func (d *DemoHandler) Handler(f fiber.Router) {
@@ -39,9 +41,9 @@ func (d *DemoHandler) Get(ctx *fiber.Ctx) (err error) {
 		data  schema.DemoResp
 		id    int
 	)
-
+	lo := i18n.NewLocalizer(d.i18n, utils.GetLanguage(ctx.UserContext()))
 	if id, err = ctx.ParamsInt("id"); err != nil {
-		err = errorx.NewError(errorx.IllegalParameter).WithError(err)
+		err = xi18n2.NewError(lo.MustLocalize(&i18n.LocalizeConfig{MessageID: xi18n2.IllegalParameter})).WithError(err)
 		return
 	}
 	hello, err = d.us.Get(ctx.UserContext(), uint(id))

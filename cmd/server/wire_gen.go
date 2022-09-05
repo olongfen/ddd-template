@@ -21,10 +21,11 @@ func NewServer(confPath string) error {
 	logger := initialization.InitLog(configs)
 	db := repository.NewDB(configs, logger)
 	data := repository.NewData(db, logger)
-	iDemoRepo := repository.NewDemoDependency(data, logger)
+	bundle := initialization.InitI18N(configs)
+	iDemoRepo := repository.NewDemoDependency(data, bundle, logger)
 	iTransaction := repository.NewTransaction(data)
-	iDemoUsecase := usecase.NewDemoServer(iDemoRepo, iTransaction, logger)
-	demoHandler := xfiber.NewDemoHandler(iDemoUsecase)
+	iDemoUseCase := usecase.NewDemoServer(iDemoRepo, iTransaction, logger)
+	demoHandler := xfiber.NewDemoHandler(iDemoUseCase, bundle)
 	error2 := app.NewApp(configs, logger, demoHandler)
 	return error2
 }

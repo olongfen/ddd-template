@@ -1,11 +1,12 @@
 package conf
 
 type Configs struct {
-	HTTP     HTTP
-	Database Database
-	Debug    bool
-	Language string
-	Log      Log
+	HTTP      HTTP
+	Database  Database
+	Debug     bool
+	Language  string
+	Languages []string
+	Log       Log
 }
 
 type Log struct {

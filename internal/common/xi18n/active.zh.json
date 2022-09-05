@@ -1,0 +1,14 @@
+{
+  "illegal_access_token": {
+    "description":"token非法的描述",
+    "other": "非法token"
+  },
+  "illegal_certificate": {
+    "description":"证书文件非法",
+    "other": "非法凭证"
+  },
+  "illegal_parameter": {
+    "description":"前端传输的参数非法",
+    "other": "非法参数"
+  }
+}

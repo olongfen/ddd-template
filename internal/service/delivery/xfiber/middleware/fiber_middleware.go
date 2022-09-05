@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"bytes"
+	"ddd-template/internal/common/utils"
 	"encoding/json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/valyala/fasthttp"
@@ -199,4 +200,13 @@ func (h *headerBag) MarshalLogObject(enc zapcore.ObjectEncoder) error {
 	}
 
 	return nil
+}
+
+func Languages(ctx *fiber.Ctx) error {
+	val := ctx.GetReqHeaders()["x-language"]
+	if len(val) == 0 {
+		val = "en"
+	}
+	ctx.SetUserContext(utils.SetLanguage(ctx.UserContext(), val))
+	return ctx.Next()
 }
