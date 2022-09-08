@@ -9,6 +9,8 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/google/wire v0.5.0
 	github.com/json-iterator/go v1.1.12
+	github.com/mitchellh/mapstructure v1.4.3
+	github.com/nicksnyder/go-i18n/v2 v2.2.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.10.1
 	github.com/stretchr/testify v1.8.0
@@ -19,7 +21,9 @@ require (
 	go.opentelemetry.io/otel v1.4.1
 	go.opentelemetry.io/otel/trace v1.4.1
 	go.uber.org/zap v1.21.0
+	golang.org/x/text v0.3.7
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
+	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/postgres v1.3.1
 	gorm.io/gorm v1.23.1
 )
@@ -51,10 +55,8 @@ require (
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/nicksnyder/go-i18n/v2 v2.2.0 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
@@ -72,9 +74,7 @@ require (
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
 	golang.org/x/net v0.0.0-20220812174116-3211cb980234 // indirect
 	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab // indirect
-	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.12 // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
