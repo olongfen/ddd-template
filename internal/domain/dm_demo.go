@@ -16,5 +16,5 @@ type IDemoUseCase interface {
 type Demo struct {
 	utils.Model
 	Message string `json:"message"`
-	Name    string `json:"name" zh:"名称" gorm:"uniqueIndex"`
+	Name    string `json:"name"  gorm:"uniqueIndex"`
 }

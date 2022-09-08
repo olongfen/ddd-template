@@ -15,7 +15,6 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"reflect"
 	"strings"
 )
 
@@ -162,6 +161,7 @@ func after(db *gorm.DB) {
 	span.SetAttributes(attribute.Key("sql").String(db.Dialector.Explain(db.Statement.SQL.String(), db.Statement.Vars...)))
 
 }
+
 func handlerDBError(db *gorm.DB) {
 	if errors.Is(db.Error, gorm.ErrRecordNotFound) {
 		db.Error = errors.New("未发现记录")
@@ -171,24 +171,15 @@ func handlerDBError(db *gorm.DB) {
 	const (
 		code23505 = "23505"
 	)
-	vo := reflect.TypeOf(db.Statement.Model)
-	switch vo.Kind() {
-	case reflect.Ptr:
-		e := vo.Elem()
-		for i := 0; i < e.NumField(); i++ {
-			fd := e.Field(i)
-			if strings.Contains(msg, code23505) {
-				if strings.Contains(msg, snakeString(fd.Name)) {
-					db.Error = fmt.Errorf(`%s已经存在`, fd.Tag.Get("zh"))
-				}
+	for _, v := range db.Statement.Schema.DBNames {
+		if strings.Contains(msg, code23505) && strings.Contains(msg, v) {
+			field := db.Statement.Schema.FieldsByDBName[v]
+			tagZH := field.Tag.Get("zh")
+			if len(tagZH) == 0 {
+				tagZH = fmt.Sprintf(`%v`, db.Statement.ReflectValue.FieldByName(field.Name))
 			}
-
+			db.Error = fmt.Errorf("%s 已被使用", tagZH)
 		}
-	}
-
-	switch db.Statement.Model.(type) {
-	case *domain.Demo:
-
 	}
 }
 

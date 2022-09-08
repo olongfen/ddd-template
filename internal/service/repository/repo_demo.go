@@ -14,7 +14,7 @@ type demoRepo struct {
 }
 
 func (d *demoRepo) Get(ctx context.Context, demo *domain.Demo) error {
-	if err := d.data.DB(ctx).First(demo).Error; err != nil {
+	if err := d.data.DB(ctx).Create(demo).Error; err != nil {
 		return err
 	}
 	return nil
