@@ -1,11 +1,10 @@
-package repository
+package respository
 
 import (
 	"context"
-	"ddd-template/internal/app"
-	"ddd-template/internal/common/conf"
-	"ddd-template/internal/common/xlog"
+	"ddd-template/internal/config"
 	"ddd-template/internal/domain"
+	"ddd-template/pkg/xlog"
 	"fmt"
 	"github.com/pkg/errors"
 	"go.opentelemetry.io/otel"
@@ -34,7 +33,7 @@ type Data struct {
 
 type contextTxKey struct{}
 
-func NewTransaction(d *Data) app.ITransaction {
+func NewTransaction(d *Data) domain.ITransaction {
 	return d
 }
 
@@ -61,7 +60,7 @@ func NewData(db *gorm.DB, logger *zap.Logger) (ret *Data) {
 }
 
 // NewDB new
-func NewDB(c *conf.Configs, logger *zap.Logger) (res *gorm.DB) {
+func NewDB(c *config.Configs, logger *zap.Logger) (res *gorm.DB) {
 	var (
 		err        error
 		db         *gorm.DB
@@ -89,9 +88,9 @@ func NewDB(c *conf.Configs, logger *zap.Logger) (res *gorm.DB) {
 		logger.Sugar().Fatal(err)
 		return
 	}
-	if conf.Get().Database.Dev {
+	if config.Get().Database.Dev {
 		db = db.Debug()
-		err = db.AutoMigrate(&domain.Demo{})
+		err = db.AutoMigrate(&User{})
 		if err != nil {
 			xlog.Log.Sugar().Warn(err)
 			err = nil

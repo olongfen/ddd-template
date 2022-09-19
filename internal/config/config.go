@@ -1,4 +1,4 @@
-package conf
+package config
 
 type Configs struct {
 	HTTP      HTTP

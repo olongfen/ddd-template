@@ -2,7 +2,7 @@ package xlog
 
 import (
 	"context"
-	"ddd-template/internal/common/conf"
+	"ddd-template/internal/config"
 	"errors"
 	"fmt"
 	"go.uber.org/zap"
@@ -24,7 +24,7 @@ func encodeJSON() zapcore.Encoder {
 }
 
 func writer(isInfo bool) zapcore.WriteSyncer {
-	logCfg := conf.Get().Log
+	logCfg := config.Get().Log
 	var (
 		lofFile string
 	)
