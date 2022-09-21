@@ -19,10 +19,11 @@ func (t JSONTime) FormatYyyyMmDdHhMmSs() string {
 
 // MarshalJSON on JSONTime format Time field with %Y-%m-%d %H:%M:%S
 func (t JSONTime) MarshalJSON() ([]byte, error) {
-	if t.UnixMilli() > 0 {
-		return []byte(strconv.FormatInt(t.UnixMilli(), 10)), nil
-	}
-	return []byte(strconv.FormatInt(0, 10)), nil
+	//if t.UnixMilli() > 0 {
+	//	return []byte(strconv.FormatInt(t.UnixMilli(), 10)), nil
+	//}
+	//return []byte(strconv.FormatInt(0, 10)), nil
+	return []byte(t.FormatYyyyMmDdHhMmSs()), nil
 }
 
 func (t *JSONTime) UnmarshalJSON(s []byte) error {
