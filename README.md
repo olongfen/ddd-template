@@ -5,18 +5,17 @@
 - cmd 
   - server 服务开启入口
 - docs 文档
+- configs 配置文件
 - internal
-    - infra 基础设施
-        - mock mock代码
-    - app 应用层的接口定义
-    - common 公用包
-    - domain 领域设计
-    - service 服务
-      - delivery 运输
-      - repository 存储库存储
-      - usecase 用例
-    - initialization 项目初始化
-
+    - adapters 适配器代码
+    - application 应用层
+      - mutation 写入操作
+      - query 查询操作
+    - config 配置
+    - ports 端口
+      - middleware http中间件 
+    - schema api返回表单
+- pkg 可提取公用包
 ## 运行
 ```shell
 go run ./cmd/server -conf conf ./configs/config.yaml
