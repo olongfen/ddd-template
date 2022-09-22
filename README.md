@@ -18,7 +18,7 @@
 - pkg 可提取公用包
 ## 运行
 ```shell
-go run ./cmd/server -conf conf ./configs/config.yaml
+go run ./...
 ```
 ## 单元测试
 ```shell
