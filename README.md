@@ -2,8 +2,6 @@
 六边形领域驱动项目架构模板，完善中
 
 ## 项目结构
-- cmd 
-  - server 服务开启入口
 - docs 文档
 - configs 配置文件
 - internal
