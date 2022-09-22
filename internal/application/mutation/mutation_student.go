@@ -8,14 +8,14 @@ import (
 	"go.uber.org/zap"
 )
 
-type UserMutation struct {
+type studentMutation struct {
 	repo         domain.IStudentRepository
 	classService domain.IClassDomainService
 	logger       *zap.Logger
 }
 
 // AddStudent add
-func (u UserMutation) AddStudent(ctx context.Context, form *schema.StudentAddForm) (err error) {
+func (u studentMutation) AddStudent(ctx context.Context, form *schema.StudentAddForm) (err error) {
 	var (
 		stu *domain.Student
 	)
@@ -48,7 +48,7 @@ func NewUserMutation(repo domain.IStudentRepository,
 		zap.L().Fatal("empty logger")
 		return
 	}
-	u := new(UserMutation)
+	u := new(studentMutation)
 	u.repo = repo
 	u.logger = logger
 	u.classService = classService

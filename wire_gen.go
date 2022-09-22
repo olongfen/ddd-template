@@ -11,6 +11,7 @@ import (
 	"ddd-template/internal/adapters/respository"
 	"ddd-template/internal/application"
 	"ddd-template/internal/application/mutation"
+	"ddd-template/internal/application/query"
 	"ddd-template/internal/config"
 	"ddd-template/internal/domain"
 	"ddd-template/internal/ports"
@@ -26,8 +27,10 @@ func NewServer(ctx context.Context, configs *config.Configs, logger *zap.Logger)
 	iClassRepository := respository.NewClassRepository(data)
 	iClassDomainService := domain.NewClassDomainService(iClassRepository, logger)
 	iStudentMutationService := mutation.NewUserMutation(iStudentRepository, iClassDomainService, logger)
-	mutations := app.SetMutations(iStudentMutationService)
-	queries := app.SetQueries()
+	iClassMutationService := mutation.NewClassMutation(iClassRepository, logger)
+	mutations := app.SetMutations(iStudentMutationService, iClassMutationService)
+	iStudentQueryService := query.NewQueryStudent(iStudentRepository, iClassDomainService, logger)
+	queries := app.SetQueries(iStudentQueryService)
 	application := app.NewApplication(ctx, mutations, queries)
 	httpServer, cleanup := ports.NewHttpServer(application)
 	return httpServer, func() {

@@ -17,6 +17,22 @@ type Student struct {
 	classUuid string
 }
 
+func UnmarshalStudentFromDatabase(uuid string,
+	createdAt utils.JSONTime,
+	updatedAt utils.JSONTime,
+	name string,
+	stuNumber string,
+	classUuid string) *Student {
+	return &Student{
+		uuid:      uuid,
+		createdAt: createdAt,
+		updatedAt: updatedAt,
+		name:      name,
+		stuNumber: stuNumber,
+		classUuid: classUuid,
+	}
+}
+
 func (u Student) Uuid() string {
 	return u.uuid
 }
@@ -66,4 +82,5 @@ func NewStudent(name string, stuNumber string, classID string) (u *Student, err 
 // IStudentRepository 用户表存储库
 type IStudentRepository interface {
 	AddStudent(ctx context.Context, stu *Student) (err error)
+	GetStudent(ctx context.Context, uuid string) (ret *Student, err error)
 }

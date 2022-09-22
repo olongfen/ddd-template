@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"ddd-template/internal/application/mutation"
+	"ddd-template/internal/application/query"
 )
 
 type Application struct {
@@ -14,18 +15,22 @@ type Application struct {
 // Mutations 操作变动的数据
 type Mutations struct {
 	Student mutation.IStudentMutationService
+	Class   mutation.IClassMutationService
 }
 
 // Queries 查询的数据
 type Queries struct {
+	Student query.IStudentQueryService
 }
 
-func SetQueries() Queries {
-	return Queries{}
+func SetQueries(stu query.IStudentQueryService) Queries {
+	return Queries{
+		Student: stu,
+	}
 }
 
-func SetMutations(student mutation.IStudentMutationService) Mutations {
-	return Mutations{Student: student}
+func SetMutations(student mutation.IStudentMutationService, class mutation.IClassMutationService) Mutations {
+	return Mutations{Student: student, Class: class}
 }
 
 func NewApplication(ctx context.Context, mut Mutations, que Queries) Application {

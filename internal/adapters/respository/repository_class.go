@@ -39,5 +39,15 @@ func (c classRepository) GetClass(ctx context.Context, uid string) (ret *domain.
 }
 
 func (c classRepository) AddClass(ctx context.Context, cls *domain.Class) (err error) {
-	return c.data.DB(ctx).Create(cls).Error
+	return c.data.DB(ctx).Create(c.marshal(cls)).Error
+}
+
+func (c classRepository) marshal(in *domain.Class) *Class {
+	class := &Class{
+		Model: utils.Model{
+			Uuid: in.Uuid(),
+		},
+		Name: in.Name(),
+	}
+	return class
 }

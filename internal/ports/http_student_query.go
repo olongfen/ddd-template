@@ -17,5 +17,10 @@ import (
 // @Failure 404 {object} string
 // @Failure 500 {object} string
 func (h HttpServer) GetStudent(ctx *fiber.Ctx) (err error) {
-	return response.SuccessHandler(ctx, ctx.Params("uuid"))
+	uid := ctx.Params("uuid")
+	student, err := h.app.Queries.Student.GetStudent(ctx.UserContext(), uid)
+	if err != nil {
+		return err
+	}
+	return response.SuccessHandler(ctx, student)
 }

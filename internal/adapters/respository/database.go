@@ -90,7 +90,7 @@ func NewDB(c *config.Configs, logger *zap.Logger) (res *gorm.DB) {
 	}
 	if config.Get().Database.Dev {
 		db = db.Debug()
-		err = db.AutoMigrate(&Student{})
+		err = db.AutoMigrate(&Student{}, &Class{})
 		if err != nil {
 			xlog.Log.Sugar().Warn(err)
 			err = nil

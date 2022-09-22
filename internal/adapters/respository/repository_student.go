@@ -14,23 +14,36 @@ type Student struct {
 	ClassUuid string `gorm:"size:36;index;comment:班级id"`
 }
 
-type userRepository struct {
+type studentRepository struct {
 	data *Data
 }
 
-func (u userRepository) marshal(in *domain.Student) *Student {
+// GetStudent get one
+func (u studentRepository) GetStudent(ctx context.Context, uuid string) (ret *domain.Student, err error) {
+	var (
+		data *Student
+	)
+	if err = u.data.DB(ctx).Model(&Student{}).Where("uuid = ?", uuid).First(&data).Error; err != nil {
+		return
+	}
+	ret = domain.UnmarshalStudentFromDatabase(data.Uuid, data.CreatedAt, data.UpdatedAt, data.Name, data.StuNumber, data.ClassUuid)
+	return
+}
+
+func (u studentRepository) marshal(in *domain.Student) *Student {
 	stu := &Student{
 		Model: utils.Model{
 			Uuid: in.Uuid(),
 		},
 		Name:      in.Name(),
 		StuNumber: in.StuNumber(),
+		ClassUuid: in.ClassUuid(),
 	}
 	return stu
 }
 
 // AddStudent 往数据库写入user记录
-func (u userRepository) AddStudent(ctx context.Context, stu *domain.Student) (err error) {
+func (u studentRepository) AddStudent(ctx context.Context, stu *domain.Student) (err error) {
 	if err = u.data.DB(ctx).Model(&Student{}).Create(u.marshal(stu)).Error; err != nil {
 		return
 	}
@@ -43,7 +56,7 @@ func NewStudentRepository(data *Data) (ret domain.IStudentRepository) {
 		zap.L().Fatal("empty data")
 		return
 	}
-	stu := &userRepository{
+	stu := &studentRepository{
 		data: data,
 	}
 	ret = stu

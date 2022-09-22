@@ -3,6 +3,7 @@ package utils
 import (
 	"database/sql/driver"
 	"fmt"
+	jsoniter "github.com/json-iterator/go"
 	"strconv"
 	"strings"
 	"time"
@@ -23,7 +24,8 @@ func (t JSONTime) MarshalJSON() ([]byte, error) {
 	//	return []byte(strconv.FormatInt(t.UnixMilli(), 10)), nil
 	//}
 	//return []byte(strconv.FormatInt(0, 10)), nil
-	return []byte(t.FormatYyyyMmDdHhMmSs()), nil
+	b, _ := jsoniter.Marshal(t.FormatYyyyMmDdHhMmSs())
+	return b, nil
 }
 
 func (t *JSONTime) UnmarshalJSON(s []byte) error {

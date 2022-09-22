@@ -4,6 +4,98 @@
         "contact": {}
     },
     "paths": {
+        "/api/v1/class": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "add",
+                "tags": [
+                    "class"
+                ],
+                "summary": "add class one record",
+                "operationId": "class add one",
+                "parameters": [
+                    {
+                        "description": "form",
+                        "name": "{}",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.ClassAddForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/student": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "add",
+                "tags": [
+                    "student"
+                ],
+                "summary": "add student one record",
+                "operationId": "student add one",
+                "parameters": [
+                    {
+                        "description": "form",
+                        "name": "{}",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.StudentAddForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/student/{uuid}": {
             "get": {
                 "security": [
@@ -58,6 +150,40 @@
                 },
                 "data": {},
                 "message": {}
+            }
+        },
+        "schema.ClassAddForm": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "description": "班级名称",
+                    "type": "string"
+                }
+            }
+        },
+        "schema.StudentAddForm": {
+            "type": "object",
+            "required": [
+                "classUuid",
+                "name",
+                "stuNumber"
+            ],
+            "properties": {
+                "classUuid": {
+                    "description": "班级uuid",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "姓名",
+                    "type": "string"
+                },
+                "stuNumber": {
+                    "description": "学号",
+                    "type": "string"
+                }
             }
         }
     }

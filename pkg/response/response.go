@@ -20,7 +20,7 @@ var SuccessHandler = func(ctx *fiber.Ctx, data interface{}, status ...int) error
 	if len(status) > 0 {
 		code = status[0]
 	}
-	return ctx.Status(code).JSON(&Response{Code: 0, Data: data})
+	return ctx.Status(code).JSON(&Response{Code: 0, Data: data, Message: "success"})
 }
 
 var ErrorHandler = func(ctx *fiber.Ctx, err error) error {
