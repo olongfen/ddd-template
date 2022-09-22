@@ -2,4 +2,5 @@
 log
 ddd.exe
 ddd
-configs
+configs/*.yml
+configs/*.yaml

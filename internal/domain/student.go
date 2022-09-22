@@ -14,7 +14,7 @@ type Student struct {
 	updatedAt utils.JSONTime
 	name      string
 	stuNumber string
-	classID   string
+	classUuid string
 }
 
 func (u Student) Uuid() string {
@@ -29,8 +29,8 @@ func (u Student) UpdatedAt() utils.JSONTime {
 	return u.updatedAt
 }
 
-func (u Student) ClassID() string {
-	return u.classID
+func (u Student) ClassUuid() string {
+	return u.classUuid
 }
 
 func (u Student) Name() string {
@@ -58,7 +58,7 @@ func NewStudent(name string, stuNumber string, classID string) (u *Student, err 
 	u = &Student{}
 	u.uuid = uuid.NewV4().String()
 	u.name = name
-	u.classID = classID
+	u.classUuid = classID
 	u.stuNumber = stuNumber
 	return
 }

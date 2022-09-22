@@ -1,13 +1,13 @@
 {
-  "illegal_access_token": {
+  "40001": {
     "description":"Token illegal desc",
     "other": "Illegal token"
   },
-  "illegal_certificate": {
+  "40002": {
     "description":"Cer file illegal",
     "other": "Illegal certificate"
   },
-  "illegal_parameter": {
+  "40003": {
     "description":"parameter illegal by front sent",
     "other": "Illegal parameter"
   }

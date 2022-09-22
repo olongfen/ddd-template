@@ -4,13 +4,14 @@ import (
 	"context"
 	"ddd-template/internal/domain"
 	"ddd-template/pkg/utils"
+	"go.uber.org/zap"
 )
 
 type Student struct {
 	utils.Model
 	StuNumber string `gorm:"uniqueIndex;comment:学号;size:10"`
 	Name      string `gorm:"type:varchar(16);index;comment:名称"`
-	ClassID   string `gorm:"size:36;index;comment:班级id"`
+	ClassUuid string `gorm:"size:36;index;comment:班级id"`
 }
 
 type userRepository struct {
@@ -37,8 +38,14 @@ func (u userRepository) AddStudent(ctx context.Context, stu *domain.Student) (er
 }
 
 // NewStudentRepository new user repository
-func NewStudentRepository(data *Data) domain.IStudentRepository {
-	return &userRepository{
+func NewStudentRepository(data *Data) (ret domain.IStudentRepository) {
+	if data == nil {
+		zap.L().Fatal("empty data")
+		return
+	}
+	stu := &userRepository{
 		data: data,
 	}
+	ret = stu
+	return
 }

@@ -1,9 +1,9 @@
 package xi18n
 
 const (
-	IllegalAccessToken = "illegal_access_token"
+	IllegalAccessToken = "40001"
 	// IllegalCertificate 非法凭证
-	IllegalCertificate = "illegal_certificate"
+	IllegalCertificate = "40002"
 	// IllegalParameter 非法参数
-	IllegalParameter = "illegal_parameter"
+	IllegalParameter = "40003"
 )

@@ -1,8 +1,8 @@
 package response
 
 import (
-	"ddd-template/internal/common/xi18n"
-	"ddd-template/internal/common/xlog"
+	"ddd-template/pkg/xi18n"
+	"ddd-template/pkg/xlog"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 )
@@ -13,7 +13,7 @@ type Response struct {
 	Message interface{} `json:"message"`
 }
 
-var SuccessFunc = func(ctx *fiber.Ctx, data interface{}, status ...int) error {
+var SuccessHandler = func(ctx *fiber.Ctx, data interface{}, status ...int) error {
 	var (
 		code = 200
 	)

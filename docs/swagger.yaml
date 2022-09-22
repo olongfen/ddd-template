@@ -1,0 +1,40 @@
+definitions:
+  response.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message: {}
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/student/{uuid}:
+    get:
+      description: get
+      operationId: student one
+      parameters:
+      - description: uuid4
+        in: path
+        name: uuid
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: get student one record
+      tags:
+      - student
+swagger: "2.0"
