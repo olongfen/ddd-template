@@ -4,7 +4,6 @@ import (
 	"context"
 	"ddd-template/internal/config"
 	"ddd-template/internal/domain"
-	"ddd-template/pkg/xlog"
 	"fmt"
 	"github.com/pkg/errors"
 	"go.opentelemetry.io/otel"
@@ -59,8 +58,8 @@ func NewData(db *gorm.DB, logger *zap.Logger) (ret *Data) {
 	}
 }
 
-// NewDB new
-func NewDB(c *config.Configs, logger *zap.Logger) (res *gorm.DB) {
+// InitDBConnect init database connect
+func InitDBConnect(c *config.Configs, logger *zap.Logger) (res *gorm.DB) {
 	var (
 		err        error
 		db         *gorm.DB
@@ -72,9 +71,12 @@ func NewDB(c *config.Configs, logger *zap.Logger) (res *gorm.DB) {
 		}
 	)
 	switch c.Database.Driver {
-	case "postgres":
-		if db, err = gorm.Open(postgres.Open(c.Database.Source), gormConfig); err != nil {
-			logger.Sugar().Fatal(err.Error())
+	case "postgresql":
+		dbCfg := c.Database
+		dns := fmt.Sprintf(`host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s`, dbCfg.Host,
+			dbCfg.User, dbCfg.Password, dbCfg.DBName, dbCfg.Port, dbCfg.SSLMode, dbCfg.TimeZone)
+		if db, err = gorm.Open(postgres.Open(dns), gormConfig); err != nil {
+			logger.Fatal(err.Error())
 		}
 
 	}
@@ -85,17 +87,21 @@ func NewDB(c *config.Configs, logger *zap.Logger) (res *gorm.DB) {
 	}
 	err = db.Use(&OpentracingPlugin{})
 	if err != nil {
-		logger.Sugar().Fatal(err)
-		return
+		logger.Fatal(err.Error())
+
 	}
-	if config.Get().Database.Dev {
-		db = db.Debug()
+	// true 自动迁移
+	if c.Database.AutoMigrate {
 		err = db.AutoMigrate(&Student{}, &Class{})
 		if err != nil {
-			xlog.Log.Sugar().Warn(err)
-			err = nil
+			logger.Fatal(err.Error())
 		}
 	}
+	// debug 打开数据库debug打印模式
+	if config.Get().Database.Debug {
+		db = db.Debug()
+	}
+
 	return db
 }
 

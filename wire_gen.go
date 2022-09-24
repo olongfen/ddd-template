@@ -21,7 +21,7 @@ import (
 // Injectors from wire.go:
 
 func NewServer(ctx context.Context, configs *config.Configs, logger *zap.Logger) (ports.HttpServer, func()) {
-	db := respository.NewDB(configs, logger)
+	db := respository.InitDBConnect(configs, logger)
 	data := respository.NewData(db, logger)
 	iStudentRepository := respository.NewStudentRepository(data)
 	iClassRepository := respository.NewClassRepository(data)
