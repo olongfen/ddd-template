@@ -1,4 +1,4 @@
-package ports
+package controller
 
 import (
 	"ddd-template/pkg/response"

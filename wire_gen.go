@@ -14,13 +14,13 @@ import (
 	"ddd-template/internal/application/query"
 	"ddd-template/internal/config"
 	"ddd-template/internal/domain"
-	"ddd-template/internal/ports"
+	"ddd-template/internal/ports/controller"
 	"go.uber.org/zap"
 )
 
 // Injectors from wire.go:
 
-func NewServer(ctx context.Context, configs *config.Configs, logger *zap.Logger) (ports.HttpServer, func()) {
+func NewServer(ctx context.Context, configs *config.Configs, logger *zap.Logger) (controller.HttpServer, func()) {
 	db := respository.InitDBConnect(configs, logger)
 	data := respository.NewData(db, logger)
 	iStudentRepository := respository.NewStudentRepository(data)
@@ -32,7 +32,7 @@ func NewServer(ctx context.Context, configs *config.Configs, logger *zap.Logger)
 	iStudentQueryService := query.NewQueryStudent(iStudentRepository, iClassDomainService, logger)
 	queries := app.SetQueries(iStudentQueryService)
 	application := app.NewApplication(ctx, mutations, queries)
-	httpServer, cleanup := ports.NewHttpServer(application)
+	httpServer, cleanup := controller.NewHttpServer(application)
 	return httpServer, func() {
 		cleanup()
 	}

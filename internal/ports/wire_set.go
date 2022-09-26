@@ -1,5 +1,8 @@
 package ports
 
-import "github.com/google/wire"
+import (
+	"ddd-template/internal/ports/controller"
+	"github.com/google/wire"
+)
 
-var Set = wire.NewSet(NewHttpServer)
+var Set = wire.NewSet(controller.NewHttpServer)

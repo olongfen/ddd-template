@@ -1,14 +1,14 @@
-package ports
+package controller
 
 import (
 	_ "ddd-template/docs"
 	app "ddd-template/internal/application"
 	"ddd-template/internal/config"
-	"ddd-template/internal/ports/middleware"
+	"ddd-template/internal/ports/controller/middleware"
 	"ddd-template/pkg/response"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/swaggo/fiber-swagger"
+	fiberSwagger "github.com/swaggo/fiber-swagger"
 	"go.uber.org/zap"
 )
 

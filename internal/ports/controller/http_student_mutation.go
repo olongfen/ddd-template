@@ -1,4 +1,4 @@
-package ports
+package controller
 
 import (
 	"ddd-template/internal/schema"
@@ -6,25 +6,25 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// AddClass
-// @Id class add one
-// @tags class
-// @Summary add class one record
+// AddStudent
+// @Id student add one
+// @tags student
+// @Summary add student one record
 // @Description add
-// @Param {}  body schema.ClassAddForm true "form"
-// @router /api/v1/class [post]
+// @Param {}  body schema.StudentAddForm true "form"
+// @router /api/v1/student [post]
 // @Success 200 {object} response.Response{}
 // @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
-func (h HttpServer) AddClass(ctx *fiber.Ctx) (err error) {
+func (h HttpServer) AddStudent(ctx *fiber.Ctx) (err error) {
 	var (
-		form = new(schema.ClassAddForm)
+		form = new(schema.StudentAddForm)
 	)
 	if err = ctx.BodyParser(form); err != nil {
 		return
 	}
-	if err = h.app.Mutations.Class.AddClass(ctx.UserContext(), form); err != nil {
+	if err = h.app.Mutations.Student.AddStudent(ctx.UserContext(), form); err != nil {
 		return
 	}
 	return response.SuccessHandler(ctx, nil)

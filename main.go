@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"ddd-template/internal/config"
-	"ddd-template/internal/ports"
+	"ddd-template/internal/ports/controller"
 	"ddd-template/pkg/xlog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/cobra"
@@ -13,7 +13,7 @@ import (
 
 func main() {
 	var (
-		server    ports.HttpServer
+		server    controller.HttpServer
 		ctx       = context.Background()
 		logger, _ = zap.NewProduction()
 		fc        func()
@@ -28,8 +28,8 @@ func main() {
 	xlog.Log = logger
 	server, fc = NewServer(ctx, cfg, logger)
 	defer fc()
-	ports.RunHTTPServer(func(app2 *fiber.App) *fiber.App {
-		return ports.HandlerFromMux(server, app2)
+	controller.RunHTTPServer(func(app2 *fiber.App) *fiber.App {
+		return controller.HandlerFromMux(server, app2)
 	}, cfg.HTTP, logger)
 
 }

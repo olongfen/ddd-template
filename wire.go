@@ -10,10 +10,11 @@ import (
 	"ddd-template/internal/config"
 	"ddd-template/internal/domain"
 	"ddd-template/internal/ports"
+	"ddd-template/internal/ports/controller"
 	"github.com/google/wire"
 	"go.uber.org/zap"
 )
 
-func NewServer(ctx context.Context, configs *config.Configs, logger *zap.Logger) (s ports.HttpServer, fc func()) {
+func NewServer(ctx context.Context, configs *config.Configs, logger *zap.Logger) (s controller.HttpServer, fc func()) {
 	panic(wire.Build(ports.Set, app.Set, domain.Set, respository.Set))
 }
