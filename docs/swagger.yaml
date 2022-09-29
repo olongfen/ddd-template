@@ -33,7 +33,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /api/v1/class:
+  /api/v1/classes:
     post:
       description: add
       operationId: class add one
@@ -61,8 +61,8 @@ paths:
       - BearerAuth: []
       summary: add class one record
       tags:
-      - class
-  /api/v1/student:
+      - classes
+  /api/v1/students:
     post:
       description: add
       operationId: student add one
@@ -90,8 +90,8 @@ paths:
       - BearerAuth: []
       summary: add student one record
       tags:
-      - student
-  /api/v1/student/{uuid}:
+      - students
+  /api/v1/students/{uuid}:
     get:
       description: get
       operationId: student one
@@ -118,5 +118,5 @@ paths:
       - BearerAuth: []
       summary: get student one record
       tags:
-      - student
+      - students
 swagger: "2.0"

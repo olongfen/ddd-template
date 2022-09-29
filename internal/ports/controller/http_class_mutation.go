@@ -8,11 +8,11 @@ import (
 
 // AddClass
 // @Id class add one
-// @tags class
+// @tags classes
 // @Summary add class one record
 // @Description add
 // @Param {}  body schema.ClassAddForm true "form"
-// @router /api/v1/class [post]
+// @router /api/v1/classes [post]
 // @Success 200 {object} response.Response{}
 // @Security BearerAuth
 // @Failure 404 {object} string

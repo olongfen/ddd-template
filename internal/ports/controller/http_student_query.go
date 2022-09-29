@@ -7,11 +7,11 @@ import (
 
 // GetStudent
 // @Id student one
-// @tags student
+// @tags students
 // @Summary get student one record
 // @Description get
 // @Param uuid  path string true "uuid4"
-// @router /api/v1/student/{uuid} [get]
+// @router /api/v1/students/{uuid} [get]
 // @Success 200 {object} response.Response{}
 // @Security BearerAuth
 // @Failure 404 {object} string

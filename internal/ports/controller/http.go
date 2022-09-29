@@ -36,11 +36,11 @@ func RunHTTPServer(fc func(app2 *fiber.App) *fiber.App, cfg config.HTTP, logger 
 func HandlerFromMux(server Server, a *fiber.App) *fiber.App {
 	a.Get("/docs/*", fiberSwagger.WrapHandler)
 	// student
-	stu := a.Group("/student")
+	stu := a.Group("/students")
 	stu.Post("/", server.AddStudent)
 	stu.Get("/:uuid", server.GetStudent)
 	// class
-	class := a.Group("/class")
+	class := a.Group("/classes")
 	class.Post("/", server.AddClass)
 	return a
 }

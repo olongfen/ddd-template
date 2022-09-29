@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/class": {
+        "/api/v1/classes": {
             "post": {
                 "security": [
                     {
@@ -25,7 +25,7 @@ const docTemplate = `{
                 ],
                 "description": "add",
                 "tags": [
-                    "class"
+                    "classes"
                 ],
                 "summary": "add class one record",
                 "operationId": "class add one",
@@ -62,7 +62,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/student": {
+        "/api/v1/students": {
             "post": {
                 "security": [
                     {
@@ -71,7 +71,7 @@ const docTemplate = `{
                 ],
                 "description": "add",
                 "tags": [
-                    "student"
+                    "students"
                 ],
                 "summary": "add student one record",
                 "operationId": "student add one",
@@ -108,7 +108,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/student/{uuid}": {
+        "/api/v1/students/{uuid}": {
             "get": {
                 "security": [
                     {
@@ -117,7 +117,7 @@ const docTemplate = `{
                 ],
                 "description": "get",
                 "tags": [
-                    "student"
+                    "students"
                 ],
                 "summary": "get student one record",
                 "operationId": "student one",

@@ -8,11 +8,11 @@ import (
 
 // AddStudent
 // @Id student add one
-// @tags student
+// @tags students
 // @Summary add student one record
 // @Description add
 // @Param {}  body schema.StudentAddForm true "form"
-// @router /api/v1/student [post]
+// @router /api/v1/students [post]
 // @Success 200 {object} response.Response{}
 // @Security BearerAuth
 // @Failure 404 {object} string
