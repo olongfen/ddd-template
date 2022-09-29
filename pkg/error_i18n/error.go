@@ -1,4 +1,4 @@
-package xi18n
+package error_i18n
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ var _ BizError = (*bizError)(nil)
 type BizError interface {
 	// i 为了避免被其他包实现
 	i()
-
+	Code() int
 	// WithError 设置错误信息
 	WithError(err error) BizError
 
@@ -21,18 +21,29 @@ type BizError interface {
 }
 
 type bizError struct {
+	code    int
 	message string // 错误描述
 	stack   error  // 含有堆栈信息的错误
 }
 
-func NewError(msg string) BizError {
+func NewError(code int, language string) BizError {
 	biz := &bizError{
-		message: msg,
+		message: "",
+	}
+	switch language {
+	case "en":
+		biz.message = enError[code]
+	default:
+		biz.message = zhError[code]
 	}
 	return biz
 }
 
 func (e *bizError) i() {}
+
+func (e *bizError) Code() int {
+	return e.code
+}
 
 func (e *bizError) Error() string {
 	return fmt.Sprintf(`%s`, e.message)

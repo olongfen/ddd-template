@@ -1,36 +1,72 @@
 package response
 
 import (
-	"ddd-template/pkg/xi18n"
+	"context"
+	"ddd-template/pkg/error_i18n"
 	"ddd-template/pkg/xlog"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
+	"net/http"
 )
 
-type Response struct {
-	Code    int         `json:"code"`
-	Data    interface{} `json:"data"`
-	Message interface{} `json:"message"`
+type responseCtxTag struct{}
+
+func SetResponse(ctx context.Context, resp *Response) context.Context {
+	return context.WithValue(ctx, responseCtxTag{}, resp)
 }
 
-var SuccessHandler = func(ctx *fiber.Ctx, data interface{}, status ...int) error {
-	var (
-		code = 200
-	)
-	if len(status) > 0 {
-		code = status[0]
+func GetResponse(ctx context.Context) *Response {
+	return ctx.Value(responseCtxTag{}).(*Response)
+}
+
+type Response struct {
+	status int
+	//
+	Code       int         `json:"code"`
+	Data       interface{} `json:"data"`
+	Message    string      `json:"message"`
+	Language   string      `json:"language"`
+	Pagination interface{} `json:"pagination"`
+	Errors     interface{} `json:"errors"`
+}
+
+func NewResponse(language string) *Response {
+	return &Response{status: http.StatusOK, Language: language}
+}
+
+func (r *Response) SetPagination(pagination interface{}) *Response {
+	r.Pagination = pagination
+	return r
+}
+
+func (r *Response) SetErrors(errs interface{}) *Response {
+	r.Errors = errs
+	return r
+}
+
+func (r *Response) SetMessage(msg string) *Response {
+	r.Message = msg
+	return r
+}
+
+func (r *Response) Success(ctx *fiber.Ctx, data interface{}) error {
+	r.Data = data
+	if r.Message == "" {
+		r.Message = "success"
 	}
-	return ctx.Status(code).JSON(&Response{Code: 0, Data: data, Message: "success"})
+	return ctx.Status(r.status).JSON(r)
 }
 
 var ErrorHandler = func(ctx *fiber.Ctx, err error) error {
-	code := fiber.StatusInternalServerError
+	status := fiber.StatusInternalServerError
 	if e, ok := err.(*fiber.Error); ok {
-		code = e.Code
+		status = e.Code
 	}
-	if e, ok := err.(xi18n.BizError); ok {
+	if e, ok := err.(error_i18n.BizError); ok {
 		xlog.Log.Error("Business Error", zap.Error(e.StackError()))
-		code = fiber.StatusOK
+		status = fiber.StatusOK
 	}
-	return ctx.Status(code).JSON(&Response{Code: -1, Message: err.Error()})
+	resp := GetResponse(ctx.UserContext())
+	resp.Message = err.Error()
+	return ctx.Status(status).JSON(resp)
 }

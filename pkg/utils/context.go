@@ -1,6 +1,8 @@
 package utils
 
-import "context"
+import (
+	"context"
+)
 
 type languageCtxTag struct {
 }
@@ -13,5 +15,5 @@ func GetLanguage(ctx context.Context) string {
 	if val, ok := ctx.Value(languageCtxTag{}).(string); ok {
 		return val
 	}
-	return ""
+	return "zh"
 }

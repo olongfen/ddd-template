@@ -11,7 +11,7 @@ type StudentAddForm struct {
 	// 班级uuid
 	ClassUuid string `json:"classUuid" validate:"required,uuid4"`
 	// 学号
-	StuNumber string `json:"stuNumber" validate:"required"`
+	StuNumber string `json:"stuNumber" validate:"required,min=1,max=10"`
 }
 
 type StudentResp struct {

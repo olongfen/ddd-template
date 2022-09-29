@@ -2,6 +2,7 @@ package controller
 
 import (
 	"ddd-template/pkg/response"
+	"ddd-template/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -18,9 +19,10 @@ import (
 // @Failure 500 {object} string
 func (h HttpServer) GetStudent(ctx *fiber.Ctx) (err error) {
 	uid := ctx.Params("uuid")
+	language := utils.GetLanguage(ctx.UserContext())
 	student, err := h.app.Queries.Student.GetStudent(ctx.UserContext(), uid)
 	if err != nil {
 		return err
 	}
-	return response.SuccessHandler(ctx, student)
+	return response.NewResponse(language).Success(ctx, student)
 }
