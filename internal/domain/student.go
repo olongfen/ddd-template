@@ -104,6 +104,7 @@ func UnmarshalStudentToSchema(ent *Student) *schema.StudentResp {
 		Name:      ent.Name(),
 		StuNumber: ent.StuNumber(),
 		ClassUuid: ent.ClassUuid(),
+		ID:        ent.Id(),
 		ClassName: "",
 	}
 }
