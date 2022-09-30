@@ -13,16 +13,22 @@ import (
 // @tags students
 // @Summary get student one record
 // @Description get
-// @Param uuid  path string true "uuid4"
-// @router /api/v1/students/{uuid} [get]
+// @Param id  path int true "id"
+// @router /api/v1/students/{id} [get]
 // @Success 200 {object} response.Response{data=schema.StudentResp}
 // @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
 func (h server) GetStudent(ctx *fiber.Ctx) (err error) {
-	uid := ctx.Params("uuid")
-	language := scontext.GetLanguage(ctx.UserContext())
-	student, err := h.app.Queries.Student.GetStudent(ctx.UserContext(), uid)
+	var (
+		id       int
+		language = scontext.GetLanguage(ctx.UserContext())
+	)
+	if id, err = ctx.ParamsInt("id"); err != nil {
+		err = error_i18n.NewError(error_i18n.IllegalParameter, language)
+		return
+	}
+	student, err := h.app.Queries.Student.GetStudent(ctx.UserContext(), id)
 	if err != nil {
 		return err
 	}

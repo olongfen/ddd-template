@@ -8,7 +8,7 @@ import (
 )
 
 type IStudentQueryService interface {
-	GetStudent(ctx context.Context, uuid string) (ret *schema.StudentResp, err error)
+	GetStudent(ctx context.Context, id int) (ret *schema.StudentResp, err error)
 	QueryStudents(ctx context.Context, query schema.StudentsQuery) (ret schema.StudentsResp,
 		pagination *schema.Pagination, err error)
 }
@@ -20,8 +20,8 @@ type queryStudent struct {
 }
 
 // GetStudent get
-func (q queryStudent) GetStudent(ctx context.Context, uuid string) (ret *schema.StudentResp, err error) {
-	student, err := q.repo.GetStudent(ctx, uuid)
+func (q queryStudent) GetStudent(ctx context.Context, id int) (ret *schema.StudentResp, err error) {
+	student, err := q.repo.GetStudent(ctx, id)
 	if err != nil {
 		return nil, err
 	}

@@ -27,7 +27,7 @@ func NewClassRepository(data *Data) (ret domain.IClassRepository) {
 	return
 }
 
-func (c classRepository) GetClass(ctx context.Context, uid string) (ret *domain.Class, err error) {
+func (c classRepository) GetClassWithUuid(ctx context.Context, uid string) (ret *domain.Class, err error) {
 	var (
 		m = new(Class)
 	)

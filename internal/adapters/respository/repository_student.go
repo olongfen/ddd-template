@@ -20,11 +20,11 @@ type studentRepository struct {
 }
 
 // GetStudent get one
-func (u studentRepository) GetStudent(ctx context.Context, uuid string) (ret *domain.Student, err error) {
+func (u studentRepository) GetStudent(ctx context.Context, id int) (ret *domain.Student, err error) {
 	var (
 		data *Student
 	)
-	if err = u.data.DB(ctx).Model(&Student{}).Where("uuid = ?", uuid).First(&data).Error; err != nil {
+	if err = u.data.DB(ctx).Model(&Student{}).Where("id = ?", id).First(&data).Error; err != nil {
 		return
 	}
 	ret = domain.UnmarshalStudentFromDatabase(data.Uuid, data.CreatedAt, data.UpdatedAt, data.Name, data.StuNumber, data.ClassUuid)

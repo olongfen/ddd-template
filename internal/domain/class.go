@@ -57,7 +57,7 @@ func NewClass(name string) (c *Class, err error) {
 
 // IClassRepository class repository
 type IClassRepository interface {
-	GetClass(ctx context.Context, uid string) (ret *Class, err error)
+	GetClassWithUuid(ctx context.Context, uid string) (ret *Class, err error)
 	AddClass(ctx context.Context, c *Class) (err error)
 }
 

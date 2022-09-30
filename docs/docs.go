@@ -77,11 +77,14 @@ const docTemplate = `{
                 "operationId": "query students",
                 "parameters": [
                     {
+                        "minimum": 0,
                         "type": "integer",
                         "name": "currentPage",
                         "in": "query"
                     },
                     {
+                        "maximum": 100,
+                        "minimum": 1,
                         "type": "integer",
                         "name": "pageSize",
                         "in": "query"
@@ -171,7 +174,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/students/{uuid}": {
+        "/api/v1/students/{id}": {
             "get": {
                 "security": [
                     {
@@ -186,9 +189,9 @@ const docTemplate = `{
                 "operationId": "student one",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "uuid4",
-                        "name": "uuid",
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }

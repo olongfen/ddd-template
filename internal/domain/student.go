@@ -83,7 +83,7 @@ func NewStudent(name string, stuNumber string, classID string) (u *Student, err 
 // IStudentRepository 用户表存储库
 type IStudentRepository interface {
 	AddStudent(ctx context.Context, stu *Student) (err error)
-	GetStudent(ctx context.Context, uuid string) (ret *Student, err error)
+	GetStudent(ctx context.Context, id int) (ret *Student, err error)
 	QueryStudents(ctx context.Context, query schema.StudentsQuery) (ret []*Student,
 		pagination *schema.Pagination, err error)
 }

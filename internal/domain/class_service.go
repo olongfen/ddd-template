@@ -24,5 +24,5 @@ func NewClassDomainService(repo IClassRepository, logger *zap.Logger) IClassDoma
 }
 
 func (c ClassDomainService) GetClassDetail(ctx context.Context, uid string) (ret *Class, err error) {
-	return c.repo.GetClass(ctx, uid)
+	return c.repo.GetClassWithUuid(ctx, uid)
 }

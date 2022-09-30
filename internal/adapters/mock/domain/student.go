@@ -51,18 +51,18 @@ func (mr *MockIStudentRepositoryMockRecorder) AddStudent(ctx, stu interface{}) *
 }
 
 // GetStudent mocks base method.
-func (m *MockIStudentRepository) GetStudent(ctx context.Context, uuid string) (*domain.Student, error) {
+func (m *MockIStudentRepository) GetStudent(ctx context.Context, id int) (*domain.Student, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetStudent", ctx, uuid)
+	ret := m.ctrl.Call(m, "GetStudent", ctx, id)
 	ret0, _ := ret[0].(*domain.Student)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetStudent indicates an expected call of GetStudent.
-func (mr *MockIStudentRepositoryMockRecorder) GetStudent(ctx, uuid interface{}) *gomock.Call {
+func (mr *MockIStudentRepositoryMockRecorder) GetStudent(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStudent", reflect.TypeOf((*MockIStudentRepository)(nil).GetStudent), ctx, uuid)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStudent", reflect.TypeOf((*MockIStudentRepository)(nil).GetStudent), ctx, id)
 }
 
 // QueryStudents mocks base method.

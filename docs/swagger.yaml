@@ -104,9 +104,12 @@ paths:
       operationId: query students
       parameters:
       - in: query
+        minimum: 0
         name: currentPage
         type: integer
       - in: query
+        maximum: 100
+        minimum: 1
         name: pageSize
         type: integer
       responses:
@@ -164,16 +167,16 @@ paths:
       summary: add student one record
       tags:
       - students
-  /api/v1/students/{uuid}:
+  /api/v1/students/{id}:
     get:
       description: get
       operationId: student one
       parameters:
-      - description: uuid4
+      - description: id
         in: path
-        name: uuid
+        name: id
         required: true
-        type: string
+        type: integer
       responses:
         "200":
           description: OK

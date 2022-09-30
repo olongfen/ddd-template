@@ -36,18 +36,18 @@ func (m *MockIStudentQueryService) EXPECT() *MockIStudentQueryServiceMockRecorde
 }
 
 // GetStudent mocks base method.
-func (m *MockIStudentQueryService) GetStudent(ctx context.Context, uuid string) (*schema.StudentResp, error) {
+func (m *MockIStudentQueryService) GetStudent(ctx context.Context, id int) (*schema.StudentResp, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetStudent", ctx, uuid)
+	ret := m.ctrl.Call(m, "GetStudent", ctx, id)
 	ret0, _ := ret[0].(*schema.StudentResp)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetStudent indicates an expected call of GetStudent.
-func (mr *MockIStudentQueryServiceMockRecorder) GetStudent(ctx, uuid interface{}) *gomock.Call {
+func (mr *MockIStudentQueryServiceMockRecorder) GetStudent(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStudent", reflect.TypeOf((*MockIStudentQueryService)(nil).GetStudent), ctx, uuid)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStudent", reflect.TypeOf((*MockIStudentQueryService)(nil).GetStudent), ctx, id)
 }
 
 // QueryStudents mocks base method.

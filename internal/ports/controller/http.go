@@ -37,7 +37,7 @@ func HandlerFromMux(server Server, a *fiber.App) *fiber.App {
 	// student
 	stu := a.Group("/students")
 	stu.Post("/", server.AddStudent)
-	stu.Get("/:uuid", server.GetStudent)
+	stu.Get("/:id", server.GetStudent)
 	stu.Get("/", server.QueryStudents)
 	// class
 	class := a.Group("/classes")
