@@ -10,6 +10,7 @@ import (
 
 // Student entity
 type Student struct {
+	id        uint
 	uuid      string
 	createdAt utils.JSONTime
 	updatedAt utils.JSONTime
@@ -18,13 +19,20 @@ type Student struct {
 	classUuid string
 }
 
-func UnmarshalStudentFromDatabase(uuid string,
+func (u Student) Id() uint {
+	return u.id
+}
+
+func UnmarshalStudentFromDatabase(
+	id uint,
+	uuid string,
 	createdAt utils.JSONTime,
 	updatedAt utils.JSONTime,
 	name string,
 	stuNumber string,
 	classUuid string) *Student {
 	return &Student{
+		id:        id,
 		uuid:      uuid,
 		createdAt: createdAt,
 		updatedAt: updatedAt,

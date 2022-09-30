@@ -27,7 +27,7 @@ func (u studentRepository) GetStudent(ctx context.Context, id int) (ret *domain.
 	if err = u.data.DB(ctx).Model(&Student{}).Where("id = ?", id).First(&data).Error; err != nil {
 		return
 	}
-	ret = domain.UnmarshalStudentFromDatabase(data.Uuid, data.CreatedAt, data.UpdatedAt, data.Name, data.StuNumber, data.ClassUuid)
+	ret = domain.UnmarshalStudentFromDatabase(data.ID, data.Uuid, data.CreatedAt, data.UpdatedAt, data.Name, data.StuNumber, data.ClassUuid)
 	return
 }
 
@@ -41,7 +41,8 @@ func (u studentRepository) QueryStudents(ctx context.Context, query schema.Stude
 		return
 	}
 	for _, v := range data {
-		ret = append(ret, domain.UnmarshalStudentFromDatabase(v.Uuid, v.CreatedAt, v.UpdatedAt, v.Name, v.StuNumber, v.ClassUuid))
+		ret = append(ret, domain.UnmarshalStudentFromDatabase(v.ID, v.Uuid, v.CreatedAt, v.UpdatedAt, v.Name,
+			v.StuNumber, v.ClassUuid))
 	}
 	return
 }

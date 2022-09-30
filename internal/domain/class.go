@@ -9,10 +9,15 @@ import (
 
 // Class  entity
 type Class struct {
+	id        uint
 	uuid      string
 	createdAt utils.JSONTime
 	updatedAt utils.JSONTime
 	name      string
+}
+
+func (c Class) Id() uint {
+	return c.id
 }
 
 func UnmarshalClassFromDatabase(uid string, createdAt utils.JSONTime,

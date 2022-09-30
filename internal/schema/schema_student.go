@@ -14,6 +14,8 @@ type StudentAddForm struct {
 }
 
 type StudentResp struct {
+	// ID
+	ID int `json:"id"`
 	// Uuid
 	Uuid string `json:"uuid"`
 	// 创建时间
