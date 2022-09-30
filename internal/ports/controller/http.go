@@ -2,7 +2,6 @@ package controller
 
 import (
 	_ "ddd-template/docs"
-	app "ddd-template/internal/application"
 	"ddd-template/internal/config"
 	"ddd-template/internal/ports/controller/middleware"
 	"ddd-template/pkg/response"
@@ -13,11 +12,11 @@ import (
 )
 
 type HttpServer struct {
-	app app.Application
+	Server Server
 }
 
-func NewHttpServer(app app.Application) (HttpServer, func()) {
-	return HttpServer{app}, app.Cleanup
+func NewHttpServer(server Server) (HttpServer, func()) {
+	return HttpServer{server}, server.Cleanup()
 }
 
 func RunHTTPServer(fc func(app2 *fiber.App) *fiber.App, cfg config.HTTP, logger *zap.Logger) {
@@ -39,6 +38,7 @@ func HandlerFromMux(server Server, a *fiber.App) *fiber.App {
 	stu := a.Group("/students")
 	stu.Post("/", server.AddStudent)
 	stu.Get("/:uuid", server.GetStudent)
+	stu.Get("/", server.QueryStudents)
 	// class
 	class := a.Group("/classes")
 	class.Post("/", server.AddClass)
@@ -46,8 +46,10 @@ func HandlerFromMux(server Server, a *fiber.App) *fiber.App {
 }
 
 type Server interface {
+	Cleanup() func()
 	AddStudent(ctx *fiber.Ctx) error
 	GetStudent(ctx *fiber.Ctx) error
+	QueryStudents(ctx *fiber.Ctx) error
 	//
 	AddClass(ctx *fiber.Ctx) error
 }

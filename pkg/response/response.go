@@ -1,23 +1,13 @@
 package response
 
 import (
-	"context"
 	"ddd-template/pkg/error_i18n"
+	"ddd-template/pkg/scontext"
 	"ddd-template/pkg/xlog"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 	"net/http"
 )
-
-type responseCtxTag struct{}
-
-func SetResponse(ctx context.Context, resp *Response) context.Context {
-	return context.WithValue(ctx, responseCtxTag{}, resp)
-}
-
-func GetResponse(ctx context.Context) *Response {
-	return ctx.Value(responseCtxTag{}).(*Response)
-}
 
 type Response struct {
 	status int
@@ -66,7 +56,9 @@ var ErrorHandler = func(ctx *fiber.Ctx, err error) error {
 		xlog.Log.Error("Business Error", zap.Error(e.StackError()))
 		status = fiber.StatusOK
 	}
-	resp := GetResponse(ctx.UserContext())
+	userCtx := ctx.UserContext()
+	resp := NewResponse(scontext.GetLanguage(userCtx))
+	resp.SetErrors(scontext.GetErrorsContext(userCtx))
 	resp.Message = err.Error()
 	return ctx.Status(status).JSON(resp)
 }

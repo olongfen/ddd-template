@@ -3,6 +3,7 @@ package respository
 import (
 	"context"
 	"ddd-template/internal/domain"
+	"ddd-template/internal/schema"
 	"ddd-template/pkg/utils"
 	"go.uber.org/zap"
 )
@@ -27,6 +28,21 @@ func (u studentRepository) GetStudent(ctx context.Context, uuid string) (ret *do
 		return
 	}
 	ret = domain.UnmarshalStudentFromDatabase(data.Uuid, data.CreatedAt, data.UpdatedAt, data.Name, data.StuNumber, data.ClassUuid)
+	return
+}
+
+func (u studentRepository) QueryStudents(ctx context.Context, query schema.StudentsQuery) (ret []*domain.Student,
+	pagination *schema.Pagination, err error) {
+	var (
+		data []*Student
+		db   = u.data.DB(ctx).Model(&Student{})
+	)
+	if pagination, err = findPage(db, query.QueryOptions, &data); err != nil {
+		return
+	}
+	for _, v := range data {
+		ret = append(ret, domain.UnmarshalStudentFromDatabase(v.Uuid, v.CreatedAt, v.UpdatedAt, v.Name, v.StuNumber, v.ClassUuid))
+	}
 	return
 }
 

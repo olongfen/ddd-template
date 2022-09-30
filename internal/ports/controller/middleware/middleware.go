@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"bytes"
-	"ddd-template/pkg/utils"
+	"ddd-template/pkg/scontext"
 	"encoding/json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/valyala/fasthttp"
@@ -207,6 +207,6 @@ func Languages(ctx *fiber.Ctx) error {
 	if len(val) == 0 {
 		val = "en"
 	}
-	ctx.SetUserContext(utils.SetLanguage(ctx.UserContext(), val))
+	ctx.SetUserContext(scontext.SetLanguage(ctx.UserContext(), val))
 	return ctx.Next()
 }

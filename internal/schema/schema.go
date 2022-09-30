@@ -60,3 +60,15 @@ func ValidateForm(c interface{}, language string) map[string]*Error {
 	}
 	return errs
 }
+
+type QueryOptions struct {
+	CurrentPage int `json:"currentPage" validate:"min=0" query:"currentPage"`
+	PageSize    int `json:"pageSize" validate:"min=1,max=100" query:"pageSize"`
+}
+
+type Pagination struct {
+	PageSize    int   `json:"pageSize"`
+	CurrentPage int   `json:"currentPage"`
+	TotalPage   int   `json:"totalPage"`
+	TotalCount  int64 `json:"totalCount"`
+}

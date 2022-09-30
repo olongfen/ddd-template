@@ -4,7 +4,12 @@ definitions:
       code:
         type: integer
       data: {}
-      message: {}
+      errors: {}
+      language:
+        type: string
+      message:
+        type: string
+      pagination: {}
     type: object
   schema.ClassAddForm:
     properties:
@@ -24,11 +29,42 @@ definitions:
         type: string
       stuNumber:
         description: 学号
+        maxLength: 10
+        minLength: 1
         type: string
     required:
     - classUuid
     - name
     - stuNumber
+    type: object
+  schema.StudentResp:
+    properties:
+      className:
+        description: 班级名称
+        type: string
+      classUuid:
+        description: 班级uuid
+        type: string
+      createdAt:
+        $ref: '#/definitions/utils.JSONTime'
+        description: 创建时间
+      name:
+        description: 学生姓名
+        type: string
+      stuNumber:
+        description: 学号
+        type: string
+      updatedAt:
+        $ref: '#/definitions/utils.JSONTime'
+        description: 更新时间
+      uuid:
+        description: Uuid
+        type: string
+    type: object
+  utils.JSONTime:
+    properties:
+      time.Time:
+        type: string
     type: object
 info:
   contact: {}
@@ -63,6 +99,43 @@ paths:
       tags:
       - classes
   /api/v1/students:
+    get:
+      description: get
+      operationId: query students
+      parameters:
+      - in: query
+        name: currentPage
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                code:
+                  type: integer
+                data:
+                  items:
+                    $ref: '#/definitions/schema.StudentResp'
+                  type: array
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: query students
+      tags:
+      - students
     post:
       description: add
       operationId: student add one
@@ -105,7 +178,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.Response'
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.StudentResp'
+              type: object
         "404":
           description: Not Found
           schema:

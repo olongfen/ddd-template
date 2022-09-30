@@ -8,6 +8,7 @@ package main
 
 import (
 	"context"
+	"ddd-template/internal/adapters/delivery"
 	"ddd-template/internal/adapters/respository"
 	"ddd-template/internal/application"
 	"ddd-template/internal/application/mutation"
@@ -32,7 +33,8 @@ func NewServer(ctx context.Context, configs *config.Configs, logger *zap.Logger)
 	iStudentQueryService := query.NewQueryStudent(iStudentRepository, iClassDomainService, logger)
 	queries := app.SetQueries(iStudentQueryService)
 	application := app.NewApplication(ctx, mutations, queries)
-	httpServer, cleanup := controller.NewHttpServer(application)
+	server := delivery.NewServer(application)
+	httpServer, cleanup := controller.NewHttpServer(server)
 	return httpServer, func() {
 		cleanup()
 	}

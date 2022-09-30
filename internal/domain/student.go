@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"ddd-template/internal/schema"
 	"ddd-template/pkg/utils"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -83,4 +84,18 @@ func NewStudent(name string, stuNumber string, classID string) (u *Student, err 
 type IStudentRepository interface {
 	AddStudent(ctx context.Context, stu *Student) (err error)
 	GetStudent(ctx context.Context, uuid string) (ret *Student, err error)
+	QueryStudents(ctx context.Context, query schema.StudentsQuery) (ret []*Student,
+		pagination *schema.Pagination, err error)
+}
+
+func UnmarshalStudentToSchema(ent *Student) *schema.StudentResp {
+	return &schema.StudentResp{
+		Uuid:      ent.Uuid(),
+		CreatedAt: ent.CreatedAt(),
+		UpdatedAt: ent.UpdatedAt(),
+		Name:      ent.Name(),
+		StuNumber: ent.StuNumber(),
+		ClassUuid: ent.ClassUuid(),
+		ClassName: "",
+	}
 }

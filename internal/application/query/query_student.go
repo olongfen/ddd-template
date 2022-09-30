@@ -9,6 +9,8 @@ import (
 
 type IStudentQueryService interface {
 	GetStudent(ctx context.Context, uuid string) (ret *schema.StudentResp, err error)
+	QueryStudents(ctx context.Context, query schema.StudentsQuery) (ret schema.StudentsResp,
+		pagination *schema.Pagination, err error)
 }
 
 type queryStudent struct {
@@ -17,6 +19,7 @@ type queryStudent struct {
 	logger       *zap.Logger
 }
 
+// GetStudent get
 func (q queryStudent) GetStudent(ctx context.Context, uuid string) (ret *schema.StudentResp, err error) {
 	student, err := q.repo.GetStudent(ctx, uuid)
 	if err != nil {
@@ -27,9 +30,32 @@ func (q queryStudent) GetStudent(ctx context.Context, uuid string) (ret *schema.
 		return nil, err
 	}
 	// return
-	ret = schema.UnmarshalStudentFromEnt(student)
+	ret = domain.UnmarshalStudentToSchema(student)
 	ret.ClassName = class.Name()
 
+	return
+}
+
+// QueryStudents query students by page
+func (q queryStudent) QueryStudents(ctx context.Context, query schema.StudentsQuery) (ret schema.StudentsResp,
+	pagination *schema.Pagination, err error) {
+	var (
+		data []*domain.Student
+	)
+	if data, pagination, err = q.repo.QueryStudents(ctx, query); err != nil {
+		return
+	}
+
+	for _, v := range data {
+		class, _err := q.classService.GetClassDetail(ctx, v.ClassUuid())
+		if _err != nil {
+			err = _err
+			return
+		}
+		_data := domain.UnmarshalStudentToSchema(v)
+		_data.ClassName = class.Name()
+		ret = append(ret, _data)
+	}
 	return
 }
 

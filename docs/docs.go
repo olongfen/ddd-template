@@ -63,6 +63,69 @@ const docTemplate = `{
             }
         },
         "/api/v1/students": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "get",
+                "tags": [
+                    "students"
+                ],
+                "summary": "query students",
+                "operationId": "query students",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "name": "currentPage",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.StudentResp"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -134,7 +197,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.StudentResp"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "404": {
@@ -161,7 +236,14 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "data": {},
-                "message": {}
+                "errors": {},
+                "language": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "pagination": {}
             }
         },
         "schema.ClassAddForm": {
@@ -194,6 +276,49 @@ const docTemplate = `{
                 },
                 "stuNumber": {
                     "description": "学号",
+                    "type": "string",
+                    "maxLength": 10,
+                    "minLength": 1
+                }
+            }
+        },
+        "schema.StudentResp": {
+            "type": "object",
+            "properties": {
+                "className": {
+                    "description": "班级名称",
+                    "type": "string"
+                },
+                "classUuid": {
+                    "description": "班级uuid",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "$ref": "#/definitions/utils.JSONTime"
+                },
+                "name": {
+                    "description": "学生姓名",
+                    "type": "string"
+                },
+                "stuNumber": {
+                    "description": "学号",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "$ref": "#/definitions/utils.JSONTime"
+                },
+                "uuid": {
+                    "description": "Uuid",
+                    "type": "string"
+                }
+            }
+        },
+        "utils.JSONTime": {
+            "type": "object",
+            "properties": {
+                "time.Time": {
                     "type": "string"
                 }
             }

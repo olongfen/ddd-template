@@ -1,7 +1,6 @@
 package schema
 
 import (
-	"ddd-template/internal/domain"
 	"ddd-template/pkg/utils"
 )
 
@@ -31,14 +30,8 @@ type StudentResp struct {
 	ClassName string `json:"className"`
 }
 
-func UnmarshalStudentFromEnt(ent *domain.Student) *StudentResp {
-	return &StudentResp{
-		Uuid:      ent.Uuid(),
-		CreatedAt: ent.CreatedAt(),
-		UpdatedAt: ent.UpdatedAt(),
-		Name:      ent.Name(),
-		StuNumber: ent.StuNumber(),
-		ClassUuid: ent.ClassUuid(),
-		ClassName: "",
-	}
+type StudentsResp []*StudentResp
+
+type StudentsQuery struct {
+	QueryOptions
 }

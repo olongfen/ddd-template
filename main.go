@@ -29,7 +29,7 @@ func main() {
 	server, fc = NewServer(ctx, cfg, logger)
 	defer fc()
 	controller.RunHTTPServer(func(app2 *fiber.App) *fiber.App {
-		return controller.HandlerFromMux(server, app2)
+		return controller.HandlerFromMux(server.Server, app2)
 	}, cfg.HTTP, logger)
 
 }
