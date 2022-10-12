@@ -1,6 +1,7 @@
 package error_i18n
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/pkg/errors"
 )
@@ -26,9 +27,17 @@ type bizError struct {
 	stack   error  // 含有堆栈信息的错误
 }
 
+type DBErrorResponse map[string]BizError
+
+func (c DBErrorResponse) Error() string {
+	b, _ := json.Marshal(c)
+	return string(b)
+}
+
 func NewError(code int, language string) BizError {
 	biz := &bizError{
 		message: "",
+		code:    code,
 	}
 	switch language {
 	case "en":

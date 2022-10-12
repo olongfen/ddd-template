@@ -4,6 +4,8 @@ import (
 	"context"
 	"ddd-template/internal/config"
 	"ddd-template/internal/domain"
+	"ddd-template/pkg/error_i18n"
+	"ddd-template/pkg/scontext"
 	"fmt"
 	"github.com/pkg/errors"
 	"go.opentelemetry.io/otel"
@@ -48,7 +50,7 @@ func (d *Data) DB(ctx context.Context) *gorm.DB {
 	if ok {
 		return tx
 	}
-	return d.db
+	return d.db.WithContext(ctx)
 }
 
 func NewData(db *gorm.DB, logger *zap.Logger) (ret *Data) {
@@ -168,22 +170,23 @@ func after(db *gorm.DB) {
 }
 
 func handlerDBError(db *gorm.DB) {
+	lang := scontext.GetLanguage(db.Statement.Context)
 	if errors.Is(db.Error, gorm.ErrRecordNotFound) {
-		db.Error = errors.New("未发现记录")
+		db.Error = error_i18n.NewError(error_i18n.RecordNotFound, lang)
 		return
 	}
 	msg := db.Error.Error()
 	const (
 		code23505 = "23505"
 	)
+	// 处理数据库错误
 	for _, v := range db.Statement.Schema.DBNames {
 		if strings.Contains(msg, code23505) && strings.Contains(msg, v) {
 			field := db.Statement.Schema.FieldsByDBName[v]
-			tagZH := field.Tag.Get("zh")
-			if len(tagZH) == 0 {
-				tagZH = fmt.Sprintf(`%v`, db.Statement.ReflectValue.FieldByName(field.Name))
-			}
-			db.Error = fmt.Errorf("%s 已被使用", tagZH)
+			name := strings.ToLower(field.Name[:1]) + field.Name[1:]
+			var errs = error_i18n.DBErrorResponse{}
+			errs[name] = error_i18n.NewError(error_i18n.AlreadyExists, lang)
+			db.Error = errs
 		}
 	}
 }

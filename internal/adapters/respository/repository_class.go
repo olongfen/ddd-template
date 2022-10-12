@@ -9,7 +9,7 @@ import (
 
 type Class struct {
 	utils.Model
-	Name string `gorm:"size:24;comment:班级名称"`
+	Name string `gorm:"size:24;uniqueIndex;comment:班级名称"`
 }
 
 type classRepository struct {

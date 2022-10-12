@@ -66,7 +66,11 @@ func (h server) QueryStudents(ctx *fiber.Ctx) (err error) {
 	if data, page, err = h.app.Queries.Student.QueryStudents(ctx.UserContext(), *query); err != nil {
 		return
 	}
-	return resp.SetPagination(page).Success(ctx, data)
+
+	return resp.Success(ctx, map[string]any{
+		"list":       data,
+		"pagination": page,
+	})
 }
 
 func setValidateDetail(resp *response.Response, errors map[string]*schema.Error, lange string) error {

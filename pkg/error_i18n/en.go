@@ -5,5 +5,7 @@ var (
 		IllegalAccessToken: "Illegal token",
 		IllegalCertificate: "Illegal certificate",
 		IllegalParameter:   "Illegal parameter",
+		RecordNotFound:     "record not found",
+		AlreadyExists:      "already exists",
 	}
 )
