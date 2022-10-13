@@ -3,7 +3,7 @@ database:
     dbname: business
     debug: true
     driver: postgresql
-    host: db
+    host: 127.0.0.1
     password: business
     port: "5432"
     sslmode: disable

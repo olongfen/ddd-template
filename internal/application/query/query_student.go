@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"ddd-template/internal/application/transform"
 	"ddd-template/internal/domain"
 	"ddd-template/internal/schema"
 	"go.uber.org/zap"
@@ -30,7 +31,7 @@ func (q queryStudent) GetStudent(ctx context.Context, id int) (ret *schema.Stude
 		return nil, err
 	}
 	// return
-	ret = domain.UnmarshalStudentToSchema(student)
+	ret = transform.UnmarshalStudentToSchema(student)
 	ret.ClassName = class.Name()
 
 	return
@@ -52,7 +53,7 @@ func (q queryStudent) QueryStudents(ctx context.Context, query schema.StudentsQu
 			err = _err
 			return
 		}
-		_data := domain.UnmarshalStudentToSchema(v)
+		_data := transform.UnmarshalStudentToSchema(v)
 		_data.ClassName = class.Name()
 		ret = append(ret, _data)
 	}

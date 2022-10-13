@@ -18,6 +18,44 @@ definitions:
     required:
     - name
     type: object
+  schema.ClassQueryResp:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/schema.ClassResp'
+        type: array
+      pagination:
+        $ref: '#/definitions/schema.Pagination'
+    type: object
+  schema.ClassResp:
+    properties:
+      classUuid:
+        description: class uuid
+        type: string
+      createdAt:
+        $ref: '#/definitions/utils.JSONTime'
+        description: 创建时间
+      id:
+        description: id
+        type: integer
+      name:
+        description: 班级名称
+        type: string
+      updatedAt:
+        $ref: '#/definitions/utils.JSONTime'
+        description: 更新时间
+    type: object
+  schema.Pagination:
+    properties:
+      currentPage:
+        type: integer
+      pageSize:
+        type: integer
+      totalCount:
+        type: integer
+      totalPage:
+        type: integer
+    type: object
   schema.StudentAddForm:
     properties:
       classUuid:
@@ -72,6 +110,15 @@ definitions:
         description: Name 姓名
         type: string
     type: object
+  schema.StudentsQueryResp:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/schema.StudentResp'
+        type: array
+      pagination:
+        $ref: '#/definitions/schema.Pagination'
+    type: object
   utils.JSONTime:
     properties:
       time.Time:
@@ -81,6 +128,52 @@ info:
   contact: {}
 paths:
   /api/v1/classes:
+    get:
+      description: 分页查询class
+      operationId: query class
+      parameters:
+      - in: query
+        minimum: 0
+        name: currentPage
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: order
+        type: array
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: pageSize
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: sort
+        type: array
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.ClassQueryResp'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: 查询class
+      tags:
+      - classes
     post:
       description: add
       operationId: class add one
@@ -119,10 +212,20 @@ paths:
         name: currentPage
         type: integer
       - in: query
+        items:
+          type: string
+        name: order
+        type: array
+      - in: query
         maximum: 100
         minimum: 1
         name: pageSize
         type: integer
+      - in: query
+        items:
+          type: string
+        name: sort
+        type: array
       responses:
         "200":
           description: OK
@@ -133,9 +236,7 @@ paths:
                 code:
                   type: integer
                 data:
-                  items:
-                    $ref: '#/definitions/schema.StudentResp'
-                  type: array
+                  $ref: '#/definitions/schema.StudentsQueryResp'
               type: object
         "404":
           description: Not Found

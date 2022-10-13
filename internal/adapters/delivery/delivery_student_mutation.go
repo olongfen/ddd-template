@@ -19,7 +19,7 @@ import (
 // @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
-func (h server) AddStudent(ctx *fiber.Ctx) (err error) {
+func (s server) AddStudent(ctx *fiber.Ctx) (err error) {
 	var (
 		form     = new(schema.StudentAddForm)
 		language = scontext.GetLanguage(ctx.UserContext())
@@ -34,7 +34,7 @@ func (h server) AddStudent(ctx *fiber.Ctx) (err error) {
 		err = error_i18n.NewError(error_i18n.IllegalParameter, language)
 		return
 	}
-	if err = h.app.Mutations.Student.AddStudent(ctx.UserContext(), form); err != nil {
+	if err = s.app.Mutations.Student.AddStudent(ctx.UserContext(), form); err != nil {
 		return
 	}
 	return resp.Success(ctx, nil)
@@ -52,7 +52,7 @@ func (h server) AddStudent(ctx *fiber.Ctx) (err error) {
 // @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
-func (h server) UpStudent(ctx *fiber.Ctx) (err error) {
+func (s server) UpStudent(ctx *fiber.Ctx) (err error) {
 	var (
 		form     = new(schema.StudentUpForm)
 		language = scontext.GetLanguage(ctx.UserContext())
@@ -84,7 +84,7 @@ func (h server) UpStudent(ctx *fiber.Ctx) (err error) {
 		return
 	}
 
-	if err = h.app.Mutations.Student.UpStudent(ctx.UserContext(), uint(id), form); err != nil {
+	if err = s.app.Mutations.Student.UpStudent(ctx.UserContext(), uint(id), form); err != nil {
 		return
 	}
 

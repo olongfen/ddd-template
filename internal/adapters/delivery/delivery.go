@@ -9,8 +9,8 @@ type server struct {
 	app app.Application
 }
 
-func (h server) Cleanup() func() {
-	return h.app.Cleanup
+func (s server) Cleanup() func() {
+	return s.app.Cleanup
 }
 
 func NewServer(app app.Application) controller.Server {

@@ -19,7 +19,7 @@ import (
 // @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
-func (h server) AddClass(ctx *fiber.Ctx) (err error) {
+func (s server) AddClass(ctx *fiber.Ctx) (err error) {
 	var (
 		form     = new(schema.ClassAddForm)
 		language = scontext.GetLanguage(ctx.UserContext())
@@ -34,7 +34,7 @@ func (h server) AddClass(ctx *fiber.Ctx) (err error) {
 		ctx.SetUserContext(scontext.SetErrorsContext(ctx.UserContext(), errs))
 		return
 	}
-	if err = h.app.Mutations.Class.AddClass(ctx.UserContext(), form); err != nil {
+	if err = s.app.Mutations.Class.AddClass(ctx.UserContext(), form); err != nil {
 		return
 	}
 	return resp.Success(ctx, nil)

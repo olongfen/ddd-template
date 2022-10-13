@@ -21,11 +21,13 @@ type Mutations struct {
 // Queries 查询的数据
 type Queries struct {
 	Student query.IStudentQueryService
+	Class   query.IClassQueryService
 }
 
-func SetQueries(stu query.IStudentQueryService) Queries {
+func SetQueries(stu query.IStudentQueryService, cla query.IClassQueryService) Queries {
 	return Queries{
 		Student: stu,
+		Class:   cla,
 	}
 }
 

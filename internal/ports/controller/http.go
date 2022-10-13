@@ -43,6 +43,7 @@ func HandlerFromMux(server Server, a *fiber.App) *fiber.App {
 	// class
 	class := a.Group("/classes")
 	class.Post("/", server.AddClass)
+	class.Get("/", server.QueryClasses)
 	return a
 }
 
@@ -54,4 +55,5 @@ type Server interface {
 	UpStudent(ctx *fiber.Ctx) error
 	//
 	AddClass(ctx *fiber.Ctx) error
+	QueryClasses(ctx *fiber.Ctx) error
 }

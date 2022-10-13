@@ -19,7 +19,7 @@ import (
 // @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
-func (h server) GetStudent(ctx *fiber.Ctx) (err error) {
+func (s server) GetStudent(ctx *fiber.Ctx) (err error) {
 	var (
 		id       int
 		language = scontext.GetLanguage(ctx.UserContext())
@@ -28,7 +28,7 @@ func (h server) GetStudent(ctx *fiber.Ctx) (err error) {
 		err = error_i18n.NewError(error_i18n.IllegalParameter, language)
 		return
 	}
-	student, err := h.app.Queries.Student.GetStudent(ctx.UserContext(), id)
+	student, err := s.app.Queries.Student.GetStudent(ctx.UserContext(), id)
 	if err != nil {
 		return err
 	}
@@ -42,11 +42,11 @@ func (h server) GetStudent(ctx *fiber.Ctx) (err error) {
 // @Description get
 // @Param {} query schema.StudentsQuery true "query struct"
 // @router /api/v1/students [get]
-// @Success 200 {object} response.Response{code=int,data=schema.StudentsResp}
+// @Success 200 {object} response.Response{code=int,data=schema.StudentsQueryResp}
 // @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
-func (h server) QueryStudents(ctx *fiber.Ctx) (err error) {
+func (s server) QueryStudents(ctx *fiber.Ctx) (err error) {
 	var (
 		query    = new(schema.StudentsQuery)
 		language = scontext.GetLanguage(ctx.UserContext())
@@ -58,17 +58,20 @@ func (h server) QueryStudents(ctx *fiber.Ctx) (err error) {
 		return
 	}
 	if errors := schema.ValidateForm(query, language); len(errors) != 0 {
-		err = setValidateDetail(resp, errors, language)
+		err = error_i18n.NewError(error_i18n.IllegalParameter, language)
 		ctx.SetUserContext(scontext.SetErrorsContext(ctx.UserContext(), errors))
 		return
 	}
-	if data, page, err = h.app.Queries.Student.QueryStudents(ctx.UserContext(), *query); err != nil {
+	if err = query.Validate(language); err != nil {
+		return
+	}
+	if data, page, err = s.app.Queries.Student.QueryStudents(ctx.UserContext(), *query); err != nil {
 		return
 	}
 
-	return resp.Success(ctx, map[string]any{
-		"list":       data,
-		"pagination": page,
+	return resp.Success(ctx, schema.StudentsQueryResp{
+		List:       data,
+		Pagination: page,
 	})
 }
 

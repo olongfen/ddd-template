@@ -37,6 +37,11 @@ type StudentResp struct {
 // StudentsResp 列表返回体
 type StudentsResp []*StudentResp
 
+type StudentsQueryResp struct {
+	List       StudentsResp `json:"list"`
+	Pagination *Pagination  `json:"pagination"`
+}
+
 // StudentsQuery 分页查询
 type StudentsQuery struct {
 	QueryOptions

@@ -2,6 +2,7 @@ package respository
 
 import (
 	"ddd-template/internal/schema"
+	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -44,9 +45,9 @@ func findPage(db *gorm.DB, opt schema.QueryOptions, out interface{}) (pagination
 	//for _, v := range opt.OrderFields {
 	//	db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
 	//}
-	//for _, v := range opt.OrderSQLStr {
-	//	db = db.Order(v)
-	//}
+	for i, v := range opt.Sort {
+		db = db.Order(fmt.Sprintf("%s %s", snakeString(v), opt.Order[i]))
+	}
 	if err = db.Find(out).Error; err != nil {
 		return
 	}

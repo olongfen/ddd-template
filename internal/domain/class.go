@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"ddd-template/internal/schema"
 	"ddd-template/pkg/utils"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -20,11 +21,14 @@ func (c Class) Id() uint {
 	return c.id
 }
 
-func UnmarshalClassFromDatabase(uid string, createdAt utils.JSONTime,
+func UnmarshalClassFromDatabase(
+	id uint,
+	uid string, createdAt utils.JSONTime,
 	updatedAt utils.JSONTime,
 	name string,
 ) *Class {
 	return &Class{
+		id:        id,
 		uuid:      uid,
 		createdAt: createdAt,
 		updatedAt: updatedAt,
@@ -64,6 +68,7 @@ func NewClass(name string) (c *Class, err error) {
 type IClassRepository interface {
 	GetClassWithUuid(ctx context.Context, uid string) (ret *Class, err error)
 	AddClass(ctx context.Context, c *Class) (err error)
+	QueryClasses(ctx context.Context, query *schema.ClassQueryReq) (ret []*Class, pag *schema.Pagination, err error)
 }
 
 // IClassDomainService domain serve

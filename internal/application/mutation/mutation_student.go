@@ -21,7 +21,7 @@ func (u studentMutation) UpStudent(ctx context.Context, id uint, form *schema.St
 	if _, err = u.classService.GetClassDetail(ctx, form.ClassUuid); err != nil {
 		return
 	}
-	return u.repo.UpStudent(ctx, id, domain.MarshalStudentFromSchemaUpForm(form))
+	return u.repo.UpStudent(ctx, id, domain.UnmarshalStudentFromSchemaUpForm(form))
 }
 
 // AddStudent add

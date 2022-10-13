@@ -17,6 +17,82 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/api/v1/classes": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "分页查询class",
+                "tags": [
+                    "classes"
+                ],
+                "summary": "查询class",
+                "operationId": "query class",
+                "parameters": [
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "name": "currentPage",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.ClassQueryResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -83,10 +159,26 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
                         "maximum": 100,
                         "minimum": 1,
                         "type": "integer",
                         "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "name": "sort",
                         "in": "query"
                     }
                 ],
@@ -105,10 +197,7 @@ const docTemplate = `{
                                             "type": "integer"
                                         },
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/schema.StudentResp"
-                                            }
+                                            "$ref": "#/definitions/schema.StudentsQueryResp"
                                         }
                                     }
                                 }
@@ -311,6 +400,62 @@ const docTemplate = `{
                 }
             }
         },
+        "schema.ClassQueryResp": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.ClassResp"
+                    }
+                },
+                "pagination": {
+                    "$ref": "#/definitions/schema.Pagination"
+                }
+            }
+        },
+        "schema.ClassResp": {
+            "type": "object",
+            "properties": {
+                "classUuid": {
+                    "description": "class uuid",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "$ref": "#/definitions/utils.JSONTime"
+                },
+                "id": {
+                    "description": "id",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "班级名称",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "$ref": "#/definitions/utils.JSONTime"
+                }
+            }
+        },
+        "schema.Pagination": {
+            "type": "object",
+            "properties": {
+                "currentPage": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "totalCount": {
+                    "type": "integer"
+                },
+                "totalPage": {
+                    "type": "integer"
+                }
+            }
+        },
         "schema.StudentAddForm": {
             "type": "object",
             "required": [
@@ -382,6 +527,20 @@ const docTemplate = `{
                 "name": {
                     "description": "Name 姓名",
                     "type": "string"
+                }
+            }
+        },
+        "schema.StudentsQueryResp": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.StudentResp"
+                    }
+                },
+                "pagination": {
+                    "$ref": "#/definitions/schema.Pagination"
                 }
             }
         },

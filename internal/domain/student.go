@@ -97,21 +97,8 @@ type IStudentRepository interface {
 	UpStudent(ctx context.Context, id uint, stu *Student) (err error)
 }
 
-func UnmarshalStudentToSchema(ent *Student) *schema.StudentResp {
-	return &schema.StudentResp{
-		Uuid:      ent.Uuid(),
-		CreatedAt: ent.CreatedAt(),
-		UpdatedAt: ent.UpdatedAt(),
-		Name:      ent.Name(),
-		StuNumber: ent.StuNumber(),
-		ClassUuid: ent.ClassUuid(),
-		ID:        ent.Id(),
-		ClassName: "",
-	}
-}
-
-// MarshalStudentFromSchemaUpForm 把更新结构体赋值给实体
-func MarshalStudentFromSchemaUpForm(up *schema.StudentUpForm) *Student {
+// UnmarshalStudentFromSchemaUpForm 把更新结构体赋值给实体
+func UnmarshalStudentFromSchemaUpForm(up *schema.StudentUpForm) *Student {
 	return &Student{
 		name:      up.Name,
 		classUuid: up.ClassUuid,

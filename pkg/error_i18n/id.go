@@ -10,4 +10,6 @@ const (
 	RecordNotFound = 40004
 	// AlreadyExists 已经存在
 	AlreadyExists = 40005
+	// SortParameterMismatch 排序参数不匹配
+	SortParameterMismatch = 40006
 )
