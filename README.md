@@ -6,12 +6,17 @@
 - configs 配置文件
 - internal
     - adapters 适配器代码
+        - delivery 运输层处理
+        - mock mock代码
+        - repository 存储器
     - application 应用层
       - mutation 写入操作
       - query 查询操作
+      - transform 实体转成返回对象
     - config 配置
     - ports 端口
-      - middleware http中间件 
+      - controller 控制器
+        - middleware http中间件
     - schema api返回表单
 - pkg 可提取公用包
 ## 运行

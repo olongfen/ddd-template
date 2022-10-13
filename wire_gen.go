@@ -9,7 +9,7 @@ package main
 import (
 	"context"
 	"ddd-template/internal/adapters/delivery"
-	"ddd-template/internal/adapters/respository"
+	"ddd-template/internal/adapters/repository"
 	"ddd-template/internal/application"
 	"ddd-template/internal/application/mutation"
 	"ddd-template/internal/application/query"
@@ -22,10 +22,10 @@ import (
 // Injectors from wire.go:
 
 func NewServer(ctx context.Context, configs *config.Configs, logger *zap.Logger) (controller.HttpServer, func()) {
-	db := respository.InitDBConnect(configs, logger)
-	data := respository.NewData(db, logger)
-	iStudentRepository := respository.NewStudentRepository(data)
-	iClassRepository := respository.NewClassRepository(data)
+	db := repository.InitDBConnect(configs, logger)
+	data := repository.NewData(db, logger)
+	iStudentRepository := repository.NewStudentRepository(data)
+	iClassRepository := repository.NewClassRepository(data)
 	iClassDomainService := domain.NewClassDomainService(iClassRepository, logger)
 	iStudentMutationService := mutation.NewUserMutation(iStudentRepository, iClassDomainService, logger)
 	iClassMutationService := mutation.NewClassMutation(iClassRepository, logger)
