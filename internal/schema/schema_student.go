@@ -4,6 +4,7 @@ import (
 	"ddd-template/pkg/utils"
 )
 
+// StudentAddForm 添加一条学生记录
 type StudentAddForm struct {
 	// 姓名
 	Name string `json:"name" validate:"required"`
@@ -13,6 +14,7 @@ type StudentAddForm struct {
 	StuNumber string `json:"stuNumber" validate:"required,min=1,max=10"`
 }
 
+// StudentResp 返回结构体
 type StudentResp struct {
 	// ID
 	ID uint `json:"id"`
@@ -32,8 +34,18 @@ type StudentResp struct {
 	ClassName string `json:"className"`
 }
 
+// StudentsResp 列表返回体
 type StudentsResp []*StudentResp
 
+// StudentsQuery 分页查询
 type StudentsQuery struct {
 	QueryOptions
+}
+
+// StudentUpForm 更新学生信息
+type StudentUpForm struct {
+	// Name 姓名
+	Name string `json:"name"`
+	// 班级uuid
+	ClassUuid string `json:"classUuid" validate:"uuid4"`
 }

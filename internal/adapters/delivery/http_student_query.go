@@ -54,7 +54,6 @@ func (h server) QueryStudents(ctx *fiber.Ctx) (err error) {
 		data     schema.StudentsResp
 		page     *schema.Pagination
 	)
-
 	if err = ctx.QueryParser(query); err != nil {
 		return
 	}

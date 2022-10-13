@@ -94,6 +94,7 @@ type IStudentRepository interface {
 	GetStudent(ctx context.Context, id int) (ret *Student, err error)
 	QueryStudents(ctx context.Context, query schema.StudentsQuery) (ret []*Student,
 		pagination *schema.Pagination, err error)
+	UpStudent(ctx context.Context, id uint, stu *Student) (err error)
 }
 
 func UnmarshalStudentToSchema(ent *Student) *schema.StudentResp {
@@ -106,5 +107,13 @@ func UnmarshalStudentToSchema(ent *Student) *schema.StudentResp {
 		ClassUuid: ent.ClassUuid(),
 		ID:        ent.Id(),
 		ClassName: "",
+	}
+}
+
+// MarshalStudentFromSchemaUpForm 把更新结构体赋值给实体
+func MarshalStudentFromSchemaUpForm(up *schema.StudentUpForm) *Student {
+	return &Student{
+		name:      up.Name,
+		classUuid: up.ClassUuid,
 	}
 }

@@ -67,6 +67,14 @@ func (u studentRepository) AddStudent(ctx context.Context, stu *domain.Student) 
 	return
 }
 
+// UpStudent update
+func (u studentRepository) UpStudent(ctx context.Context, id uint, stu *domain.Student) (err error) {
+	if err = u.data.DB(ctx).Model(&Student{}).Where("id = ?", id).Updates(u.marshal(stu)).Error; err != nil {
+		return
+	}
+	return
+}
+
 // NewStudentRepository new user repository
 func NewStudentRepository(data *Data) (ret domain.IStudentRepository) {
 	if data == nil {

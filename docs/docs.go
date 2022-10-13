@@ -228,6 +228,57 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "通过id更新一条学生记录",
+                "tags": [
+                    "students"
+                ],
+                "summary": "更新",
+                "operationId": "student update one",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "update form",
+                        "name": "{}",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.StudentUpForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         }
     },
@@ -245,8 +296,7 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string"
-                },
-                "pagination": {}
+                }
             }
         },
         "schema.ClassAddForm": {
@@ -300,6 +350,10 @@ const docTemplate = `{
                     "description": "创建时间",
                     "$ref": "#/definitions/utils.JSONTime"
                 },
+                "id": {
+                    "description": "ID",
+                    "type": "integer"
+                },
                 "name": {
                     "description": "学生姓名",
                     "type": "string"
@@ -314,6 +368,19 @@ const docTemplate = `{
                 },
                 "uuid": {
                     "description": "Uuid",
+                    "type": "string"
+                }
+            }
+        },
+        "schema.StudentUpForm": {
+            "type": "object",
+            "properties": {
+                "classUuid": {
+                    "description": "班级uuid",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name 姓名",
                     "type": "string"
                 }
             }

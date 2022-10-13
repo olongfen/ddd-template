@@ -9,7 +9,6 @@ definitions:
         type: string
       message:
         type: string
-      pagination: {}
     type: object
   schema.ClassAddForm:
     properties:
@@ -48,6 +47,9 @@ definitions:
       createdAt:
         $ref: '#/definitions/utils.JSONTime'
         description: 创建时间
+      id:
+        description: ID
+        type: integer
       name:
         description: 学生姓名
         type: string
@@ -59,6 +61,15 @@ definitions:
         description: 更新时间
       uuid:
         description: Uuid
+        type: string
+    type: object
+  schema.StudentUpForm:
+    properties:
+      classUuid:
+        description: 班级uuid
+        type: string
+      name:
+        description: Name 姓名
         type: string
     type: object
   utils.JSONTime:
@@ -198,6 +209,39 @@ paths:
       security:
       - BearerAuth: []
       summary: get student one record
+      tags:
+      - students
+    put:
+      description: 通过id更新一条学生记录
+      operationId: student update one
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: update form
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/schema.StudentUpForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: 更新
       tags:
       - students
 swagger: "2.0"
