@@ -21,8 +21,15 @@
 - pkg 可提取公用包
 ## 运行
 ```shell
-go run ./...
+go run ./ --config configs/config.yaml
 ```
+
+## docker
+```shell
+source .env
+docker-compose up -d --build
+```
+
 ## 单元测试
 ```shell
 sh run_unit_test.sh
