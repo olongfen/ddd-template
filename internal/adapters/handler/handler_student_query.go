@@ -1,4 +1,4 @@
-package delivery
+package handler
 
 import (
 	"ddd-template/internal/schema"
@@ -19,7 +19,7 @@ import (
 // @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
-func (s server) GetStudent(ctx *fiber.Ctx) (err error) {
+func (s handler) GetStudent(ctx *fiber.Ctx) (err error) {
 	var (
 		id       int
 		language = scontext.GetLanguage(ctx.UserContext())
@@ -46,7 +46,7 @@ func (s server) GetStudent(ctx *fiber.Ctx) (err error) {
 // @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
-func (s server) QueryStudents(ctx *fiber.Ctx) (err error) {
+func (s handler) QueryStudents(ctx *fiber.Ctx) (err error) {
 	var (
 		query    = new(schema.StudentsQuery)
 		language = scontext.GetLanguage(ctx.UserContext())

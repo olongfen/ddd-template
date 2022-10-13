@@ -5,7 +5,7 @@ package main
 
 import (
 	"context"
-	"ddd-template/internal/adapters/delivery"
+	"ddd-template/internal/adapters/handler"
 	"ddd-template/internal/adapters/repository"
 	app "ddd-template/internal/application"
 	"ddd-template/internal/config"
@@ -17,5 +17,5 @@ import (
 )
 
 func NewServer(ctx context.Context, configs *config.Configs, logger *zap.Logger) (s controller.HttpServer, fc func()) {
-	panic(wire.Build(ports.Set, delivery.Set, app.Set, domain.Set, repository.Set))
+	panic(wire.Build(ports.Set, handler.Set, app.Set, domain.Set, repository.Set))
 }

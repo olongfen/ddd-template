@@ -6,7 +6,7 @@
 - configs 配置文件
 - internal
     - adapters 适配器代码
-        - delivery 运输层处理
+        - handler api处理
         - mock mock代码
         - repository 存储器
     - application 应用层

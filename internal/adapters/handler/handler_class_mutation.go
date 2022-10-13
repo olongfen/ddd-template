@@ -1,4 +1,4 @@
-package delivery
+package handler
 
 import (
 	"ddd-template/internal/schema"
@@ -19,7 +19,7 @@ import (
 // @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
-func (s server) AddClass(ctx *fiber.Ctx) (err error) {
+func (s handler) AddClass(ctx *fiber.Ctx) (err error) {
 	var (
 		form     = new(schema.ClassAddForm)
 		language = scontext.GetLanguage(ctx.UserContext())

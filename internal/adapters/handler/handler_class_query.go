@@ -1,4 +1,4 @@
-package delivery
+package handler
 
 import (
 	"ddd-template/internal/schema"
@@ -19,7 +19,7 @@ import (
 // @Security BearerAuth
 // @Failure 404 {object} string
 // @Failure 500 {object} string
-func (s server) QueryClasses(ctx *fiber.Ctx) (err error) {
+func (s handler) QueryClasses(ctx *fiber.Ctx) (err error) {
 	var (
 		query = new(schema.ClassQueryReq)
 		lan   = scontext.GetLanguage(ctx.UserContext())
