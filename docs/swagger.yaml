@@ -45,6 +45,12 @@ definitions:
         $ref: '#/definitions/utils.JSONTime'
         description: 更新时间
     type: object
+  schema.ClassUpForm:
+    properties:
+      name:
+        description: update body
+        type: string
+    type: object
   schema.Pagination:
     properties:
       currentPage:
@@ -200,6 +206,40 @@ paths:
       security:
       - BearerAuth: []
       summary: add class one record
+      tags:
+      - classes
+  /api/v1/classes/{id}:
+    put:
+      description: update class by id
+      operationId: update class
+      parameters:
+      - description: form
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ClassUpForm'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: update class
       tags:
       - classes
   /api/v1/students:

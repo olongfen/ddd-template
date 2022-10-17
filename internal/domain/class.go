@@ -17,7 +17,7 @@ type Class struct {
 	name      string
 }
 
-func (c Class) Id() uint {
+func (c *Class) Id() uint {
 	return c.id
 }
 
@@ -36,19 +36,19 @@ func UnmarshalClassFromDatabase(
 	}
 }
 
-func (c Class) Uuid() string {
+func (c *Class) Uuid() string {
 	return c.uuid
 }
 
-func (c Class) CreatedAt() utils.JSONTime {
+func (c *Class) CreatedAt() utils.JSONTime {
 	return c.createdAt
 }
 
-func (c Class) UpdatedAt() utils.JSONTime {
+func (c *Class) UpdatedAt() utils.JSONTime {
 	return c.updatedAt
 }
 
-func (c Class) Name() string {
+func (c *Class) Name() string {
 	return c.name
 }
 
@@ -64,10 +64,18 @@ func NewClass(name string) (c *Class, err error) {
 	return
 }
 
+// UnmarshalClassFromSchemaUpForm 转换
+func UnmarshalClassFromSchemaUpForm(s *schema.ClassUpForm) *Class {
+	c := new(Class)
+	c.name = s.Name
+	return c
+}
+
 // IClassRepository class repository
 type IClassRepository interface {
 	GetClassWithUuid(ctx context.Context, uid string) (ret *Class, err error)
 	AddClass(ctx context.Context, c *Class) (err error)
+	UpClass(ctx context.Context, id int, ent *Class) (err error)
 	QueryClasses(ctx context.Context, query *schema.ClassQueryReq) (ret []*Class, pag *schema.Pagination, err error)
 }
 

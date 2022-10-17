@@ -23,8 +23,17 @@ func (c classMutation) AddClass(ctx context.Context, form *schema.ClassAddForm) 
 	return c.repo.AddClass(ctx, data)
 }
 
+// UpClass update
+func (c classMutation) UpClass(ctx context.Context, form *schema.ClassUpForm) (err error) {
+	if err = c.repo.UpClass(ctx, form.Id, domain.UnmarshalClassFromSchemaUpForm(form)); err != nil {
+		return
+	}
+	return
+}
+
 type IClassMutationService interface {
 	AddClass(ctx context.Context, form *schema.ClassAddForm) (err error)
+	UpClass(ctx context.Context, form *schema.ClassUpForm) (err error)
 }
 
 func NewClassMutation(repo domain.IClassRepository,

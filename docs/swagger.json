@@ -126,6 +126,59 @@
                 }
             }
         },
+        "/api/v1/classes/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "update class by id",
+                "tags": [
+                    "classes"
+                ],
+                "summary": "update class",
+                "operationId": "update class",
+                "parameters": [
+                    {
+                        "description": "form",
+                        "name": "{}",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.ClassUpForm"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/students": {
             "get": {
                 "security": [
@@ -424,6 +477,15 @@
                 "updatedAt": {
                     "description": "更新时间",
                     "$ref": "#/definitions/utils.JSONTime"
+                }
+            }
+        },
+        "schema.ClassUpForm": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "update body",
+                    "type": "string"
                 }
             }
         },

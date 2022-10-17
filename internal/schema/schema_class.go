@@ -30,3 +30,11 @@ type ClassQueryResp struct {
 	List       ClassRespList `json:"list"`
 	Pagination *Pagination   `json:"pagination"`
 }
+
+// ClassUpForm update form
+type ClassUpForm struct {
+	// path param
+	Id int `json:"-" params:"id" validate:"required,min=1"`
+	// update body
+	Name string `json:"name"`
+}

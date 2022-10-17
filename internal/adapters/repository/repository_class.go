@@ -64,6 +64,11 @@ func (c classRepository) AddClass(ctx context.Context, cls *domain.Class) (err e
 	return c.data.DB(ctx).Create(c.marshal(cls)).Error
 }
 
+// UpClass update
+func (c classRepository) UpClass(ctx context.Context, id int, ent *domain.Class) (err error) {
+	return c.data.DB(ctx).Model(&Class{}).Where("id = ?", id).Updates(c.marshal(ent)).Error
+}
+
 func (c classRepository) marshal(in *domain.Class) *Class {
 	class := &Class{
 		Model: utils.Model{
