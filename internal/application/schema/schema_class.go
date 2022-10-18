@@ -1,6 +1,8 @@
 package schema
 
-import "ddd-template/pkg/utils"
+import (
+	"time"
+)
 
 type ClassAddForm struct {
 	// 班级名称
@@ -15,9 +17,9 @@ type ClassResp struct {
 	// id
 	ID uint `json:"id"`
 	// 创建时间
-	CreatedAt utils.JSONTime `json:"createdAt"`
+	CreatedAt time.Time `json:"createdAt"`
 	// 更新时间
-	UpdatedAt utils.JSONTime `json:"updatedAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type ClassRespList []*ClassResp

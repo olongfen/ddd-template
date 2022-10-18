@@ -2,17 +2,17 @@ package domain
 
 import (
 	"context"
-	"ddd-template/pkg/utils"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
+	"time"
 )
 
 // Class  entity
 type Class struct {
 	id        uint
 	uuid      string
-	createdAt utils.JSONTime
-	updatedAt utils.JSONTime
+	createdAt time.Time
+	updatedAt time.Time
 	name      string
 }
 
@@ -22,8 +22,8 @@ func (c *Class) Id() uint {
 
 func UnmarshalClassFromDatabase(
 	id uint,
-	uid string, createdAt utils.JSONTime,
-	updatedAt utils.JSONTime,
+	uid string, createdAt time.Time,
+	updatedAt time.Time,
 	name string,
 ) *Class {
 	return &Class{
@@ -39,11 +39,11 @@ func (c *Class) Uuid() string {
 	return c.uuid
 }
 
-func (c *Class) CreatedAt() utils.JSONTime {
+func (c *Class) CreatedAt() time.Time {
 	return c.createdAt
 }
 
-func (c *Class) UpdatedAt() utils.JSONTime {
+func (c *Class) UpdatedAt() time.Time {
 	return c.updatedAt
 }
 

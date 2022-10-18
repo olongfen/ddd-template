@@ -1,7 +1,7 @@
 package schema
 
 import (
-	"ddd-template/pkg/utils"
+	"time"
 )
 
 // StudentAddForm 添加一条学生记录
@@ -21,9 +21,9 @@ type StudentResp struct {
 	// Uuid
 	Uuid string `json:"uuid"`
 	// 创建时间
-	CreatedAt utils.JSONTime `json:"createdAt"`
+	CreatedAt time.Time `json:"createdAt"`
 	// 更新时间
-	UpdatedAt utils.JSONTime `json:"updatedAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 	// 学生姓名
 	Name string `json:"name"`
 	// 学号
