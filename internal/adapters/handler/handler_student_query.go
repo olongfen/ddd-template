@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"ddd-template/internal/schema"
+	"ddd-template/internal/application/schema"
 	"ddd-template/pkg/error_i18n"
 	"ddd-template/pkg/response"
 	"ddd-template/pkg/scontext"
@@ -41,6 +41,8 @@ func (s handler) GetStudent(ctx *fiber.Ctx) (err error) {
 // @Summary query students
 // @Description get
 // @Param {} query schema.StudentsQuery true "query struct"
+// @Param   order  query     []string   false  "string order collection"  collectionFormat(multi)
+// @Param   sort  query     []string   false  "string sort collection"  collectionFormat(multi)
 // @router /api/v1/students [get]
 // @Success 200 {object} response.Response{code=int,data=schema.StudentsQueryResp}
 // @Security BearerAuth
@@ -60,9 +62,6 @@ func (s handler) QueryStudents(ctx *fiber.Ctx) (err error) {
 	if errors := schema.ValidateForm(query, language); len(errors) != 0 {
 		err = error_i18n.NewError(error_i18n.IllegalParameter, language)
 		ctx.SetUserContext(scontext.SetErrorsContext(ctx.UserContext(), errors))
-		return
-	}
-	if err = query.Validate(language); err != nil {
 		return
 	}
 	if data, page, err = s.app.Queries.Student.QueryStudents(ctx.UserContext(), *query); err != nil {

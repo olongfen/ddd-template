@@ -2,7 +2,6 @@ package domain
 
 import (
 	"context"
-	"ddd-template/internal/schema"
 	"ddd-template/pkg/utils"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -92,15 +91,15 @@ func NewStudent(name string, stuNumber string, classID string) (u *Student, err 
 type IStudentRepository interface {
 	AddStudent(ctx context.Context, stu *Student) (err error)
 	GetStudent(ctx context.Context, id int) (ret *Student, err error)
-	QueryStudents(ctx context.Context, query schema.StudentsQuery) (ret []*Student,
-		pagination *schema.Pagination, err error)
+	FindStudent(ctx context.Context, o OtherCond, fields ...Field) (ret []*Student,
+		pagination *Pagination, err error)
 	UpStudent(ctx context.Context, id uint, stu *Student) (err error)
 }
 
 // UnmarshalStudentFromSchemaUpForm 把更新结构体赋值给实体
-func UnmarshalStudentFromSchemaUpForm(up *schema.StudentUpForm) *Student {
+func UnmarshalStudentFromSchemaUpForm(name string, classUuid string) *Student {
 	return &Student{
-		name:      up.Name,
-		classUuid: up.ClassUuid,
+		name:      name,
+		classUuid: classUuid,
 	}
 }

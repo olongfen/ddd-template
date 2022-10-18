@@ -1,8 +1,8 @@
 package transform
 
 import (
+	"ddd-template/internal/application/schema"
 	"ddd-template/internal/domain"
-	"ddd-template/internal/schema"
 )
 
 func UnmarshalClassToSchema(c *domain.Class) *schema.ClassResp {

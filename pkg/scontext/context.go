@@ -2,7 +2,7 @@ package scontext
 
 import (
 	"context"
-	"ddd-template/internal/schema"
+	"ddd-template/internal/application/schema"
 )
 
 type languageCtxTag struct {

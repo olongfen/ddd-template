@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"ddd-template/internal/schema"
+	"ddd-template/internal/application/schema"
 	"ddd-template/pkg/error_i18n"
 	"ddd-template/pkg/response"
 	"ddd-template/pkg/scontext"

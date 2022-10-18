@@ -2,9 +2,10 @@ package query
 
 import (
 	"context"
+	"ddd-template/internal/application/schema"
 	"ddd-template/internal/application/transform"
 	"ddd-template/internal/domain"
-	"ddd-template/internal/schema"
+	"ddd-template/pkg/utils"
 	"go.uber.org/zap"
 )
 
@@ -15,17 +16,24 @@ type IClassQueryService interface {
 func (c queryClass) QueryClasses(ctx context.Context, query *schema.ClassQueryReq) (ret schema.ClassRespList, pag *schema.Pagination, err error) {
 	var (
 		data []*domain.Class
+		dPag *domain.Pagination
 	)
 	if len(query.Order) == 0 {
 		query.Order = append(query.Order, "desc")
 		query.Sort = append(query.Sort, "createdAt")
 	}
-	if data, pag, err = c.repo.QueryClasses(ctx, query); err != nil {
+	if data, dPag, err = c.repo.FindClass(ctx, domain.OtherCond{
+		PageSize:    query.PageSize,
+		CurrentPage: query.CurrentPage,
+		Sort:        query.Sort,
+		Order:       query.Order,
+	}); err != nil {
 		return
 	}
 	for _, v := range data {
 		ret = append(ret, transform.UnmarshalClassToSchema(v))
 	}
+	utils.MustDecode(dPag, &pag)
 	return
 }
 

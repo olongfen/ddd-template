@@ -13,11 +13,11 @@
       - mutation 写入操作
       - query 查询操作
       - transform 实体转成返回对象
+      - schema api返回表单
     - config 配置
     - ports 端口
       - controller 控制器
         - middleware http中间件
-    - schema api返回表单
 - pkg 可提取公用包
 ## 运行
 ```shell

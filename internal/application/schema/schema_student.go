@@ -44,6 +44,7 @@ type StudentsQueryResp struct {
 
 // StudentsQuery 分页查询
 type StudentsQuery struct {
+	Name string `json:"name" query:"name"`
 	QueryOptions
 }
 

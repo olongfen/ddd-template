@@ -2,8 +2,8 @@ package mutation
 
 import (
 	"context"
+	"ddd-template/internal/application/schema"
 	"ddd-template/internal/domain"
-	"ddd-template/internal/schema"
 	"errors"
 	"go.uber.org/zap"
 )
@@ -21,7 +21,7 @@ func (u studentMutation) UpStudent(ctx context.Context, id uint, form *schema.St
 	if _, err = u.classService.GetClassDetail(ctx, form.ClassUuid); err != nil {
 		return
 	}
-	return u.repo.UpStudent(ctx, id, domain.UnmarshalStudentFromSchemaUpForm(form))
+	return u.repo.UpStudent(ctx, id, domain.UnmarshalStudentFromSchemaUpForm(form.Name, form.ClassUuid))
 }
 
 // AddStudent add

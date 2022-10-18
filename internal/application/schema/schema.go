@@ -63,10 +63,12 @@ func ValidateForm(c interface{}, language string) map[string]*Error {
 }
 
 type QueryOptions struct {
-	CurrentPage int      `json:"currentPage" validate:"min=0" query:"currentPage"`
-	PageSize    int      `json:"pageSize" validate:"min=1,max=100" query:"pageSize"`
-	Sort        []string `json:"sort" query:"sort"`
-	Order       []string `json:"order" query:"order"`
+	CurrentPage int `json:"currentPage" validate:"min=0" query:"currentPage"`
+	PageSize    int `json:"pageSize" validate:"min=1,max=100" query:"pageSize"`
+	// sort 忽略下面两个字段自动生成文档
+	Sort []string `json:"-" query:"sort"`
+	// order
+	Order []string `json:"-" query:"order"`
 }
 
 func (q QueryOptions) Validate(language string) (err error) {

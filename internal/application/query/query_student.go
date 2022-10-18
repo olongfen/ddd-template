@@ -2,9 +2,10 @@ package query
 
 import (
 	"context"
+	"ddd-template/internal/application/schema"
 	"ddd-template/internal/application/transform"
 	"ddd-template/internal/domain"
-	"ddd-template/internal/schema"
+	"ddd-template/pkg/utils"
 	"go.uber.org/zap"
 )
 
@@ -41,9 +42,24 @@ func (q queryStudent) GetStudent(ctx context.Context, id int) (ret *schema.Stude
 func (q queryStudent) QueryStudents(ctx context.Context, query schema.StudentsQuery) (ret schema.StudentsResp,
 	pagination *schema.Pagination, err error) {
 	var (
-		data []*domain.Student
+		data   []*domain.Student
+		pag    *domain.Pagination
+		fields []domain.Field
 	)
-	if data, pagination, err = q.repo.QueryStudents(ctx, query); err != nil {
+	if len(query.Name) > 0 {
+		fields = append(fields, domain.Field{
+			Column: "name",
+			Value:  query.Name,
+			Symbol: "=",
+		})
+	}
+
+	if data, pag, err = q.repo.FindStudent(ctx, domain.OtherCond{
+		PageSize:    query.PageSize,
+		CurrentPage: query.CurrentPage,
+		Sort:        query.Sort,
+		Order:       query.Order,
+	}, fields...); err != nil {
 		return
 	}
 
@@ -57,6 +73,7 @@ func (q queryStudent) QueryStudents(ctx context.Context, query schema.StudentsQu
 		_data.ClassName = class.Name()
 		ret = append(ret, _data)
 	}
+	utils.MustDecode(pag, &pagination)
 	return
 }
 

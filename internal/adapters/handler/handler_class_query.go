@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"ddd-template/internal/schema"
+	"ddd-template/internal/application/schema"
 	"ddd-template/pkg/error_i18n"
 	"ddd-template/pkg/response"
 	"ddd-template/pkg/scontext"
@@ -13,6 +13,8 @@ import (
 // @tags classes
 // @Summary 查询class
 // @Description 分页查询class
+// @Param   order  query     []string   false  "string order collection"  collectionFormat(multi)
+// @Param   sort  query     []string   false  "string sort collection"  collectionFormat(multi)
 // @Param {} query schema.ClassQueryReq true "query"
 // @router /api/v1/classes [get]
 // @Success 200 {object} response.Response{data=schema.ClassQueryResp}

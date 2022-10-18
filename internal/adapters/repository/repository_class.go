@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"ddd-template/internal/domain"
-	"ddd-template/internal/schema"
 	"ddd-template/pkg/utils"
 	"go.uber.org/zap"
 )
@@ -17,13 +16,17 @@ type classRepository struct {
 	data *Data
 }
 
-// QueryClasses query
-func (c classRepository) QueryClasses(ctx context.Context, query *schema.ClassQueryReq) (ret []*domain.Class, pag *schema.Pagination, err error) {
+// FindClass query
+func (c classRepository) FindClass(ctx context.Context, o domain.OtherCond, fields ...domain.Field) (ret []*domain.Class, pag *domain.Pagination, err error) {
 	var (
 		data []*Class
 		db   = c.data.DB(ctx).Model(&Class{})
+		opt  = newOption(o)
 	)
-	if pag, err = findPage(db, query.QueryOptions, &data); err != nil {
+
+	fieldsT(fields).process(db)
+
+	if pag, err = findPage(db, opt, &data); err != nil {
 		return
 	}
 	for _, v := range data {

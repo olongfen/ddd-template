@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"ddd-template/internal/domain"
-	"ddd-template/internal/schema"
 	"ddd-template/pkg/utils"
 	"go.uber.org/zap"
 )
@@ -31,13 +30,15 @@ func (u studentRepository) GetStudent(ctx context.Context, id int) (ret *domain.
 	return
 }
 
-func (u studentRepository) QueryStudents(ctx context.Context, query schema.StudentsQuery) (ret []*domain.Student,
-	pagination *schema.Pagination, err error) {
+func (u studentRepository) FindStudent(ctx context.Context, o domain.OtherCond, fields ...domain.Field) (ret []*domain.Student,
+	pagination *domain.Pagination, err error) {
 	var (
 		data []*Student
 		db   = u.data.DB(ctx).Model(&Student{})
+		opt  = newOption(o)
 	)
-	if pagination, err = findPage(db, query.QueryOptions, &data); err != nil {
+	fieldsT(fields).process(db)
+	if pagination, err = findPage(db, opt, &data); err != nil {
 		return
 	}
 	for _, v := range data {

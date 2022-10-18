@@ -2,7 +2,6 @@ package domain
 
 import (
 	"context"
-	"ddd-template/internal/schema"
 	"ddd-template/pkg/utils"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -65,10 +64,10 @@ func NewClass(name string) (c *Class, err error) {
 }
 
 // UnmarshalClassFromSchemaUpForm 转换
-func UnmarshalClassFromSchemaUpForm(s *schema.ClassUpForm) *Class {
-	c := new(Class)
-	c.name = s.Name
-	return c
+func UnmarshalClassFromSchemaUpForm(name string) *Class {
+	return &Class{
+		name: name,
+	}
 }
 
 // IClassRepository class repository
@@ -76,7 +75,7 @@ type IClassRepository interface {
 	GetClassWithUuid(ctx context.Context, uid string) (ret *Class, err error)
 	AddClass(ctx context.Context, c *Class) (err error)
 	UpClass(ctx context.Context, id int, ent *Class) (err error)
-	QueryClasses(ctx context.Context, query *schema.ClassQueryReq) (ret []*Class, pag *schema.Pagination, err error)
+	FindClass(ctx context.Context, o OtherCond, fields ...Field) (ret []*Class, pag *Pagination, err error)
 }
 
 // IClassDomainService domain serve

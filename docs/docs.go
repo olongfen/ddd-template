@@ -31,9 +31,13 @@ const docTemplate = `{
                 "operationId": "query class",
                 "parameters": [
                     {
-                        "minimum": 0,
-                        "type": "integer",
-                        "name": "currentPage",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "string order collection",
+                        "name": "order",
                         "in": "query"
                     },
                     {
@@ -41,7 +45,15 @@ const docTemplate = `{
                         "items": {
                             "type": "string"
                         },
-                        "name": "order",
+                        "collectionFormat": "multi",
+                        "description": "string sort collection",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "name": "currentPage",
                         "in": "query"
                     },
                     {
@@ -49,14 +61,6 @@ const docTemplate = `{
                         "minimum": 1,
                         "type": "integer",
                         "name": "pageSize",
-                        "in": "query"
-                    },
-                    {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "name": "sort",
                         "in": "query"
                     }
                 ],
@@ -212,11 +216,8 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "name": "order",
+                        "type": "string",
+                        "name": "name",
                         "in": "query"
                     },
                     {
@@ -231,6 +232,18 @@ const docTemplate = `{
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "multi",
+                        "description": "string order collection",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "string sort collection",
                         "name": "sort",
                         "in": "query"
                     }

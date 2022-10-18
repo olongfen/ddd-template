@@ -68,7 +68,7 @@ func (mr *MockIStudentRepositoryMockRecorder) GetStudent(ctx, id interface{}) *g
 // QueryStudents mocks base method.
 func (m *MockIStudentRepository) QueryStudents(ctx context.Context, query schema.StudentsQuery) ([]*domain.Student, *schema.Pagination, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "QueryStudents", ctx, query)
+	ret := m.ctrl.Call(m, "FindStudent", ctx, query)
 	ret0, _ := ret[0].([]*domain.Student)
 	ret1, _ := ret[1].(*schema.Pagination)
 	ret2, _ := ret[2].(error)
@@ -78,5 +78,5 @@ func (m *MockIStudentRepository) QueryStudents(ctx context.Context, query schema
 // QueryStudents indicates an expected call of QueryStudents.
 func (mr *MockIStudentRepositoryMockRecorder) QueryStudents(ctx, query interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueryStudents", reflect.TypeOf((*MockIStudentRepository)(nil).QueryStudents), ctx, query)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindStudent", reflect.TypeOf((*MockIStudentRepository)(nil).QueryStudents), ctx, query)
 }

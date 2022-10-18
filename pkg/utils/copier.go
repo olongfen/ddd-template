@@ -1,6 +1,9 @@
 package utils
 
-import jsoniter "github.com/json-iterator/go"
+import (
+	jsoniter "github.com/json-iterator/go"
+	"github.com/mitchellh/mapstructure"
+)
 
 func Copier(in, out interface{}) (err error) {
 	var (
@@ -11,4 +14,11 @@ func Copier(in, out interface{}) (err error) {
 		return
 	}
 	return jsoniter.Unmarshal(b, out)
+}
+
+func MustDecode(in, out interface{}) {
+	if err := mapstructure.Decode(in, out); err != nil {
+		panic(err)
+	}
+	return
 }

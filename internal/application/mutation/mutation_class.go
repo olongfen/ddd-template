@@ -2,8 +2,8 @@ package mutation
 
 import (
 	"context"
+	"ddd-template/internal/application/schema"
 	"ddd-template/internal/domain"
-	"ddd-template/internal/schema"
 	"go.uber.org/zap"
 )
 
@@ -25,7 +25,7 @@ func (c classMutation) AddClass(ctx context.Context, form *schema.ClassAddForm) 
 
 // UpClass update
 func (c classMutation) UpClass(ctx context.Context, form *schema.ClassUpForm) (err error) {
-	if err = c.repo.UpClass(ctx, form.Id, domain.UnmarshalClassFromSchemaUpForm(form)); err != nil {
+	if err = c.repo.UpClass(ctx, form.Id, domain.UnmarshalClassFromSchemaUpForm(form.Name)); err != nil {
 		return
 	}
 	return

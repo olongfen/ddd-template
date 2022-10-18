@@ -138,25 +138,29 @@ paths:
       description: 分页查询class
       operationId: query class
       parameters:
+      - collectionFormat: multi
+        description: string order collection
+        in: query
+        items:
+          type: string
+        name: order
+        type: array
+      - collectionFormat: multi
+        description: string sort collection
+        in: query
+        items:
+          type: string
+        name: sort
+        type: array
       - in: query
         minimum: 0
         name: currentPage
         type: integer
       - in: query
-        items:
-          type: string
-        name: order
-        type: array
-      - in: query
         maximum: 100
         minimum: 1
         name: pageSize
         type: integer
-      - in: query
-        items:
-          type: string
-        name: sort
-        type: array
       responses:
         "200":
           description: OK
@@ -252,16 +256,23 @@ paths:
         name: currentPage
         type: integer
       - in: query
-        items:
-          type: string
-        name: order
-        type: array
+        name: name
+        type: string
       - in: query
         maximum: 100
         minimum: 1
         name: pageSize
         type: integer
-      - in: query
+      - collectionFormat: multi
+        description: string order collection
+        in: query
+        items:
+          type: string
+        name: order
+        type: array
+      - collectionFormat: multi
+        description: string sort collection
+        in: query
         items:
           type: string
         name: sort
