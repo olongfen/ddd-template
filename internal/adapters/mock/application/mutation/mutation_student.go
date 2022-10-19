@@ -38,7 +38,7 @@ func (m *MockIStudentMutationService) EXPECT() *MockIStudentMutationServiceMockR
 // AddStudent mocks base method.
 func (m *MockIStudentMutationService) AddStudent(ctx context.Context, form *schema.StudentAddForm) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddStudent", ctx, form)
+	ret := m.ctrl.Call(m, "Create", ctx, form)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -46,5 +46,5 @@ func (m *MockIStudentMutationService) AddStudent(ctx context.Context, form *sche
 // AddStudent indicates an expected call of AddStudent.
 func (mr *MockIStudentMutationServiceMockRecorder) AddStudent(ctx, form interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddStudent", reflect.TypeOf((*MockIStudentMutationService)(nil).AddStudent), ctx, form)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIStudentMutationService)(nil).AddStudent), ctx, form)
 }

@@ -37,7 +37,7 @@ func (m *MockServer) EXPECT() *MockServerMockRecorder {
 // AddClass mocks base method.
 func (m *MockServer) AddClass(ctx *v2.Ctx) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddClass", ctx)
+	ret := m.ctrl.Call(m, "Create", ctx)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -45,13 +45,13 @@ func (m *MockServer) AddClass(ctx *v2.Ctx) error {
 // AddClass indicates an expected call of AddClass.
 func (mr *MockServerMockRecorder) AddClass(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddClass", reflect.TypeOf((*MockServer)(nil).AddClass), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockServer)(nil).AddClass), ctx)
 }
 
 // AddStudent mocks base method.
 func (m *MockServer) AddStudent(ctx *v2.Ctx) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddStudent", ctx)
+	ret := m.ctrl.Call(m, "Create", ctx)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -59,7 +59,7 @@ func (m *MockServer) AddStudent(ctx *v2.Ctx) error {
 // AddStudent indicates an expected call of AddStudent.
 func (mr *MockServerMockRecorder) AddStudent(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddStudent", reflect.TypeOf((*MockServer)(nil).AddStudent), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockServer)(nil).AddStudent), ctx)
 }
 
 // Cleanup mocks base method.
@@ -79,7 +79,7 @@ func (mr *MockServerMockRecorder) Cleanup() *gomock.Call {
 // GetStudent mocks base method.
 func (m *MockServer) GetStudent(ctx *v2.Ctx) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetStudent", ctx)
+	ret := m.ctrl.Call(m, "FindOne", ctx)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -87,13 +87,13 @@ func (m *MockServer) GetStudent(ctx *v2.Ctx) error {
 // GetStudent indicates an expected call of GetStudent.
 func (mr *MockServerMockRecorder) GetStudent(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStudent", reflect.TypeOf((*MockServer)(nil).GetStudent), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOne", reflect.TypeOf((*MockServer)(nil).GetStudent), ctx)
 }
 
 // QueryStudents mocks base method.
 func (m *MockServer) QueryStudents(ctx *v2.Ctx) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindStudent", ctx)
+	ret := m.ctrl.Call(m, "Find", ctx)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -101,5 +101,5 @@ func (m *MockServer) QueryStudents(ctx *v2.Ctx) error {
 // QueryStudents indicates an expected call of QueryStudents.
 func (mr *MockServerMockRecorder) QueryStudents(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindStudent", reflect.TypeOf((*MockServer)(nil).QueryStudents), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockServer)(nil).QueryStudents), ctx)
 }

@@ -16,8 +16,8 @@ type classRepository struct {
 	data *Data
 }
 
-// FindClass query
-func (c classRepository) FindClass(ctx context.Context, o domain.OtherCond, fields ...domain.Field) (ret []*domain.Class, pag *domain.Pagination, err error) {
+// Find query
+func (c classRepository) Find(ctx context.Context, o domain.OtherCond, fields ...domain.Field) (ret []*domain.Class, pag *domain.Pagination, err error) {
 	var (
 		data []*Class
 		db   = c.data.DB(ctx).Model(&Class{})
@@ -52,7 +52,7 @@ func NewClassRepository(data *Data) (ret domain.IClassRepository) {
 	return
 }
 
-func (c classRepository) GetClassWithUuid(ctx context.Context, uid string) (ret *domain.Class, err error) {
+func (c classRepository) GetByUuid(ctx context.Context, uid string) (ret *domain.Class, err error) {
 	var (
 		m = new(Class)
 	)
@@ -63,12 +63,12 @@ func (c classRepository) GetClassWithUuid(ctx context.Context, uid string) (ret 
 	return
 }
 
-func (c classRepository) AddClass(ctx context.Context, cls *domain.Class) (err error) {
+func (c classRepository) Create(ctx context.Context, cls *domain.Class) (err error) {
 	return c.data.DB(ctx).Create(c.marshal(cls)).Error
 }
 
-// UpClass update
-func (c classRepository) UpClass(ctx context.Context, id int, ent *domain.Class) (err error) {
+// Update update
+func (c classRepository) Update(ctx context.Context, id int, ent *domain.Class) (err error) {
 	return c.data.DB(ctx).Model(&Class{}).Where("id = ?", id).Updates(c.marshal(ent)).Error
 }
 

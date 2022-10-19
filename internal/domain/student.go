@@ -89,11 +89,11 @@ func NewStudent(name string, stuNumber string, classID string) (u *Student, err 
 
 // IStudentRepository 用户表存储库
 type IStudentRepository interface {
-	AddStudent(ctx context.Context, stu *Student) (err error)
-	GetStudent(ctx context.Context, id int) (ret *Student, err error)
-	FindStudent(ctx context.Context, o OtherCond, fields ...Field) (ret []*Student,
+	Create(ctx context.Context, stu *Student) (err error)
+	FindOne(ctx context.Context, id int) (ret *Student, err error)
+	Find(ctx context.Context, o OtherCond, fields ...Field) (ret []*Student,
 		pagination *Pagination, err error)
-	UpStudent(ctx context.Context, id uint, stu *Student) (err error)
+	Update(ctx context.Context, id uint, stu *Student) (err error)
 }
 
 // UnmarshalStudentFromSchemaUpForm 把更新结构体赋值给实体

@@ -20,12 +20,12 @@ func (c classMutation) AddClass(ctx context.Context, form *schema.ClassAddForm) 
 	if data, err = domain.NewClass(form.Name); err != nil {
 		return
 	}
-	return c.repo.AddClass(ctx, data)
+	return c.repo.Create(ctx, data)
 }
 
 // UpClass update
 func (c classMutation) UpClass(ctx context.Context, form *schema.ClassUpForm) (err error) {
-	if err = c.repo.UpClass(ctx, form.Id, domain.UnmarshalClassFromSchemaUpForm(form.Name)); err != nil {
+	if err = c.repo.Update(ctx, form.Id, domain.UnmarshalClassFromSchemaUpForm(form.Name)); err != nil {
 		return
 	}
 	return

@@ -38,7 +38,7 @@ func (m *MockIClassRepository) EXPECT() *MockIClassRepositoryMockRecorder {
 // AddClass mocks base method.
 func (m *MockIClassRepository) AddClass(ctx context.Context, c *domain.Class) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddClass", ctx, c)
+	ret := m.ctrl.Call(m, "Create", ctx, c)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -46,13 +46,13 @@ func (m *MockIClassRepository) AddClass(ctx context.Context, c *domain.Class) er
 // AddClass indicates an expected call of AddClass.
 func (mr *MockIClassRepositoryMockRecorder) AddClass(ctx, c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddClass", reflect.TypeOf((*MockIClassRepository)(nil).AddClass), ctx, c)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIClassRepository)(nil).AddClass), ctx, c)
 }
 
 // GetClassWithUuid mocks base method.
 func (m *MockIClassRepository) GetClassWithUuid(ctx context.Context, uid string) (*domain.Class, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetClassWithUuid", ctx, uid)
+	ret := m.ctrl.Call(m, "GetByUuid", ctx, uid)
 	ret0, _ := ret[0].(*domain.Class)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -61,7 +61,7 @@ func (m *MockIClassRepository) GetClassWithUuid(ctx context.Context, uid string)
 // GetClassWithUuid indicates an expected call of GetClassWithUuid.
 func (mr *MockIClassRepositoryMockRecorder) GetClassWithUuid(ctx, uid interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClassWithUuid", reflect.TypeOf((*MockIClassRepository)(nil).GetClassWithUuid), ctx, uid)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByUuid", reflect.TypeOf((*MockIClassRepository)(nil).GetClassWithUuid), ctx, uid)
 }
 
 // MockIClassDomainService is a mock of IClassDomainService interface.

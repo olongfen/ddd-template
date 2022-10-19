@@ -38,7 +38,7 @@ func (m *MockIClassMutationService) EXPECT() *MockIClassMutationServiceMockRecor
 // AddClass mocks base method.
 func (m *MockIClassMutationService) AddClass(ctx context.Context, form *schema.ClassAddForm) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddClass", ctx, form)
+	ret := m.ctrl.Call(m, "Create", ctx, form)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -46,5 +46,5 @@ func (m *MockIClassMutationService) AddClass(ctx context.Context, form *schema.C
 // AddClass indicates an expected call of AddClass.
 func (mr *MockIClassMutationServiceMockRecorder) AddClass(ctx, form interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddClass", reflect.TypeOf((*MockIClassMutationService)(nil).AddClass), ctx, form)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIClassMutationService)(nil).AddClass), ctx, form)
 }

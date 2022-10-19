@@ -39,7 +39,7 @@ func (m *MockIStudentRepository) EXPECT() *MockIStudentRepositoryMockRecorder {
 // AddStudent mocks base method.
 func (m *MockIStudentRepository) AddStudent(ctx context.Context, stu *domain.Student) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddStudent", ctx, stu)
+	ret := m.ctrl.Call(m, "Create", ctx, stu)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -47,13 +47,13 @@ func (m *MockIStudentRepository) AddStudent(ctx context.Context, stu *domain.Stu
 // AddStudent indicates an expected call of AddStudent.
 func (mr *MockIStudentRepositoryMockRecorder) AddStudent(ctx, stu interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddStudent", reflect.TypeOf((*MockIStudentRepository)(nil).AddStudent), ctx, stu)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIStudentRepository)(nil).AddStudent), ctx, stu)
 }
 
 // GetStudent mocks base method.
 func (m *MockIStudentRepository) GetStudent(ctx context.Context, id int) (*domain.Student, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetStudent", ctx, id)
+	ret := m.ctrl.Call(m, "FindOne", ctx, id)
 	ret0, _ := ret[0].(*domain.Student)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -62,13 +62,13 @@ func (m *MockIStudentRepository) GetStudent(ctx context.Context, id int) (*domai
 // GetStudent indicates an expected call of GetStudent.
 func (mr *MockIStudentRepositoryMockRecorder) GetStudent(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStudent", reflect.TypeOf((*MockIStudentRepository)(nil).GetStudent), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOne", reflect.TypeOf((*MockIStudentRepository)(nil).GetStudent), ctx, id)
 }
 
 // QueryStudents mocks base method.
 func (m *MockIStudentRepository) QueryStudents(ctx context.Context, query schema.StudentsQuery) ([]*domain.Student, *schema.Pagination, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindStudent", ctx, query)
+	ret := m.ctrl.Call(m, "Find", ctx, query)
 	ret0, _ := ret[0].([]*domain.Student)
 	ret1, _ := ret[1].(*schema.Pagination)
 	ret2, _ := ret[2].(error)
@@ -78,5 +78,5 @@ func (m *MockIStudentRepository) QueryStudents(ctx context.Context, query schema
 // QueryStudents indicates an expected call of QueryStudents.
 func (mr *MockIStudentRepositoryMockRecorder) QueryStudents(ctx, query interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindStudent", reflect.TypeOf((*MockIStudentRepository)(nil).QueryStudents), ctx, query)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockIStudentRepository)(nil).QueryStudents), ctx, query)
 }

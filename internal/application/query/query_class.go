@@ -22,7 +22,7 @@ func (c queryClass) QueryClasses(ctx context.Context, query *schema.ClassQueryRe
 		query.Order = append(query.Order, "desc")
 		query.Sort = append(query.Sort, "createdAt")
 	}
-	if data, dPag, err = c.repo.FindClass(ctx, domain.OtherCond{
+	if data, dPag, err = c.repo.Find(ctx, domain.OtherCond{
 		PageSize:    query.PageSize,
 		CurrentPage: query.CurrentPage,
 		Sort:        query.Sort,

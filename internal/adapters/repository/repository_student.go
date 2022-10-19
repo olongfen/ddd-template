@@ -18,8 +18,8 @@ type studentRepository struct {
 	data *Data
 }
 
-// GetStudent get one
-func (u studentRepository) GetStudent(ctx context.Context, id int) (ret *domain.Student, err error) {
+// FindOne  get one
+func (u studentRepository) FindOne(ctx context.Context, id int) (ret *domain.Student, err error) {
 	var (
 		data *Student
 	)
@@ -30,7 +30,7 @@ func (u studentRepository) GetStudent(ctx context.Context, id int) (ret *domain.
 	return
 }
 
-func (u studentRepository) FindStudent(ctx context.Context, o domain.OtherCond, fields ...domain.Field) (ret []*domain.Student,
+func (u studentRepository) Find(ctx context.Context, o domain.OtherCond, fields ...domain.Field) (ret []*domain.Student,
 	pagination *domain.Pagination, err error) {
 	var (
 		data []*Student
@@ -60,16 +60,16 @@ func (u studentRepository) marshal(in *domain.Student) *Student {
 	return stu
 }
 
-// AddStudent 往数据库写入user记录
-func (u studentRepository) AddStudent(ctx context.Context, stu *domain.Student) (err error) {
+// Create 往数据库写入user记录
+func (u studentRepository) Create(ctx context.Context, stu *domain.Student) (err error) {
 	if err = u.data.DB(ctx).Model(&Student{}).Create(u.marshal(stu)).Error; err != nil {
 		return
 	}
 	return
 }
 
-// UpStudent update
-func (u studentRepository) UpStudent(ctx context.Context, id uint, stu *domain.Student) (err error) {
+// Update update
+func (u studentRepository) Update(ctx context.Context, id uint, stu *domain.Student) (err error) {
 	if err = u.data.DB(ctx).Model(&Student{}).Where("id = ?", id).Updates(u.marshal(stu)).Error; err != nil {
 		return
 	}

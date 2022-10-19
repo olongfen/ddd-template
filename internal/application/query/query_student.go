@@ -23,7 +23,7 @@ type queryStudent struct {
 
 // GetStudent get
 func (q queryStudent) GetStudent(ctx context.Context, id int) (ret *schema.StudentResp, err error) {
-	student, err := q.repo.GetStudent(ctx, id)
+	student, err := q.repo.FindOne(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (q queryStudent) QueryStudents(ctx context.Context, query schema.StudentsQu
 		})
 	}
 
-	if data, pag, err = q.repo.FindStudent(ctx, domain.OtherCond{
+	if data, pag, err = q.repo.Find(ctx, domain.OtherCond{
 		PageSize:    query.PageSize,
 		CurrentPage: query.CurrentPage,
 		Sort:        query.Sort,

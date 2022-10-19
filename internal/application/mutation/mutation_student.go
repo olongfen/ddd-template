@@ -21,7 +21,7 @@ func (u studentMutation) UpStudent(ctx context.Context, id uint, form *schema.St
 	if _, err = u.classService.GetClassDetail(ctx, form.ClassUuid); err != nil {
 		return
 	}
-	return u.repo.UpStudent(ctx, id, domain.UnmarshalStudentFromSchemaUpForm(form.Name, form.ClassUuid))
+	return u.repo.Update(ctx, id, domain.UnmarshalStudentFromSchemaUpForm(form.Name, form.ClassUuid))
 }
 
 // AddStudent add
@@ -30,14 +30,14 @@ func (u studentMutation) AddStudent(ctx context.Context, form *schema.StudentAdd
 		stu *domain.Student
 	)
 	if _, err = u.classService.GetClassDetail(ctx, form.ClassUuid); err != nil {
-		u.logger.Error("AddStudent", zap.Error(err))
+		u.logger.Error("Create", zap.Error(err))
 		err = errors.New("class dose not exists")
 		return
 	}
 	if stu, err = domain.NewStudent(form.Name, form.StuNumber, form.ClassUuid); err != nil {
 		return
 	}
-	if err = u.repo.AddStudent(ctx, stu); err != nil {
+	if err = u.repo.Create(ctx, stu); err != nil {
 		return
 	}
 	return
