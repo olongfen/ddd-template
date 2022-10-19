@@ -15,7 +15,7 @@ type studentMutation struct {
 }
 
 // UpStudent update
-func (u studentMutation) UpStudent(ctx context.Context, id uint, form *schema.StudentUpForm) (err error) {
+func (u studentMutation) UpStudent(ctx context.Context, id int, form *schema.StudentUpForm) (err error) {
 
 	// 判断班级是否存在
 	if _, err = u.classService.GetClassDetail(ctx, form.ClassUuid); err != nil {
@@ -43,6 +43,11 @@ func (u studentMutation) AddStudent(ctx context.Context, form *schema.StudentAdd
 	return
 }
 
+// DelStudent delete
+func (u studentMutation) DelStudent(ctx context.Context, id int) (err error) {
+	return u.repo.Delete(ctx, id)
+}
+
 func NewUserMutation(repo domain.IStudentRepository,
 	classService domain.IClassDomainService,
 	logger *zap.Logger) (ret IStudentMutationService) {
@@ -68,5 +73,6 @@ func NewUserMutation(repo domain.IStudentRepository,
 
 type IStudentMutationService interface {
 	AddStudent(ctx context.Context, form *schema.StudentAddForm) (err error)
-	UpStudent(ctx context.Context, id uint, form *schema.StudentUpForm) (err error)
+	UpStudent(ctx context.Context, id int, form *schema.StudentUpForm) (err error)
+	DelStudent(ctx context.Context, id int) (err error)
 }

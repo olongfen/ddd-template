@@ -11,6 +11,18 @@ import (
 
 type IClassQueryService interface {
 	QueryClasses(ctx context.Context, query *schema.ClassQueryReq) (ret schema.ClassRespList, pag *schema.Pagination, err error)
+	GetClass(ctx context.Context, id int) (ret *schema.ClassResp, err error)
+}
+
+func (c queryClass) GetClass(ctx context.Context, id int) (ret *schema.ClassResp, err error) {
+	var (
+		data *domain.Class
+	)
+	if data, err = c.repo.FindOne(ctx, id); err != nil {
+		return
+	}
+	ret = transform.UnmarshalClassToSchema(data)
+	return
 }
 
 func (c queryClass) QueryClasses(ctx context.Context, query *schema.ClassQueryReq) (ret schema.ClassRespList, pag *schema.Pagination, err error) {

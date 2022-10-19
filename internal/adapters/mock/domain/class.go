@@ -52,7 +52,7 @@ func (mr *MockIClassRepositoryMockRecorder) AddClass(ctx, c interface{}) *gomock
 // GetClassWithUuid mocks base method.
 func (m *MockIClassRepository) GetClassWithUuid(ctx context.Context, uid string) (*domain.Class, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByUuid", ctx, uid)
+	ret := m.ctrl.Call(m, "FindByUuid", ctx, uid)
 	ret0, _ := ret[0].(*domain.Class)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -61,7 +61,7 @@ func (m *MockIClassRepository) GetClassWithUuid(ctx context.Context, uid string)
 // GetClassWithUuid indicates an expected call of GetClassWithUuid.
 func (mr *MockIClassRepositoryMockRecorder) GetClassWithUuid(ctx, uid interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByUuid", reflect.TypeOf((*MockIClassRepository)(nil).GetClassWithUuid), ctx, uid)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUuid", reflect.TypeOf((*MockIClassRepository)(nil).GetClassWithUuid), ctx, uid)
 }
 
 // MockIClassDomainService is a mock of IClassDomainService interface.

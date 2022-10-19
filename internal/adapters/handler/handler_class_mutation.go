@@ -78,3 +78,30 @@ func (s handler) UpClass(ctx *fiber.Ctx) (err error) {
 
 	return resp.Success(ctx, nil)
 }
+
+// DelClass
+// @Id delete class
+// @tags classes
+// @Summary 删除class
+// @Description 通过id删除
+// @Param id path int true "id"
+// @router /api/v1/classes/{id} [delete]
+// @Success 200 {object} response.Response{}
+// @Security BearerAuth
+// @Failure 404 {object} string
+// @Failure 500 {object} string
+func (s handler) DelClass(ctx *fiber.Ctx) (err error) {
+	var (
+		lan  = scontext.GetLanguage(ctx.UserContext())
+		resp = response.NewResponse(lan)
+		id   int
+	)
+	if id, err = ctx.ParamsInt("id"); err != nil {
+		err = error_i18n.NewError(error_i18n.IllegalParameter, lan)
+		return
+	}
+	if err = s.app.Mutations.Class.DelClass(ctx.UserContext(), id); err != nil {
+		return
+	}
+	return resp.Success(ctx, nil)
+}

@@ -84,9 +84,45 @@ func (s handler) UpStudent(ctx *fiber.Ctx) (err error) {
 		return
 	}
 
-	if err = s.app.Mutations.Student.UpStudent(ctx.UserContext(), uint(id), form); err != nil {
+	if err = s.app.Mutations.Student.UpStudent(ctx.UserContext(), id, form); err != nil {
 		return
 	}
 
+	return resp.Success(ctx, nil)
+}
+
+// DelStudent
+// @Id student delete one
+// @tags students
+// @Summary 删除记录
+// @Description  通过id删除记录
+// @Param id path int true "id"
+// @router /api/v1/students/{id} [delete]
+// @Success 200 {object} response.Response{}
+// @Security BearerAuth
+// @Failure 404 {object} string
+// @Failure 500 {object} string
+func (s handler) DelStudent(ctx *fiber.Ctx) (err error) {
+	var (
+		language = scontext.GetLanguage(ctx.UserContext())
+		resp     = response.NewResponse(language)
+		id       int
+	)
+
+	if id, err = ctx.ParamsInt("id"); err != nil || id <= 0 {
+		err = error_i18n.NewError(error_i18n.IllegalParameter, language)
+		// 定义逻辑错误
+		ctx.SetUserContext(scontext.SetErrorsContext(ctx.UserContext(), map[string]*schema.Error{
+			"id": {
+				Failed: "id",
+				Tag:    "id",
+				Value:  id,
+				Detail: err.Error(),
+			},
+		}))
+	}
+	if err = s.app.Mutations.Student.DelStudent(ctx.UserContext(), id); err != nil {
+		return
+	}
 	return resp.Success(ctx, nil)
 }

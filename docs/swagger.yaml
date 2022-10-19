@@ -33,8 +33,8 @@ definitions:
         description: class uuid
         type: string
       createdAt:
-        $ref: '#/definitions/utils.JSONTime'
         description: 创建时间
+        type: string
       id:
         description: id
         type: integer
@@ -42,8 +42,8 @@ definitions:
         description: 班级名称
         type: string
       updatedAt:
-        $ref: '#/definitions/utils.JSONTime'
         description: 更新时间
+        type: string
     type: object
   schema.ClassUpForm:
     properties:
@@ -89,8 +89,8 @@ definitions:
         description: 班级uuid
         type: string
       createdAt:
-        $ref: '#/definitions/utils.JSONTime'
         description: 创建时间
+        type: string
       id:
         description: ID
         type: integer
@@ -101,8 +101,8 @@ definitions:
         description: 学号
         type: string
       updatedAt:
-        $ref: '#/definitions/utils.JSONTime'
         description: 更新时间
+        type: string
       uuid:
         description: Uuid
         type: string
@@ -124,11 +124,6 @@ definitions:
         type: array
       pagination:
         $ref: '#/definitions/schema.Pagination'
-    type: object
-  utils.JSONTime:
-    properties:
-      time.Time:
-        type: string
     type: object
 info:
   contact: {}
@@ -213,6 +208,65 @@ paths:
       tags:
       - classes
   /api/v1/classes/{id}:
+    delete:
+      description: 通过id删除
+      operationId: delete class
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: 删除class
+      tags:
+      - classes
+    get:
+      description: 通过id获取
+      operationId: get class one
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.ClassResp'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: 获取一条class
+      tags:
+      - classes
     put:
       description: update class by id
       operationId: update class
@@ -331,6 +385,33 @@ paths:
       tags:
       - students
   /api/v1/students/{id}:
+    delete:
+      description: 通过id删除记录
+      operationId: student delete one
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: 删除记录
+      tags:
+      - students
     get:
       description: get
       operationId: student one

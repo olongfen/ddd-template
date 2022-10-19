@@ -30,13 +30,7 @@ func (c classRepository) Find(ctx context.Context, o domain.OtherCond, fields ..
 		return
 	}
 	for _, v := range data {
-		ret = append(ret, domain.UnmarshalClassFromDatabase(
-			v.ID,
-			v.Uuid,
-			v.CreatedAt,
-			v.UpdatedAt,
-			v.Name,
-		))
+		ret = append(ret, c.unmarshal(v))
 	}
 	return
 }
@@ -52,17 +46,19 @@ func NewClassRepository(data *Data) (ret domain.IClassRepository) {
 	return
 }
 
-func (c classRepository) GetByUuid(ctx context.Context, uid string) (ret *domain.Class, err error) {
+// FindByUuid find by uuid
+func (c classRepository) FindByUuid(ctx context.Context, uid string) (ret *domain.Class, err error) {
 	var (
 		m = new(Class)
 	)
 	if err = c.data.DB(ctx).Model(&Class{}).Where("uuid = ?", uid).First(m).Error; err != nil {
 		return
 	}
-	ret = domain.UnmarshalClassFromDatabase(m.ID, m.Uuid, m.CreatedAt, m.UpdatedAt, m.Name)
+	ret = c.unmarshal(m)
 	return
 }
 
+// Create one
 func (c classRepository) Create(ctx context.Context, cls *domain.Class) (err error) {
 	return c.data.DB(ctx).Create(c.marshal(cls)).Error
 }
@@ -70,6 +66,26 @@ func (c classRepository) Create(ctx context.Context, cls *domain.Class) (err err
 // Update update
 func (c classRepository) Update(ctx context.Context, id int, ent *domain.Class) (err error) {
 	return c.data.DB(ctx).Model(&Class{}).Where("id = ?", id).Updates(c.marshal(ent)).Error
+}
+
+func (c classRepository) FindOne(ctx context.Context, id int) (ret *domain.Class, err error) {
+	var (
+		data = new(Class)
+	)
+	if err = c.data.DB(ctx).Where("id = ?", id).First(data).Error; err != nil {
+		return
+	}
+	ret = c.unmarshal(data)
+	return
+}
+
+func (c classRepository) Delete(ctx context.Context, id int) (err error) {
+	return c.data.DB(ctx).Where("id = ?", id).Delete(&Class{}).Error
+
+}
+
+func (c classRepository) unmarshal(data *Class) *domain.Class {
+	return domain.UnmarshalClassFromDatabase(data.ID, data.Uuid, data.CreatedAt, data.UpdatedAt, data.Name)
 }
 
 func (c classRepository) marshal(in *domain.Class) *Class {

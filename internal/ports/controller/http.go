@@ -40,11 +40,14 @@ func HandlerFromMux(server Server, a *fiber.App) *fiber.App {
 	stu.Get("/:id", server.GetStudent)
 	stu.Get("/", server.QueryStudents)
 	stu.Put("/:id", server.UpStudent)
+	stu.Delete("/:id", server.DelStudent)
 	// class
 	class := a.Group("/classes")
 	class.Post("/", server.AddClass)
 	class.Get("/", server.QueryClasses)
+	class.Get("/:id", server.GetClass)
 	class.Put("/:id", server.UpClass)
+	class.Delete("/:id", server.DelClass)
 	return a
 }
 
@@ -54,8 +57,11 @@ type Server interface {
 	GetStudent(ctx *fiber.Ctx) error
 	QueryStudents(ctx *fiber.Ctx) error
 	UpStudent(ctx *fiber.Ctx) error
+	DelStudent(ctx *fiber.Ctx) (err error)
 	//
 	AddClass(ctx *fiber.Ctx) error
 	UpClass(ctx *fiber.Ctx) error
 	QueryClasses(ctx *fiber.Ctx) error
+	DelClass(ctx *fiber.Ctx) error
+	GetClass(ctx *fiber.Ctx) error
 }

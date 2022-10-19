@@ -93,7 +93,8 @@ type IStudentRepository interface {
 	FindOne(ctx context.Context, id int) (ret *Student, err error)
 	Find(ctx context.Context, o OtherCond, fields ...Field) (ret []*Student,
 		pagination *Pagination, err error)
-	Update(ctx context.Context, id uint, stu *Student) (err error)
+	Update(ctx context.Context, id int, stu *Student) (err error)
+	Delete(ctx context.Context, id int) (err error)
 }
 
 // UnmarshalStudentFromSchemaUpForm 把更新结构体赋值给实体

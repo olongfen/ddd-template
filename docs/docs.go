@@ -143,6 +143,60 @@ const docTemplate = `{
             }
         },
         "/api/v1/classes/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "通过id获取",
+                "tags": [
+                    "classes"
+                ],
+                "summary": "获取一条class",
+                "operationId": "get class one",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.ClassResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "put": {
                 "security": [
                     {
@@ -165,6 +219,48 @@ const docTemplate = `{
                             "$ref": "#/definitions/schema.ClassUpForm"
                         }
                     },
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "通过id删除",
+                "tags": [
+                    "classes"
+                ],
+                "summary": "删除class",
+                "operationId": "delete class",
+                "parameters": [
                     {
                         "type": "integer",
                         "description": "id",
@@ -434,6 +530,48 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "通过id删除记录",
+                "tags": [
+                    "students"
+                ],
+                "summary": "删除记录",
+                "operationId": "student delete one",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         }
     },
@@ -489,7 +627,7 @@ const docTemplate = `{
                 },
                 "createdAt": {
                     "description": "创建时间",
-                    "$ref": "#/definitions/utils.JSONTime"
+                    "type": "string"
                 },
                 "id": {
                     "description": "id",
@@ -501,7 +639,7 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "description": "更新时间",
-                    "$ref": "#/definitions/utils.JSONTime"
+                    "type": "string"
                 }
             }
         },
@@ -568,7 +706,7 @@ const docTemplate = `{
                 },
                 "createdAt": {
                     "description": "创建时间",
-                    "$ref": "#/definitions/utils.JSONTime"
+                    "type": "string"
                 },
                 "id": {
                     "description": "ID",
@@ -584,7 +722,7 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "description": "更新时间",
-                    "$ref": "#/definitions/utils.JSONTime"
+                    "type": "string"
                 },
                 "uuid": {
                     "description": "Uuid",
@@ -616,14 +754,6 @@ const docTemplate = `{
                 },
                 "pagination": {
                     "$ref": "#/definitions/schema.Pagination"
-                }
-            }
-        },
-        "utils.JSONTime": {
-            "type": "object",
-            "properties": {
-                "time.Time": {
-                    "type": "string"
                 }
             }
         }

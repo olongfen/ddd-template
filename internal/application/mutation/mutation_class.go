@@ -12,6 +12,10 @@ type classMutation struct {
 	logger *zap.Logger
 }
 
+func (c classMutation) DelClass(ctx context.Context, id int) (err error) {
+	return c.repo.Delete(ctx, id)
+}
+
 // AddClass 添加班级
 func (c classMutation) AddClass(ctx context.Context, form *schema.ClassAddForm) (err error) {
 	var (
@@ -34,6 +38,7 @@ func (c classMutation) UpClass(ctx context.Context, form *schema.ClassUpForm) (e
 type IClassMutationService interface {
 	AddClass(ctx context.Context, form *schema.ClassAddForm) (err error)
 	UpClass(ctx context.Context, form *schema.ClassUpForm) (err error)
+	DelClass(ctx context.Context, id int) (err error)
 }
 
 func NewClassMutation(repo domain.IClassRepository,

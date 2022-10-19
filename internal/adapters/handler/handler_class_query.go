@@ -45,3 +45,31 @@ func (s handler) QueryClasses(ctx *fiber.Ctx) (err error) {
 		Pagination: pag,
 	})
 }
+
+// GetClass
+// @Id get class one
+// @tags classes
+// @Summary 获取一条class
+// @Description 通过id获取
+// @Param id path int true "id"
+// @router /api/v1/classes/{id} [get]
+// @Success 200 {object} response.Response{data=schema.ClassResp}
+// @Security BearerAuth
+// @Failure 404 {object} string
+// @Failure 500 {object} string
+func (s handler) GetClass(ctx *fiber.Ctx) (err error) {
+	var (
+		lan  = scontext.GetLanguage(ctx.UserContext())
+		resp = response.NewResponse(lan)
+		data *schema.ClassResp
+		id   int
+	)
+	if id, err = ctx.ParamsInt("id"); err != nil {
+		err = error_i18n.NewError(error_i18n.IllegalParameter, lan)
+		return
+	}
+	if data, err = s.app.Queries.Class.GetClass(ctx.UserContext(), id); err != nil {
+		return
+	}
+	return resp.Success(ctx, data)
+}

@@ -26,10 +26,11 @@ func (u studentRepository) FindOne(ctx context.Context, id int) (ret *domain.Stu
 	if err = u.data.DB(ctx).Model(&Student{}).Where("id = ?", id).First(&data).Error; err != nil {
 		return
 	}
-	ret = domain.UnmarshalStudentFromDatabase(data.ID, data.Uuid, data.CreatedAt, data.UpdatedAt, data.Name, data.StuNumber, data.ClassUuid)
+	ret = u.unmarshal(data)
 	return
 }
 
+// Find get page
 func (u studentRepository) Find(ctx context.Context, o domain.OtherCond, fields ...domain.Field) (ret []*domain.Student,
 	pagination *domain.Pagination, err error) {
 	var (
@@ -42,10 +43,13 @@ func (u studentRepository) Find(ctx context.Context, o domain.OtherCond, fields 
 		return
 	}
 	for _, v := range data {
-		ret = append(ret, domain.UnmarshalStudentFromDatabase(v.ID, v.Uuid, v.CreatedAt, v.UpdatedAt, v.Name,
-			v.StuNumber, v.ClassUuid))
+		ret = append(ret, u.unmarshal(v))
 	}
 	return
+}
+
+func (u studentRepository) unmarshal(data *Student) *domain.Student {
+	return domain.UnmarshalStudentFromDatabase(data.ID, data.Uuid, data.CreatedAt, data.UpdatedAt, data.Name, data.StuNumber, data.ClassUuid)
 }
 
 func (u studentRepository) marshal(in *domain.Student) *Student {
@@ -69,8 +73,16 @@ func (u studentRepository) Create(ctx context.Context, stu *domain.Student) (err
 }
 
 // Update update
-func (u studentRepository) Update(ctx context.Context, id uint, stu *domain.Student) (err error) {
+func (u studentRepository) Update(ctx context.Context, id int, stu *domain.Student) (err error) {
 	if err = u.data.DB(ctx).Model(&Student{}).Where("id = ?", id).Updates(u.marshal(stu)).Error; err != nil {
+		return
+	}
+	return
+}
+
+// Delete del
+func (u studentRepository) Delete(ctx context.Context, id int) (err error) {
+	if err = u.data.DB(ctx).Where("id = ?", id).Delete(&Student{}).Error; err != nil {
 		return
 	}
 	return

@@ -72,10 +72,12 @@ func UnmarshalClassFromSchemaUpForm(name string) *Class {
 
 // IClassRepository class repository
 type IClassRepository interface {
-	GetByUuid(ctx context.Context, uid string) (ret *Class, err error)
+	FindByUuid(ctx context.Context, uid string) (ret *Class, err error)
 	Create(ctx context.Context, c *Class) (err error)
 	Update(ctx context.Context, id int, ent *Class) (err error)
 	Find(ctx context.Context, o OtherCond, fields ...Field) (ret []*Class, pag *Pagination, err error)
+	FindOne(ctx context.Context, id int) (ret *Class, err error)
+	Delete(ctx context.Context, id int) (err error)
 }
 
 // IClassDomainService domain serve

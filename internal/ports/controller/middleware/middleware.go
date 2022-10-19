@@ -11,7 +11,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 )
 
@@ -28,39 +27,21 @@ type Config struct {
 
 // New creates a new middleware handler
 func New(config Config) fiber.Handler {
-	var (
-		errPadding  = 15
-		start, stop time.Time
-		once        sync.Once
-		errHandler  fiber.ErrorHandler
-	)
 
 	return func(c *fiber.Ctx) error {
 		if config.Next != nil && config.Next(c) {
 			return c.Next()
-		}
-
-		once.Do(func() {
-			errHandler = c.App().Config().ErrorHandler
-			stack := c.App().Stack()
-			for m := range stack {
-				for r := range stack[m] {
-					if len(stack[m][r].Path) > errPadding {
-						errPadding = len(stack[m][r].Path)
-					}
-				}
+		} else {
+			config.Next = func(c *fiber.Ctx) bool {
+				return true
 			}
-		})
-
+		}
+		var (
+			start, stop time.Time
+		)
 		start = time.Now()
 
-		chainErr := c.Next()
-
-		if chainErr != nil {
-			if err := errHandler(c, chainErr); err != nil {
-				_ = c.SendStatus(fiber.StatusInternalServerError)
-			}
-		}
+		_ = c.Next()
 
 		stop = time.Now()
 
@@ -74,15 +55,6 @@ func New(config Config) fiber.Handler {
 
 		if u := c.Locals("userId"); u != nil {
 			fields = append(fields, zap.Uint("userId", u.(uint)))
-		}
-
-		formatErr := ""
-		if chainErr != nil && c.Response().StatusCode() != fiber.StatusOK {
-			formatErr = chainErr.Error()
-			fields = append(fields, zap.String("error", formatErr))
-			config.Logger.With(fields...).Error(formatErr)
-
-			return nil
 		}
 
 		config.Logger.With(fields...).Info("api.request")
