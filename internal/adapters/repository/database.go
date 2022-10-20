@@ -94,7 +94,7 @@ func InitDBConnect(c *config.Configs, logger *zap.Logger) (res *gorm.DB) {
 	}
 	// true 自动迁移
 	if c.Database.AutoMigrate {
-		err = db.AutoMigrate(&Student{}, &Class{})
+		err = db.AutoMigrate(&domain.Student{}, &Class{})
 		if err != nil {
 			logger.Fatal(err.Error())
 		}

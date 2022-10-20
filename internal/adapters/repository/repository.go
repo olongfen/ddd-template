@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"ddd-template/internal/domain"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -124,4 +125,70 @@ func findPage(db *gorm.DB, opt *option, out interface{}) (pagination *domain.Pag
 	}
 	return
 
+}
+
+// repository 增删改查泛型
+type repository[T any] struct {
+	data *Data
+}
+
+// FindOne  get one
+func (u repository[T]) FindOne(ctx context.Context, id int) (ret *T, err error) {
+	var (
+		model T
+	)
+	if err = u.data.DB(ctx).Model(&model).Where("id = ?", id).First(&ret).Error; err != nil {
+		return
+	}
+	return
+}
+
+// Find get page
+func (u repository[T]) Find(ctx context.Context, o domain.OtherCond, fields ...domain.Field) (ret []*T,
+	pagination *domain.Pagination, err error) {
+	var (
+		data  []*T
+		model T
+		db    = u.data.DB(ctx).Model(&model)
+		opt   = newOption(o)
+	)
+	fieldsT(fields).process(db)
+	if pagination, err = findPage(db, opt, &data); err != nil {
+		return
+	}
+	ret = data
+	return
+}
+
+// Create 往数据库写入user记录
+func (u repository[T]) Create(ctx context.Context, stu *T) (err error) {
+	var (
+		model T
+	)
+	if err = u.data.DB(ctx).Model(&model).Create(stu).Error; err != nil {
+		return
+	}
+	return
+}
+
+// Update update
+func (u repository[T]) Update(ctx context.Context, id int, stu *T) (err error) {
+	var (
+		model T
+	)
+	if err = u.data.DB(ctx).Model(&model).Where("id = ?", id).Updates(stu).Error; err != nil {
+		return
+	}
+	return
+}
+
+// Delete del
+func (u repository[T]) Delete(ctx context.Context, id int) (err error) {
+	var (
+		model T
+	)
+	if err = u.data.DB(ctx).Where("id = ?", id).Delete(&model).Error; err != nil {
+		return
+	}
+	return
 }

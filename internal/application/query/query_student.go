@@ -27,13 +27,13 @@ func (q queryStudent) GetStudent(ctx context.Context, id int) (ret *schema.Stude
 	if err != nil {
 		return nil, err
 	}
-	class, err := q.classService.GetClassDetail(ctx, student.ClassUuid())
+	class, err := q.classService.GetClassDetail(ctx, student.ClassUuid)
 	if err != nil {
 		return nil, err
 	}
 	// return
 	ret = transform.UnmarshalStudentToSchema(student)
-	ret.ClassName = class.Name()
+	ret.ClassName = class.Name
 
 	return
 }
@@ -64,13 +64,13 @@ func (q queryStudent) QueryStudents(ctx context.Context, query schema.StudentsQu
 	}
 
 	for _, v := range data {
-		class, _err := q.classService.GetClassDetail(ctx, v.ClassUuid())
+		class, _err := q.classService.GetClassDetail(ctx, v.ClassUuid)
 		if _err != nil {
 			err = _err
 			return
 		}
 		_data := transform.UnmarshalStudentToSchema(v)
-		_data.ClassName = class.Name()
+		_data.ClassName = class.Name
 		ret = append(ret, _data)
 	}
 	utils.MustDecode(pag, &pagination)
