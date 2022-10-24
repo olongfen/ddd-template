@@ -110,23 +110,17 @@ func InitConfigs(confPath string) *Configs {
 		}
 	} else {
 		var (
-			originalBytes  []byte
-			originalStruct = new(Configs)
-			changeBytes    []byte
+			originalBytes []byte
+			changeBytes   []byte
 		)
 		// 读取旧文件含有的配置
 		if originalBytes, err = os.ReadFile(confPath); err != nil {
 			log.Fatalln(err)
 		}
-		if err = yaml.Unmarshal(originalBytes, originalStruct); err != nil {
-			log.Fatalln(err)
-		}
 		if err = utils.Copier(viper.AllSettings(), globalCfg); err != nil {
 			log.Fatalln(err)
 		}
-
-		// 自动添加新的字段
-		if err = utils.Copier(originalStruct, globalCfg); err != nil {
+		if err = yaml.Unmarshal(originalBytes, globalCfg); err != nil {
 			log.Fatalln(err)
 		}
 		if changeBytes, err = jsoniter.Marshal(globalCfg); err != nil {
