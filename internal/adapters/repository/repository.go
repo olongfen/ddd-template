@@ -143,6 +143,19 @@ func (u repository[T]) FindOne(ctx context.Context, id int) (ret *T, err error) 
 	return
 }
 
+// FindOneBy  get one
+func (u repository[T]) FindOneBy(ctx context.Context, field ...domain.Field) (ret *T, err error) {
+	var (
+		model T
+	)
+	db := u.data.DB(ctx).Model(&model)
+	fieldsT(field).process(db)
+	if err = db.First(&ret).Error; err != nil {
+		return
+	}
+	return
+}
+
 // Find get page
 func (u repository[T]) Find(ctx context.Context, o domain.OtherCond, fields ...domain.Field) (ret []*T,
 	pagination *domain.Pagination, err error) {
