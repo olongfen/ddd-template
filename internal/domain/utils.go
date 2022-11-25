@@ -6,11 +6,25 @@ type Field struct {
 	Symbol string // 符号,<=,<,>,>=,in,like,<>等于默认是""
 }
 
+func SetField(col string, val any, symbols ...string) Field {
+	symbol := "="
+	if len(symbols) > 0 {
+		symbol = symbols[0]
+	}
+	return Field{
+		Column: col,
+		Value:  val,
+		Symbol: symbol,
+	}
+}
+
 type OtherCond struct {
 	PageSize    int
 	CurrentPage int
 	Sort        []string
 	Order       []string
+	All         bool
+	NoCount     bool
 }
 
 type Pagination struct {

@@ -6,4 +6,4 @@ import (
 	"github.com/google/wire"
 )
 
-var Set = wire.NewSet(NewApplication, SetMutations, SetQueries, mutation.NewUserMutation, mutation.NewClassMutation, query.NewQueryStudent, query.NewQueryClass)
+var Set = wire.NewSet(NewApplication, SetClose, SetMutations, SetQueries, mutation.Set, query.Set)

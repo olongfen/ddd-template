@@ -1,4 +1,6 @@
 .idea
+configs/*.yml
+configs/*.yaml
 log
 ddd.exe
 ddd

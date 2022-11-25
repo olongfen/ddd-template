@@ -53,7 +53,15 @@ func (d *Data) DB(ctx context.Context) *gorm.DB {
 	return d.db.WithContext(ctx)
 }
 
-func NewData(db *gorm.DB, logger *zap.Logger) (ret *Data) {
+func (d *Data) Close() error {
+	sqlDB, err := d.db.DB()
+	if err != nil {
+		return err
+	}
+	return sqlDB.Close()
+}
+
+func NewData(db *gorm.DB, logger *zap.Logger) (ret DBData) {
 	return &Data{
 		db:  db,
 		log: logger,
@@ -94,7 +102,7 @@ func InitDBConnect(c *config.Configs, logger *zap.Logger) (res *gorm.DB) {
 	}
 	// true 自动迁移
 	if c.Database.AutoMigrate {
-		err = db.AutoMigrate(&domain.Student{}, &Class{})
+		err = db.AutoMigrate()
 		if err != nil {
 			logger.Fatal(err.Error())
 		}

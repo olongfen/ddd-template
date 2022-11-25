@@ -7,36 +7,33 @@
 package main
 
 import (
-	"context"
-	"ddd-template/internal/adapters/handler"
 	"ddd-template/internal/adapters/repository"
+	"ddd-template/internal/adapters/store/redis"
 	"ddd-template/internal/application"
-	"ddd-template/internal/application/mutation"
-	"ddd-template/internal/application/query"
 	"ddd-template/internal/config"
-	"ddd-template/internal/domain"
 	"ddd-template/internal/ports/controller"
+	"ddd-template/internal/ports/controller/handler"
+	"ddd-template/internal/ports/controller/middleware"
+	"ddd-template/internal/service"
 	"go.uber.org/zap"
 )
 
 // Injectors from wire.go:
 
-func NewServer(ctx context.Context, configs *config.Configs, logger *zap.Logger) (controller.HttpServer, func()) {
+func NewServer(configs *config.Configs, logger *zap.Logger) (*service.Server, func()) {
+	mutations := app.SetMutations()
+	queries := app.SetQueries()
 	db := repository.InitDBConnect(configs, logger)
-	data := repository.NewData(db, logger)
-	iStudentRepository := repository.NewStudentRepository(data)
-	iClassRepository := repository.NewClassRepository(data)
-	iClassDomainService := domain.NewClassDomainService(iClassRepository, logger)
-	iStudentMutationService := mutation.NewUserMutation(iStudentRepository, iClassDomainService, logger)
-	iClassMutationService := mutation.NewClassMutation(iClassRepository, logger)
-	mutations := app.SetMutations(iStudentMutationService, iClassMutationService)
-	iStudentQueryService := query.NewQueryStudent(iStudentRepository, iClassDomainService, logger)
-	iClassQueryService := query.NewQueryClass(iClassRepository, logger)
-	queries := app.SetQueries(iStudentQueryService, iClassQueryService)
-	application := app.NewApplication(ctx, mutations, queries)
-	server := handler.NewServer(application)
-	httpServer, cleanup := controller.NewHttpServer(server)
-	return httpServer, func() {
+	dbData := repository.NewData(db, logger)
+	store := redis_store.NewRedisStore(configs)
+	appClose := app.SetClose(dbData, store)
+	application, cleanup := app.NewApplication(mutations, queries, appClose)
+	handlerHandler := handler.NewHandler(application)
+	middlewareMiddleware := middleware.NewMiddleware(logger)
+	httpServer := controller.NewHttpServer(handlerHandler, middlewareMiddleware)
+	server, cleanup2 := service.NewServer(httpServer)
+	return server, func() {
+		cleanup2()
 		cleanup()
 	}
 }

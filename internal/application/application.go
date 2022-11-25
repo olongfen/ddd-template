@@ -1,9 +1,9 @@
 package app
 
 import (
-	"context"
-	"ddd-template/internal/application/mutation"
-	"ddd-template/internal/application/query"
+	"ddd-template/internal/adapters/repository"
+	"ddd-template/internal/adapters/store"
+	"log"
 )
 
 type Application struct {
@@ -12,33 +12,41 @@ type Application struct {
 	Cleanup   func()
 }
 
+type Close struct {
+	data  repository.DBData
+	store store.Store
+}
+
 // Mutations 操作变动的数据
 type Mutations struct {
-	Student mutation.IStudentMutationService
-	Class   mutation.IClassMutationService
 }
 
 // Queries 查询的数据
 type Queries struct {
-	Student query.IStudentQueryService
-	Class   query.IClassQueryService
 }
 
-func SetQueries(stu query.IStudentQueryService, cla query.IClassQueryService) Queries {
-	return Queries{
-		Student: stu,
-		Class:   cla,
-	}
+func SetQueries() Queries {
+	return Queries{}
 }
 
-func SetMutations(student mutation.IStudentMutationService, class mutation.IClassMutationService) Mutations {
-	return Mutations{Student: student, Class: class}
+func SetMutations() Mutations {
+	return Mutations{}
 }
 
-func NewApplication(ctx context.Context, mut Mutations, que Queries) Application {
-	app := Application{}
+func SetClose(data repository.DBData, store store.Store) Close {
+	return Close{data: data, store: store}
+}
+
+func NewApplication(mut Mutations, que Queries, close Close) (*Application, func()) {
+	app := &Application{}
 	app.Queries = que
 	app.Mutations = mut
-	app.Cleanup = func() {}
-	return app
+	app.Cleanup = func() {
+
+		err := close.data.Close()
+		log.Println("db data close", err)
+		err = close.store.Close()
+		log.Println("cache store close", err)
+	}
+	return app, app.Cleanup
 }

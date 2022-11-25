@@ -37,7 +37,7 @@ func fieldWhere(field domain.Field) clause.Expression {
 	case "ilike":
 		return ILike{Column: column, Value: field.Value}
 	case "in":
-		return clause.IN{Column: column, Values: field.Value.([]interface{})}
+		return clause.IN{Column: column, Values: []interface{}{field.Value}}
 	default:
 		return clause.Eq{Column: column, Value: field.Value}
 	}
@@ -47,11 +47,13 @@ type option struct {
 	order       map[string]bool
 	pageSize    int
 	currentPage int
+	all         bool
+	noCount     bool
 }
 
-type fieldsT []domain.Field
+type TFields []domain.Field
 
-func (f fieldsT) process(db *gorm.DB) {
+func (f TFields) process(db *gorm.DB) {
 	for _, v := range f {
 		db = db.Where(fieldWhere(v))
 	}
@@ -63,6 +65,8 @@ func newOption(o domain.OtherCond) *option {
 	opt.order = map[string]bool{}
 	opt.currentPage = o.CurrentPage
 	opt.pageSize = o.PageSize
+	opt.all = o.All
+	opt.noCount = o.NoCount
 	if opt.currentPage == 0 {
 		opt.currentPage = 1
 	}
@@ -99,16 +103,27 @@ func findPage(db *gorm.DB, opt *option, out interface{}) (pagination *domain.Pag
 	//	}
 	//}
 	pagination = new(domain.Pagination)
-	if err = db.Count(&pagination.TotalCount).Error; err != nil {
-		return
+	// 不需要count
+	if !opt.noCount {
+		if err = db.Count(&pagination.TotalCount).Error; err != nil {
+			return
+		}
 	}
-	pagination.CurrentPage = opt.currentPage
-	pagination.PageSize = opt.pageSize
-	pageNum, pageSize := pagination.CurrentPage, pagination.PageSize
-	if pageNum > 0 && pageSize > 0 {
-		db = db.Offset((pageNum - 1) * pageSize).Limit(pageSize)
-	} else if pageSize > 0 {
-		db = db.Limit(pageSize)
+	// 不需要获取全部,默认分页查询
+	if !opt.all {
+		pagination.CurrentPage = opt.currentPage
+		pagination.PageSize = opt.pageSize
+		pageNum, pageSize := pagination.CurrentPage, pagination.PageSize
+		if pageNum > 0 && pageSize > 0 {
+			db = db.Offset((pageNum - 1) * pageSize).Limit(pageSize)
+		} else if pageSize > 0 {
+			db = db.Limit(pageSize)
+		}
+		if pagination.TotalCount%int64(pagination.PageSize) == 0 {
+			pagination.TotalPage = int(pagination.TotalCount / int64(pagination.PageSize))
+		} else {
+			pagination.TotalPage = int(pagination.TotalCount/int64(pagination.PageSize)) + 1
+		}
 	}
 
 	for column, v := range opt.order {
@@ -118,22 +133,17 @@ func findPage(db *gorm.DB, opt *option, out interface{}) (pagination *domain.Pag
 		return
 	}
 
-	if pagination.TotalCount%int64(pagination.PageSize) == 0 {
-		pagination.TotalPage = int(pagination.TotalCount / int64(pagination.PageSize))
-	} else {
-		pagination.TotalPage = int(pagination.TotalCount/int64(pagination.PageSize)) + 1
-	}
 	return
 
 }
 
 // repository 增删改查泛型
 type repository[T any] struct {
-	data *Data
+	data DBData
 }
 
 // FindOne  get one
-func (u repository[T]) FindOne(ctx context.Context, id int) (ret *T, err error) {
+func (u *repository[T]) FindOne(ctx context.Context, id int) (ret *T, err error) {
 	var (
 		model T
 	)
@@ -144,12 +154,12 @@ func (u repository[T]) FindOne(ctx context.Context, id int) (ret *T, err error) 
 }
 
 // FindOneBy  get one
-func (u repository[T]) FindOneBy(ctx context.Context, field ...domain.Field) (ret *T, err error) {
+func (u *repository[T]) FindOneBy(ctx context.Context, field ...domain.Field) (ret *T, err error) {
 	var (
 		model T
 	)
 	db := u.data.DB(ctx).Model(&model)
-	fieldsT(field).process(db)
+	TFields(field).process(db)
 	if err = db.First(&ret).Error; err != nil {
 		return
 	}
@@ -157,7 +167,7 @@ func (u repository[T]) FindOneBy(ctx context.Context, field ...domain.Field) (re
 }
 
 // Find get page
-func (u repository[T]) Find(ctx context.Context, o domain.OtherCond, fields ...domain.Field) (ret []*T,
+func (u *repository[T]) Find(ctx context.Context, o domain.OtherCond, fields ...domain.Field) (ret []*T,
 	pagination *domain.Pagination, err error) {
 	var (
 		data  []*T
@@ -165,7 +175,7 @@ func (u repository[T]) Find(ctx context.Context, o domain.OtherCond, fields ...d
 		db    = u.data.DB(ctx).Model(&model)
 		opt   = newOption(o)
 	)
-	fieldsT(fields).process(db)
+	TFields(fields).process(db)
 	if pagination, err = findPage(db, opt, &data); err != nil {
 		return
 	}
@@ -174,7 +184,7 @@ func (u repository[T]) Find(ctx context.Context, o domain.OtherCond, fields ...d
 }
 
 // Create 往数据库写入user记录
-func (u repository[T]) Create(ctx context.Context, stu *T) (err error) {
+func (u *repository[T]) Create(ctx context.Context, stu *T) (err error) {
 	var (
 		model T
 	)
@@ -185,7 +195,7 @@ func (u repository[T]) Create(ctx context.Context, stu *T) (err error) {
 }
 
 // Update update
-func (u repository[T]) Update(ctx context.Context, id int, stu *T) (err error) {
+func (u *repository[T]) Update(ctx context.Context, id int, stu *T) (err error) {
 	var (
 		model T
 	)
@@ -196,11 +206,23 @@ func (u repository[T]) Update(ctx context.Context, id int, stu *T) (err error) {
 }
 
 // Delete del
-func (u repository[T]) Delete(ctx context.Context, id int) (err error) {
+func (u *repository[T]) Delete(ctx context.Context, id int) (err error) {
 	var (
 		model T
 	)
 	if err = u.data.DB(ctx).Where("id = ?", id).Delete(&model).Error; err != nil {
+		return
+	}
+	return
+}
+
+func (u *repository[T]) DeleteBy(ctx context.Context, fields ...domain.Field) (err error) {
+	var (
+		model T
+		db    = u.data.DB(ctx)
+	)
+	TFields(fields).process(db)
+	if err = db.Delete(&model).Error; err != nil {
 		return
 	}
 	return

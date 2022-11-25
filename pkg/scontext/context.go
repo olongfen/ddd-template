@@ -2,8 +2,14 @@ package scontext
 
 import (
 	"context"
-	"ddd-template/internal/application/schema"
 )
+
+type Error struct {
+	Failed string      `json:"failed"`
+	Tag    string      `json:"tag"`
+	Value  interface{} `json:"value"`
+	Detail string      `json:"detail"`
+}
 
 type languageCtxTag struct {
 }
@@ -22,13 +28,13 @@ func GetLanguage(ctx context.Context) string {
 	return "zh"
 }
 
-func SetErrorsContext(ctx context.Context, val map[string]*schema.Error) context.Context {
+func SetErrorsContext(ctx context.Context, val map[string]*Error) context.Context {
 	return context.WithValue(ctx, errorsCtxTag{}, val)
 }
 
-func GetErrorsContext(ctx context.Context) map[string]*schema.Error {
-	if val, ok := ctx.Value(errorsCtxTag{}).(map[string]*schema.Error); ok {
+func GetErrorsContext(ctx context.Context) map[string]*Error {
+	if val, ok := ctx.Value(errorsCtxTag{}).(map[string]*Error); ok {
 		return val
 	}
-	return map[string]*schema.Error{}
+	return map[string]*Error{}
 }

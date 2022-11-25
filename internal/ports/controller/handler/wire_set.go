@@ -2,4 +2,4 @@ package handler
 
 import "github.com/google/wire"
 
-var Set = wire.NewSet(NewServer)
+var Set = wire.NewSet(NewHandler)

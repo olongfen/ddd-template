@@ -3,65 +3,46 @@ package controller
 import (
 	_ "ddd-template/docs"
 	"ddd-template/internal/config"
+	"ddd-template/internal/ports/controller/handler"
 	"ddd-template/internal/ports/controller/middleware"
 	"ddd-template/pkg/response"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
 	fiberSwagger "github.com/swaggo/fiber-swagger"
 	"go.uber.org/zap"
+	"log"
 )
 
 type HttpServer struct {
-	Server Server
+	handler    *handler.Handler
+	app        *fiber.App
+	middleware middleware.Middleware
 }
 
-func NewHttpServer(server Server) (HttpServer, func()) {
-	return HttpServer{server}, server.Cleanup()
+func (h *HttpServer) Close() (err error) {
+	log.Println("http handler close")
+	return h.app.Shutdown()
 }
 
-func RunHTTPServer(fc func(app2 *fiber.App) *fiber.App, cfg config.HTTP, logger *zap.Logger) {
-	a := fiber.New(fiber.Config{
+func NewHttpServer(handler *handler.Handler, m middleware.Middleware) *HttpServer {
+	return &HttpServer{handler: handler, middleware: m}
+}
+
+func (h *HttpServer) RunHTTPServer(fc func(app2 *fiber.App) *fiber.App, cfg config.HTTP, logger *zap.Logger) {
+	h.app = fiber.New(fiber.Config{
 		ErrorHandler: response.ErrorHandler,
 		JSONEncoder:  jsoniter.Marshal,
 		JSONDecoder:  jsoniter.Unmarshal,
 	})
-	a.Use(middleware.Languages, middleware.New(middleware.Config{Logger: logger}))
-	a.Mount("/api/v1", fc(a))
-	logger.Info("HTTP Start", zap.String("addr", cfg.Host+":"+cfg.Port))
-	logger.Fatal("HTTP START ERROR", zap.Error(a.Listen(cfg.Host+":"+cfg.Port)))
+	h.app.Use(h.middleware.Languages(), h.middleware.Log())
+	h.app.Mount("/api/v1", fc(h.app))
+	logger.Info("HTTP Start", zap.String("addr", fmt.Sprintf(`%s:%d`, cfg.Host, cfg.Port)))
+	logger.Fatal("HTTP START ERROR", zap.Error(h.app.Listen(fmt.Sprintf(`%s:%d`, cfg.Host, cfg.Port))))
 
 }
 
-func HandlerFromMux(server Server, a *fiber.App) *fiber.App {
+func (h *HttpServer) HandlerFromMux(a *fiber.App) *fiber.App {
 	a.Get("/docs/*", fiberSwagger.WrapHandler)
-	// student
-	stu := a.Group("/students")
-	stu.Post("/", server.AddStudent)
-	stu.Get("/:id", server.GetStudent)
-	stu.Get("/", server.QueryStudents)
-	stu.Put("/:id", server.UpStudent)
-	stu.Delete("/:id", server.DelStudent)
-	// class
-	class := a.Group("/classes")
-	class.Post("/", server.AddClass)
-	class.Get("/", server.QueryClasses)
-	class.Get("/:id", server.GetClass)
-	class.Put("/:id", server.UpClass)
-	class.Delete("/:id", server.DelClass)
 	return a
-}
-
-type Server interface {
-	Cleanup() func()
-	AddStudent(ctx *fiber.Ctx) error
-	GetStudent(ctx *fiber.Ctx) error
-	QueryStudents(ctx *fiber.Ctx) error
-	UpStudent(ctx *fiber.Ctx) error
-	DelStudent(ctx *fiber.Ctx) (err error)
-	//
-	AddClass(ctx *fiber.Ctx) error
-	UpClass(ctx *fiber.Ctx) error
-	QueryClasses(ctx *fiber.Ctx) error
-	DelClass(ctx *fiber.Ctx) error
-	GetClass(ctx *fiber.Ctx) error
 }

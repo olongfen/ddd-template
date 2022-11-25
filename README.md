@@ -21,13 +21,17 @@
 - pkg 可提取公用包
 ## 运行
 ```shell
-go run ./ --config configs/config.yaml
+go run . --config configs/config.yaml
 ```
 
-## docker
+## docker 部署
 ```shell
-source .env
-docker-compose up -d --build
+docker-compose up -d 
+```
+
+## docker 更新
+```shell
+    docker-compose restart app
 ```
 
 ## 单元测试
@@ -39,5 +43,19 @@ sh run_unit_test.sh
 ```shell
 make -f ./makefile mockgen
 ```
+
+## 生成grpc代码
+```shell
+make -f makefile grpcgen
+```
+
+## 生成EC256
+```shell
+openssl ecparam -genkey -name prime256v1 -noout -out access_token_key.pem
+openssl ec -in access_token_key.pem -pubout -out access_token_pub.pem
+openssl ecparam -genkey -name prime256v1 -noout -out refresh_token_key.pem
+openssl ec -in refresh_token_key.pem -pubout -out refresh_token_pub.pem
+```
+
 ## 感谢JetBrains的开源许可证书支持
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png?_gl=1*l2f4tq*_ga*MTE4NTc2NDE2MC4xNjU0MTM5MzQ0*_ga_9J976DJZ68*MTY1NDEzOTM0NC4xLjAuMTY1NDEzOTM0NC4w" alt="JetBrains" width="200">

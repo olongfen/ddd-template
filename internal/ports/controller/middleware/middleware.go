@@ -25,6 +25,41 @@ type Config struct {
 	Logger *zap.Logger
 }
 
+type Middleware interface {
+	Log() fiber.Handler
+	Languages() fiber.Handler
+}
+
+type middleware struct {
+	logger *zap.Logger
+}
+
+func (m middleware) Languages() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		// 以后如果拓展语言再说
+		// val := ctx.GetReqHeaders()["X-Language"]
+		val := ctx.GetReqHeaders()["Accept-Language"]
+		if len(val) == 0 {
+			val = "zh-cn"
+		}
+		ctx.SetUserContext(scontext.SetLanguage(ctx.UserContext(), val))
+		return ctx.Next()
+	}
+}
+
+func (m middleware) Log() fiber.Handler {
+	return New(Config{
+		Logger: m.logger,
+	})
+}
+
+func NewMiddleware(
+	logger *zap.Logger) Middleware {
+	var m = new(middleware)
+	m.logger = logger
+	return m
+}
+
 // New creates a new middleware handler
 func New(config Config) fiber.Handler {
 
@@ -70,26 +105,26 @@ func getAllowedHeaders() map[string]bool {
 	}
 }
 
-type resp struct {
+type Response struct {
 	code  int
 	_type string
 }
 
-func Resp(r *fasthttp.Response) *resp {
-	return &resp{
+func Resp(r *fasthttp.Response) *Response {
+	return &Response{
 		code:  r.StatusCode(),
 		_type: bytes.NewBuffer(r.Header.ContentType()).String(),
 	}
 }
 
-func (r *resp) MarshalLogObject(enc zapcore.ObjectEncoder) error {
+func (r *Response) MarshalLogObject(enc zapcore.ObjectEncoder) error {
 	enc.AddString("type", r._type)
 	enc.AddInt("code", r.code)
 
 	return nil
 }
 
-type req struct {
+type Request struct {
 	body     string
 	fullPath string
 	user     string
@@ -99,7 +134,7 @@ type req struct {
 	headers  *headerBag
 }
 
-func Req(c *fiber.Ctx) *req {
+func Req(c *fiber.Ctx) *Request {
 	reqq := c.Request()
 	var body []byte
 	buffer := new(bytes.Buffer)
@@ -128,7 +163,7 @@ func Req(c *fiber.Ctx) *req {
 		userEmail = u.(string)
 	}
 
-	return &req{
+	return &Request{
 		body:     bytes.NewBuffer(body).String(),
 		fullPath: bytes.NewBuffer(reqq.RequestURI()).String(),
 		headers:  headers,
@@ -139,7 +174,7 @@ func Req(c *fiber.Ctx) *req {
 	}
 }
 
-func (r *req) MarshalLogObject(enc zapcore.ObjectEncoder) error {
+func (r *Request) MarshalLogObject(enc zapcore.ObjectEncoder) error {
 	enc.AddString("fullPath", r.fullPath)
 	enc.AddString("ip", r.ip)
 	enc.AddString("method", r.method)
@@ -172,13 +207,4 @@ func (h *headerBag) MarshalLogObject(enc zapcore.ObjectEncoder) error {
 	}
 
 	return nil
-}
-
-func Languages(ctx *fiber.Ctx) error {
-	val := ctx.GetReqHeaders()["x-language"]
-	if len(val) == 0 {
-		val = "en"
-	}
-	ctx.SetUserContext(scontext.SetLanguage(ctx.UserContext(), val))
-	return ctx.Next()
 }
