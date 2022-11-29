@@ -53,11 +53,11 @@ type option struct {
 
 type TFields []domain.Field
 
-func (f TFields) process(db *gorm.DB) {
+func (f TFields) process(db *gorm.DB) *gorm.DB {
 	for _, v := range f {
 		db = db.Where(fieldWhere(v))
 	}
-	return
+	return db
 }
 
 func newOption(o domain.OtherCond) *option {
@@ -159,8 +159,8 @@ func (u *repository[T]) FindOneBy(ctx context.Context, field ...domain.Field) (r
 		model T
 	)
 	db := u.data.DB(ctx).Model(&model)
-	TFields(field).process(db)
-	if err = db.First(&ret).Error; err != nil {
+
+	if err = TFields(field).process(db).First(&ret).Error; err != nil {
 		return
 	}
 	return
@@ -175,8 +175,8 @@ func (u *repository[T]) Find(ctx context.Context, o domain.OtherCond, fields ...
 		db    = u.data.DB(ctx).Model(&model)
 		opt   = newOption(o)
 	)
-	TFields(fields).process(db)
-	if pagination, err = findPage(db, opt, &data); err != nil {
+
+	if pagination, err = findPage(TFields(fields).process(db), opt, &data); err != nil {
 		return
 	}
 	ret = data
@@ -221,8 +221,8 @@ func (u *repository[T]) DeleteBy(ctx context.Context, fields ...domain.Field) (e
 		model T
 		db    = u.data.DB(ctx)
 	)
-	TFields(fields).process(db)
-	if err = db.Delete(&model).Error; err != nil {
+
+	if err = TFields(fields).process(db).Delete(&model).Error; err != nil {
 		return
 	}
 	return
