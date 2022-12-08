@@ -2,7 +2,8 @@ package config
 
 import (
 	"bytes"
-	"ddd-template/pkg/utils"
+	"e.coding.net/zkxrsz/starwiz/zkxr_center_backend/system-manage/pkg/utils"
+	"fmt"
 	"github.com/fsnotify/fsnotify"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/spf13/viper"
@@ -21,6 +22,16 @@ type Configs struct {
 	Redis       Redis
 	JWT         JWT
 	Nacos       Nacos
+	RabbitMQ    RabbitMQ
+}
+
+type RabbitMQ struct {
+	URI          string
+	Exchange     string
+	ExchangeType string
+	ConsumerTag  string
+	QueueName    string
+	Key          string
 }
 
 type Nacos struct {
@@ -71,8 +82,9 @@ type Database struct {
 }
 
 type HTTP struct {
-	Host string
-	Port int
+	Host    string
+	Port    int
+	BaseURL string
 }
 
 type Redis struct {
@@ -95,8 +107,17 @@ var conf *Configs
 func setDefault() {
 	viper.SetDefault("watchconfig", false)
 	viper.SetDefault("http", HTTP{
-		Host: "0.0.0.0",
-		Port: 8818,
+		Host:    "0.0.0.0",
+		Port:    8818,
+		BaseURL: fmt.Sprintf(`%s:%d`, "0.0.0.0", 8818),
+	})
+	viper.SetDefault("rabbitmq", RabbitMQ{
+		URI:          "amqp://admin:123456@192.168.3.42:5682/",
+		Exchange:     "data-management-exchange",
+		ExchangeType: "fanout",
+		ConsumerTag:  "system-manage",
+		QueueName:    "data-management-queue",
+		Key:          "system-manage",
 	})
 	viper.SetDefault("languages", []string{"cn", "en"})
 	viper.SetDefault("database", Database{

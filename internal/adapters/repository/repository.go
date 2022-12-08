@@ -227,3 +227,14 @@ func (u *repository[T]) DeleteBy(ctx context.Context, fields ...domain.Field) (e
 	}
 	return
 }
+
+func (u *repository[T]) Count(ctx context.Context, fields ...domain.Field) (count int64, err error) {
+	var (
+		model T
+		db    = u.data.DB(ctx).Model(model)
+	)
+	if err = TFields(fields).process(db).Count(&count).Error; err != nil {
+		return
+	}
+	return
+}
