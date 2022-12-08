@@ -2,7 +2,7 @@ package config
 
 import (
 	"bytes"
-	"e.coding.net/zkxrsz/starwiz/zkxr_center_backend/system-manage/pkg/utils"
+	"ddd-template/pkg/utils"
 	"github.com/fsnotify/fsnotify"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/spf13/viper"

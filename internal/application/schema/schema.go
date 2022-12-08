@@ -2,7 +2,6 @@ package schema
 
 import (
 	"ddd-template/pkg/error_i18n"
-	"ddd-template/pkg/scontext"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
@@ -38,19 +37,19 @@ func translate(language string) ut.Translator {
 	return trans
 }
 
-func ValidateForm(c interface{}, language string) map[string]*scontext.Error {
+func ValidateForm(c interface{}, language string) map[string]string {
 	var (
-		errs = map[string]*scontext.Error{}
+		errs = map[string]string{}
 	)
 	err := validate.Struct(c)
 	if err != nil {
 		for _, e := range err.(validator.ValidationErrors) {
-			_err := &scontext.Error{}
-			_err.Detail = e.Translate(translate(language))
-			_err.Tag = e.Tag()
-			_err.Failed = e.Field()
-			_err.Value = e.Value()
-			errs[strings.ToLower(e.Field()[:1])+e.Field()[1:]] = _err
+			//_err := &scontext.Error{}
+			//_err.Detail = e.Translate(translate(language))
+			//_err.Tag = e.Tag()
+			//_err.Failed = e.Field()
+			//_err.Value = e.Value()
+			errs[strings.ToLower(e.Field()[:1])+e.Field()[1:]] = e.Translate(translate(language))
 		}
 	}
 	return errs
