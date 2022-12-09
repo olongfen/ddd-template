@@ -10,5 +10,6 @@ type IRepository[T any] interface {
 		pagination *Pagination, err error)
 	Update(ctx context.Context, id int, stu *T) (err error)
 	Delete(ctx context.Context, id int) (err error)
+	DeleteBy(ctx context.Context, fields ...Field) (err error)
 	Count(ctx context.Context, fields ...Field) (count int64, err error)
 }
