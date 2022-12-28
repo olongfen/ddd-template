@@ -37,8 +37,8 @@ func (h *HttpServer) RunHTTPServer(fc func(app2 *fiber.App) *fiber.App, cfg conf
 	})
 	h.app.Use(h.middleware.Languages(), h.middleware.Log())
 	h.app.Mount("/api/v1", fc(h.app))
-	logger.Info("HTTP Start", zap.String("addr", fmt.Sprintf(`%s:%d`, cfg.Host, cfg.Port)))
-	logger.Fatal("HTTP START ERROR", zap.Error(h.app.Listen(fmt.Sprintf(`%s:%d`, cfg.Host, cfg.Port))))
+	logger.Info("HTTP Start", zap.String("addr", fmt.Sprintf(`%s:%s`, cfg.Host, cfg.Port)))
+	logger.Fatal("HTTP START ERROR", zap.Error(h.app.Listen(fmt.Sprintf(`%s:%s`, cfg.Host, cfg.Port))))
 
 }
 

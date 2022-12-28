@@ -83,7 +83,7 @@ type Database struct {
 
 type HTTP struct {
 	Host    string
-	Port    int
+	Port    string
 	BaseURL string
 }
 
@@ -108,7 +108,7 @@ func setDefault() {
 	viper.SetDefault("watchconfig", false)
 	viper.SetDefault("http", HTTP{
 		Host:    "0.0.0.0",
-		Port:    8818,
+		Port:    "8818",
 		BaseURL: fmt.Sprintf(`%s:%d`, "0.0.0.0", 8818),
 	})
 	viper.SetDefault("rabbitmq", RabbitMQ{

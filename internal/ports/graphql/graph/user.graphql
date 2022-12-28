@@ -1,0 +1,10 @@
+
+"""User 用户信息"""
+type User {
+    """用户uuid"""
+    uuid: UUID!
+    """用户名"""
+    username: String!
+}
+
+scalar UUID
