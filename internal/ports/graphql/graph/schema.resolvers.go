@@ -8,11 +8,12 @@ import (
 	"context"
 	"ddd-template/internal/ports/graphql/graph/model"
 	"fmt"
+	uuid "github.com/satori/go.uuid"
 )
 
 // User is the resolver for the User field.
 func (r *mutationResolver) User(ctx context.Context, username string) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: User - User"))
+	return &model.User{UUID: uuid.NewV4().String(), Username: username}, nil
 }
 
 // User is the resolver for the User field.

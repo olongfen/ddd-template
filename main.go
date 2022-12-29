@@ -2,7 +2,6 @@ package main
 
 import (
 	"ddd-template/internal/config"
-	"ddd-template/internal/ports/graphql"
 	"ddd-template/internal/service"
 	"ddd-template/pkg/xlog"
 	"github.com/gofiber/fiber/v2"
@@ -63,10 +62,6 @@ func main() {
 		server.Http.RunHTTPServer(func(app2 *fiber.App) *fiber.App {
 			return server.Http.HandlerFromMux(app2)
 		}, cfg.HTTP, logger)
-	}()
-	go func() {
-		defer wg.Done()
-		graphql.NewServer()
 	}()
 
 	wg.Wait()

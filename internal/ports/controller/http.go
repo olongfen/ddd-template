@@ -5,13 +5,18 @@ import (
 	"ddd-template/internal/config"
 	"ddd-template/internal/ports/controller/handler"
 	"ddd-template/internal/ports/controller/middleware"
+	"ddd-template/internal/ports/graphql/graph"
 	"ddd-template/pkg/response"
 	"fmt"
+	handler2 "github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
 	fiberSwagger "github.com/swaggo/fiber-swagger"
+	"github.com/valyala/fasthttp/fasthttpadaptor"
 	"go.uber.org/zap"
 	"log"
+	"net/http"
 )
 
 type HttpServer struct {
@@ -44,5 +49,16 @@ func (h *HttpServer) RunHTTPServer(fc func(app2 *fiber.App) *fiber.App, cfg conf
 
 func (h *HttpServer) HandlerFromMux(a *fiber.App) *fiber.App {
 	a.Get("/docs/*", fiberSwagger.WrapHandler)
+	srv := handler2.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	a.All("/", HTTPHandler(playground.Handler("GraphQL playground", "/query")))
+	a.All("/query", HTTPHandler(srv))
 	return a
+}
+
+func HTTPHandler(h http.Handler) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		handler := fasthttpadaptor.NewFastHTTPHandler(h)
+		handler(c.Context())
+		return nil
+	}
 }
