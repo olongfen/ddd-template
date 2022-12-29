@@ -41,6 +41,10 @@ func (h *HttpServer) RunHTTPServer(fc func(app2 *fiber.App) *fiber.App, cfg conf
 		JSONDecoder:  jsoniter.Unmarshal,
 	})
 	h.app.Use(h.middleware.Languages(), h.middleware.Log())
+	g := h.app.Group("/")
+	srv := handler2.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	g.All("/", HTTPHandler(playground.Handler("GraphQL playground", "/query")))
+	g.All("/query", HTTPHandler(srv))
 	h.app.Mount("/api/v1", fc(h.app))
 	logger.Info("HTTP Start", zap.String("addr", fmt.Sprintf(`%s:%s`, cfg.Host, cfg.Port)))
 	logger.Fatal("HTTP START ERROR", zap.Error(h.app.Listen(fmt.Sprintf(`%s:%s`, cfg.Host, cfg.Port))))
@@ -49,9 +53,6 @@ func (h *HttpServer) RunHTTPServer(fc func(app2 *fiber.App) *fiber.App, cfg conf
 
 func (h *HttpServer) HandlerFromMux(a *fiber.App) *fiber.App {
 	a.Get("/docs/*", fiberSwagger.WrapHandler)
-	srv := handler2.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
-	a.All("/", HTTPHandler(playground.Handler("GraphQL playground", "/query")))
-	a.All("/query", HTTPHandler(srv))
 	return a
 }
 
