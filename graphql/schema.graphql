@@ -1,4 +1,6 @@
 
+scalar UUID
+
 type Query {
     User(uuid:UUID!): User!
 }

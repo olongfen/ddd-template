@@ -7,4 +7,3 @@ type User {
     username: String!
 }
 
-scalar UUID

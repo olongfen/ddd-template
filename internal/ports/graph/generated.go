@@ -5,8 +5,7 @@ package graph
 import (
 	"bytes"
 	"context"
-	"ddd-template/internal/ports/graphql/graph/model"
-	"embed"
+	"ddd-template/internal/application/schema"
 	"errors"
 	"fmt"
 	"strconv"
@@ -60,10 +59,10 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	User(ctx context.Context, username string) (*model.User, error)
+	User(ctx context.Context, username string) (*schema.User, error)
 }
 type QueryResolver interface {
-	User(ctx context.Context, uuid string) (*model.User, error)
+	User(ctx context.Context, uuid string) (*schema.User, error)
 }
 
 type executableSchema struct {
@@ -185,20 +184,26 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(parsedSchema, parsedSchema.Types[name]), nil
 }
 
-//go:embed "schema.graphql" "user.graphql"
-var sourcesFS embed.FS
-
-func sourceData(filename string) string {
-	data, err := sourcesFS.ReadFile(filename)
-	if err != nil {
-		panic(fmt.Sprintf("codegen problem: %s not available", filename))
-	}
-	return string(data)
+var sources = []*ast.Source{
+	{Name: "../../../graphql/schema.graphql", Input: `
+type Query {
+    User(uuid:UUID!): User!
 }
 
-var sources = []*ast.Source{
-	{Name: "schema.graphql", Input: sourceData("schema.graphql"), BuiltIn: false},
-	{Name: "user.graphql", Input: sourceData("user.graphql"), BuiltIn: false},
+
+type Mutation {
+   User(username:String!):User!
+}`, BuiltIn: false},
+	{Name: "../../../graphql/user.graphql", Input: `
+"""User 用户信息"""
+type User {
+    """用户uuid"""
+    uuid: UUID!
+    """用户名"""
+    username: String!
+}
+
+scalar UUID`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
@@ -315,9 +320,9 @@ func (ec *executionContext) _Mutation_User(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.User)
+	res := resTmp.(*schema.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖdddᚑtemplateᚋinternalᚋportsᚋgraphqlᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖdddᚑtemplateᚋinternalᚋapplicationᚋschemaᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_User(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -376,9 +381,9 @@ func (ec *executionContext) _Query_User(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.User)
+	res := resTmp.(*schema.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖdddᚑtemplateᚋinternalᚋportsᚋgraphqlᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖdddᚑtemplateᚋinternalᚋapplicationᚋschemaᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_User(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -540,7 +545,7 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _User_uuid(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_uuid(ctx context.Context, field graphql.CollectedField, obj *schema.User) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_User_uuid(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -584,7 +589,7 @@ func (ec *executionContext) fieldContext_User_uuid(ctx context.Context, field gr
 	return fc, nil
 }
 
-func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *schema.User) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_User_username(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -2515,7 +2520,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 
 var userImplementors = []string{"User"}
 
-func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *model.User) graphql.Marshaler {
+func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *schema.User) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -2911,11 +2916,11 @@ func (ec *executionContext) marshalNUUID2string(ctx context.Context, sel ast.Sel
 	return res
 }
 
-func (ec *executionContext) marshalNUser2dddᚑtemplateᚋinternalᚋportsᚋgraphqlᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2dddᚑtemplateᚋinternalᚋapplicationᚋschemaᚐUser(ctx context.Context, sel ast.SelectionSet, v schema.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUser2ᚖdddᚑtemplateᚋinternalᚋportsᚋgraphqlᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖdddᚑtemplateᚋinternalᚋapplicationᚋschemaᚐUser(ctx context.Context, sel ast.SelectionSet, v *schema.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")

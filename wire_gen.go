@@ -14,6 +14,7 @@ import (
 	"ddd-template/internal/ports/controller"
 	"ddd-template/internal/ports/controller/handler"
 	"ddd-template/internal/ports/controller/middleware"
+	"ddd-template/internal/ports/graph"
 	"ddd-template/internal/service"
 	"go.uber.org/zap"
 )
@@ -29,10 +30,11 @@ func NewServer(configs *config.Configs, logger *zap.Logger) (*service.Server, fu
 	appClose := app.SetClose(dbData, store)
 	application, cleanup := app.NewApplication(mutations, queries, appClose)
 	handlerHandler := handler.NewHandler(application)
+	server := graph.NewResolver(application, logger)
 	middlewareMiddleware := middleware.NewMiddleware(logger)
-	httpServer := controller.NewHttpServer(handlerHandler, middlewareMiddleware)
-	server, cleanup2 := service.NewServer(httpServer)
-	return server, func() {
+	httpServer := controller.NewHttpServer(handlerHandler, server, middlewareMiddleware)
+	serviceServer, cleanup2 := service.NewServer(httpServer)
+	return serviceServer, func() {
 		cleanup2()
 		cleanup()
 	}

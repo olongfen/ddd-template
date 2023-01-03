@@ -58,6 +58,9 @@ var ErrorHandler = func(ctx *fiber.Ctx, err error) error {
 		xlog.Log.Error("Business Error", zap.Error(e.StackError()))
 		resp.Code = e.Code()
 		resp.Message = e.Error()
+	case error_i18n.ValidateError:
+		resp.SetErrors(err.(error_i18n.ValidateError))
+		resp.Message = error_i18n.NewError(error_i18n.IllegalParameter, scontext.GetLanguage(userCtx)).Error()
 	case error_i18n.DBErrorResponse:
 		// 处理数据库错误返回
 		var (
@@ -96,10 +99,7 @@ var ErrorHandler = func(ctx *fiber.Ctx, err error) error {
 			resp.SetErrors(m)
 		}*/
 
-	errors := scontext.GetErrorsContext(userCtx)
-	if len(errors) > 0 {
-		resp.SetErrors(errors)
-	} else if resp.Errors == nil {
+	if resp.Errors == nil {
 		resp.Errors = map[string]any{"error": err.Error()}
 	}
 

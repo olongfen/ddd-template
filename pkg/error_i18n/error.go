@@ -6,6 +6,12 @@ import (
 	"github.com/pkg/errors"
 )
 
+type ValidateError map[string]string
+
+func (v ValidateError) Error() string {
+	return fmt.Sprintf("%v", v)
+}
+
 var _ BizError = (*bizError)(nil)
 
 type BizError interface {

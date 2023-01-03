@@ -7,9 +7,6 @@ import (
 type languageCtxTag struct {
 }
 
-type errorsCtxTag struct {
-}
-
 func SetLanguage(ctx context.Context, lang string) context.Context {
 	return context.WithValue(ctx, languageCtxTag{}, lang)
 }
@@ -21,13 +18,15 @@ func GetLanguage(ctx context.Context) string {
 	return "zh"
 }
 
-func SetErrorsContext(ctx context.Context, val map[string]string) context.Context {
-	return context.WithValue(ctx, errorsCtxTag{}, val)
+type userUuidCtxTag struct{}
+
+func SetUserUuid(ctx context.Context, userUuid string) context.Context {
+	return context.WithValue(ctx, userUuidCtxTag{}, userUuid)
 }
 
-func GetErrorsContext(ctx context.Context) map[string]string {
-	if val, ok := ctx.Value(errorsCtxTag{}).(map[string]string); ok {
+func GetUserUuid(ctx context.Context) string {
+	if val, ok := ctx.Value(userUuidCtxTag{}).(string); ok {
 		return val
 	}
-	return map[string]string{}
+	return ""
 }
