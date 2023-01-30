@@ -126,20 +126,44 @@ func (op *OpentracingPlugin) Name() string {
 
 func (op *OpentracingPlugin) Initialize(db *gorm.DB) (err error) {
 	// 开始前 - 并不是都用相同的方法，可以自己自定义
-	db.Callback().Create().Before("gorm:before_create").Register(CallBackBeforeName, before)
-	db.Callback().Query().Before("gorm:query").Register(CallBackBeforeName, before)
-	db.Callback().Delete().Before("gorm:before_delete").Register(CallBackBeforeName, before)
-	db.Callback().Update().Before("gorm:setup_reflect_value").Register(CallBackBeforeName, before)
-	db.Callback().Row().Before("gorm:row").Register(CallBackBeforeName, before)
-	db.Callback().Raw().Before("gorm:raw").Register(CallBackBeforeName, before)
+	if err = db.Callback().Create().Before("gorm:before_create").Register(CallBackBeforeName, before); err != nil {
+		return
+	}
+	if err = db.Callback().Query().Before("gorm:query").Register(CallBackBeforeName, before); err != nil {
+		return
+	}
+	if err = db.Callback().Delete().Before("gorm:before_delete").Register(CallBackBeforeName, before); err != nil {
+		return
+	}
+	if err = db.Callback().Update().Before("gorm:setup_reflect_value").Register(CallBackBeforeName, before); err != nil {
+		return
+	}
+	if err = db.Callback().Row().Before("gorm:row").Register(CallBackBeforeName, before); err != nil {
+		return
+	}
+	if err = db.Callback().Raw().Before("gorm:raw").Register(CallBackBeforeName, before); err != nil {
+		return
+	}
 
 	// 结束后 - 并不是都用相同的方法，可以自己自定义
-	db.Callback().Create().After("gorm:after_create").Register(CallBackAfterName, after)
-	db.Callback().Query().After("gorm:after_query").Register(CallBackAfterName, after)
-	db.Callback().Delete().After("gorm:after_delete").Register(CallBackAfterName, after)
-	db.Callback().Update().After("gorm:after_update").Register(CallBackAfterName, after)
-	db.Callback().Row().After("gorm:row").Register(CallBackAfterName, after)
-	db.Callback().Raw().After("gorm:raw").Register(CallBackAfterName, after)
+	if err = db.Callback().Create().After("gorm:after_create").Register(CallBackAfterName, after); err != nil {
+		return
+	}
+	if err = db.Callback().Query().After("gorm:after_query").Register(CallBackAfterName, after); err != nil {
+		return
+	}
+	if err = db.Callback().Delete().After("gorm:after_delete").Register(CallBackAfterName, after); err != nil {
+		return
+	}
+	if err = db.Callback().Update().After("gorm:after_update").Register(CallBackAfterName, after); err != nil {
+		return
+	}
+	if err = db.Callback().Row().After("gorm:row").Register(CallBackAfterName, after); err != nil {
+		return
+	}
+	if err = db.Callback().Raw().After("gorm:raw").Register(CallBackAfterName, after); err != nil {
+		return
+	}
 	return
 }
 
@@ -241,10 +265,10 @@ func camelString(s string) string {
 	num := len(s) - 1
 	for i := 0; i <= num; i++ {
 		d := s[i]
-		if k == false && d >= 'A' && d <= 'Z' {
+		if !k && d >= 'A' && d <= 'Z' {
 			k = true
 		}
-		if d >= 'a' && d <= 'z' && (j || k == false) {
+		if d >= 'a' && d <= 'z' && (j || !k) {
 			d = d - 32
 			j = false
 			k = true

@@ -44,11 +44,8 @@ func main() {
 	xlog.Log = logger
 	server, cleanup = NewServer(cfg, logger)
 	go func() {
-		for {
-			select {
-			case <-done:
-				cleanup()
-			}
+		for range done {
+			cleanup()
 		}
 	}()
 	wg.Add(2)

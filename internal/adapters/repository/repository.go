@@ -7,20 +7,30 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+// ILike ilike
 type ILike clause.Eq
 
+// Build builder sql
 func (like ILike) Build(builder clause.Builder) {
 	builder.WriteQuoted(like.Column)
-	builder.WriteString(" ILIKE ")
+	_, err := builder.WriteString(" ILIKE ")
+	if err != nil {
+		panic(err)
+	}
 	builder.AddVar(builder, like.Value)
 }
 
+// NegationBuild builder sql
 func (like ILike) NegationBuild(builder clause.Builder) {
 	builder.WriteQuoted(like.Column)
-	builder.WriteString(" NOT LIKE ")
+	_, err := builder.WriteString(" NOT LIKE ")
+	if err != nil {
+		panic(err)
+	}
 	builder.AddVar(builder, like.Value)
 }
 
+// fieldWhere process field symbol
 func fieldWhere(field domain.Field) clause.Expression {
 	column := snakeString(field.Column)
 	switch field.Symbol {
@@ -43,6 +53,7 @@ func fieldWhere(field domain.Field) clause.Expression {
 	}
 }
 
+// option query conditions
 type option struct {
 	order       map[string]bool
 	pageSize    int
@@ -51,8 +62,10 @@ type option struct {
 	noCount     bool
 }
 
+// TFields field array type
 type TFields []domain.Field
 
+// process handler db.Where()
 func (f TFields) process(db *gorm.DB) *gorm.DB {
 	for _, v := range f {
 		db = db.Where(fieldWhere(v))
@@ -60,6 +73,7 @@ func (f TFields) process(db *gorm.DB) *gorm.DB {
 	return db
 }
 
+// newPotion new
 func newOption(o domain.OtherCond) *option {
 	opt := new(option)
 	opt.order = map[string]bool{}
@@ -85,6 +99,7 @@ func newOption(o domain.OtherCond) *option {
 	return opt
 }
 
+// findPage find page
 func findPage(db *gorm.DB, opt *option, out interface{}) (pagination *domain.Pagination, err error) {
 	//if !opt.NotCount {
 	//	if opt.Distinct != "" {
@@ -216,6 +231,7 @@ func (u *repository[T]) Delete(ctx context.Context, id int) (err error) {
 	return
 }
 
+// DeleteBy delete by fields
 func (u *repository[T]) DeleteBy(ctx context.Context, fields ...domain.Field) (err error) {
 	var (
 		model T
@@ -228,6 +244,7 @@ func (u *repository[T]) DeleteBy(ctx context.Context, fields ...domain.Field) (e
 	return
 }
 
+// Count return number
 func (u *repository[T]) Count(ctx context.Context, fields ...domain.Field) (count int64, err error) {
 	var (
 		model T
