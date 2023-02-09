@@ -1,5 +1,6 @@
 # Stage 1: compile mbtileserver
-FROM golang:1.19
+ARG GO_VERSION=1.19
+FROM golang:${GO_VERSION}
 ENV CONFIG="./configs/config.yaml"
 ENV TZ="Asia/Shanghai"
 # 设置时区
