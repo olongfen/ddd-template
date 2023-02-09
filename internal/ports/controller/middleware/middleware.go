@@ -100,8 +100,8 @@ func New(config Config) fiber.Handler {
 
 func getAllowedHeaders() map[string]bool {
 	return map[string]bool{
-		"User-Agent": true,
-		"X-Mobile":   true,
+		"Use-Agent": true,
+		"X-Mobile":  true,
 	}
 }
 

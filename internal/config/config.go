@@ -2,7 +2,7 @@ package config
 
 import (
 	"bytes"
-	"e.coding.net/zkxrsz/starwiz/zkxr_center_backend/system-manage/pkg/utils"
+	"ddd-template/pkg/utils"
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	jsoniter "github.com/json-iterator/go"
@@ -88,6 +88,7 @@ type HTTP struct {
 }
 
 type Redis struct {
+	Use       bool
 	Addr      string
 	Password  string
 	DB        int
@@ -145,6 +146,7 @@ func setDefault() {
 		Addr:      "127.0.0.1:6379",
 		Password:  "123456",
 		DB:        1,
+		Use:       true,
 		KeyPrefix: "system_manage",
 	})
 

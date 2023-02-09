@@ -80,7 +80,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "Mutation.User":
+	case "Mutation.Use":
 		if e.complexity.Mutation.User == nil {
 			break
 		}
@@ -92,7 +92,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.User(childComplexity, args["username"].(string)), true
 
-	case "Query.User":
+	case "Query.Use":
 		if e.complexity.Query.User == nil {
 			break
 		}
@@ -104,14 +104,14 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.User(childComplexity, args["uuid"].(string)), true
 
-	case "User.uuid":
+	case "Use.uuid":
 		if e.complexity.User.UUID == nil {
 			break
 		}
 
 		return e.complexity.User.UUID(childComplexity), true
 
-	case "User.username":
+	case "Use.username":
 		if e.complexity.User.Username == nil {
 			break
 		}
@@ -187,16 +187,16 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 var sources = []*ast.Source{
 	{Name: "../../../graphql/schema.graphql", Input: `
 type Query {
-    User(uuid:UUID!): User!
+    Use(uuid:UUID!): Use!
 }
 
 
 type Mutation {
-   User(username:String!):User!
+   Use(username:String!):Use!
 }`, BuiltIn: false},
 	{Name: "../../../graphql/user.graphql", Input: `
-"""User 用户信息"""
-type User {
+"""Use 用户信息"""
+type Use {
     """用户uuid"""
     uuid: UUID!
     """用户名"""
@@ -338,7 +338,7 @@ func (ec *executionContext) fieldContext_Mutation_User(ctx context.Context, fiel
 			case "username":
 				return ec.fieldContext_User_username(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type Use", field.Name)
 		},
 	}
 	defer func() {
@@ -399,7 +399,7 @@ func (ec *executionContext) fieldContext_Query_User(ctx context.Context, field g
 			case "username":
 				return ec.fieldContext_User_username(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type Use", field.Name)
 		},
 	}
 	defer func() {
@@ -578,7 +578,7 @@ func (ec *executionContext) _User_uuid(ctx context.Context, field graphql.Collec
 
 func (ec *executionContext) fieldContext_User_uuid(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "User",
+		Object:     "Use",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -622,7 +622,7 @@ func (ec *executionContext) _User_username(ctx context.Context, field graphql.Co
 
 func (ec *executionContext) fieldContext_User_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "User",
+		Object:     "Use",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -2433,7 +2433,7 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
-		case "User":
+		case "Use":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_User(ctx, field)
@@ -2472,7 +2472,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "User":
+		case "Use":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -2518,7 +2518,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
-var userImplementors = []string{"User"}
+var userImplementors = []string{"Use"}
 
 func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *schema.User) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
@@ -2527,7 +2527,7 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("User")
+			out.Values[i] = graphql.MarshalString("Use")
 		case "uuid":
 
 			out.Values[i] = ec._User_uuid(ctx, field, obj)

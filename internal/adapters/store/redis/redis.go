@@ -18,8 +18,10 @@ func NewRedisStore(cfg *config.Configs) store.Store {
 		DB:       cfg.Redis.DB,
 		Password: cfg.Redis.Password,
 	})
-	if err := cli.Ping(context.Background()).Err(); err != nil {
-		log.Fatalln(err)
+	if cfg.Redis.Use {
+		if err := cli.Ping(context.Background()).Err(); err != nil {
+			log.Fatalln(err)
+		}
 	}
 	return &Store{
 		cli:    cli,
