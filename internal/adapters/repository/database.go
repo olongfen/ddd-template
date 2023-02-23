@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
+	"ddd-template/internal/adapters/repository/db_iface"
 	"ddd-template/internal/config"
-	"ddd-template/internal/domain"
 	"ddd-template/pkg/error_i18n"
 	"ddd-template/pkg/scontext"
 	"fmt"
@@ -34,7 +34,7 @@ type Data struct {
 
 type contextTxKey struct{}
 
-func NewTransaction(d *Data) domain.ITransaction {
+func NewTransaction(d db_iface.DBData) db_iface.ITransaction {
 	return d
 }
 
@@ -61,7 +61,7 @@ func (d *Data) Close() error {
 	return sqlDB.Close()
 }
 
-func NewData(db *gorm.DB, logger *zap.Logger) (ret DBData) {
+func NewData(db *gorm.DB, logger *zap.Logger) (ret db_iface.DBData) {
 	return &Data{
 		db:  db,
 		log: logger,

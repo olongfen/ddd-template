@@ -1,7 +1,7 @@
 package app
 
 import (
-	"ddd-template/internal/adapters/repository"
+	"ddd-template/internal/adapters/repository/db_iface"
 	"ddd-template/internal/adapters/store"
 	"log"
 )
@@ -13,7 +13,7 @@ type Application struct {
 }
 
 type Close struct {
-	data  repository.DBData
+	data  db_iface.DBData
 	store store.Store
 }
 
@@ -33,7 +33,7 @@ func SetMutations() Mutations {
 	return Mutations{}
 }
 
-func SetClose(data repository.DBData, store store.Store) Close {
+func SetClose(data db_iface.DBData, store store.Store) Close {
 	return Close{data: data, store: store}
 }
 

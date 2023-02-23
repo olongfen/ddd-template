@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"ddd-template/internal/adapters/repository/db_iface"
 	"ddd-template/internal/domain"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -154,7 +155,7 @@ func findPage(db *gorm.DB, opt *option, out interface{}) (pagination *domain.Pag
 
 // repository 增删改查泛型
 type repository[T any] struct {
-	data DBData
+	data db_iface.DBData
 }
 
 // FindOne  get one
