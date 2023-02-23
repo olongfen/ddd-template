@@ -5,9 +5,9 @@ import (
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
-	"github.com/go-playground/validator/v10"
 	en_translation "github.com/go-playground/validator/v10/translations/en"
 	zh_translation "github.com/go-playground/validator/v10/translations/zh"
+	validator "olongfen/ddd-template/.go/pkg/mod/github.com/go-playground/validator/v10@v10.11.1"
 	"strings"
 )
 
@@ -37,22 +37,25 @@ func translate(language string) ut.Translator {
 	return trans
 }
 
-func ValidateForm(c interface{}, language string) map[string]string {
+func ValidateForm(c interface{}, language string) error {
 	var (
-		errs = map[string]string{}
+		errs = error_i18n.ValidateError{}
 	)
 	err := validate.Struct(c)
 	if err != nil {
 		for _, e := range err.(validator.ValidationErrors) {
 			//_err := &scontext.Error{}
 			//_err.Detail = e.Translate(translate(language))
-			//_err.Tag = e.Tag()
+			//_err.Title = e.Title()
 			//_err.Failed = e.Field()
 			//_err.Value = e.Value()
 			errs[strings.ToLower(e.Field()[:1])+e.Field()[1:]] = e.Translate(translate(language))
 		}
 	}
-	return errs
+	if len(errs) > 0 {
+		return errs
+	}
+	return nil
 }
 
 type QueryOptions struct {
