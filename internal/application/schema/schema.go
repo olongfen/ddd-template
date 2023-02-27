@@ -5,9 +5,9 @@ import (
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
+	"github.com/go-playground/validator/v10"
 	en_translation "github.com/go-playground/validator/v10/translations/en"
 	zh_translation "github.com/go-playground/validator/v10/translations/zh"
-	validator "olongfen/ddd-template/.go/pkg/mod/github.com/go-playground/validator/v10@v10.11.1"
 	"strings"
 )
 
