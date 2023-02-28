@@ -3,8 +3,7 @@ package main
 import (
 	"ddd-template/internal/config"
 	"ddd-template/internal/service"
-	"ddd-template/pkg/xlog"
-	"github.com/gofiber/fiber/v2"
+	"github.com/olongfen/toolkit/xlog"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"log"
@@ -56,9 +55,7 @@ func main() {
 				done <- struct{}{}
 			}
 		}()
-		server.Http.RunHTTPServer(func(app2 *fiber.App) *fiber.App {
-			return server.Http.HandlerFromMux(app2)
-		}, cfg.HTTP, logger)
+		server.Http.RunHTTPServer(cfg.HTTP, logger)
 	}()
 
 	wg.Wait()

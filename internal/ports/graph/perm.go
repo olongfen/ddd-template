@@ -2,9 +2,9 @@ package graph
 
 import (
 	"context"
-	"ddd-template/pkg/scontext"
 	"errors"
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/olongfen/toolkit/scontext"
 	"github.com/vektah/gqlparser/v2/ast"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )

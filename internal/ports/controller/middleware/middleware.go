@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"bytes"
-	"ddd-template/pkg/scontext"
 	"encoding/json"
 	"github.com/gofiber/fiber/v2"
+	"github.com/olongfen/toolkit/scontext"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

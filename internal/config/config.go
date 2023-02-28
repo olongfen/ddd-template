@@ -2,10 +2,10 @@ package config
 
 import (
 	"bytes"
-	"ddd-template/pkg/utils"
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/olongfen/toolkit/utils"
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
 	"log"

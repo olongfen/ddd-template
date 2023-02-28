@@ -1,13 +1,13 @@
 package schema
 
 import (
-	"ddd-template/pkg/error_i18n"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	en_translation "github.com/go-playground/validator/v10/translations/en"
 	zh_translation "github.com/go-playground/validator/v10/translations/zh"
+	"github.com/olongfen/toolkit/err_mul"
 	"strings"
 )
 
@@ -39,7 +39,7 @@ func translate(language string) ut.Translator {
 
 func ValidateForm(c interface{}, language string) error {
 	var (
-		errs = error_i18n.ValidateError{}
+		errs = err_mul.ValidateError{}
 	)
 	err := validate.Struct(c)
 	if err != nil {
@@ -69,7 +69,7 @@ type QueryOptions struct {
 
 func (q QueryOptions) Validate(language string) (err error) {
 	if len(q.Sort) != len(q.Order) {
-		err = error_i18n.NewError(error_i18n.SortParameterMismatch, language)
+		err = err_mul.NewError(err_mul.SortParameterMismatch, language)
 		return
 	}
 	return
