@@ -2,9 +2,9 @@ package controller
 
 import (
 	_ "ddd-template/docs"
-	"ddd-template/internal/config"
 	"ddd-template/internal/ports/controller/handler"
 	"ddd-template/internal/ports/controller/middleware"
+	"ddd-template/internal/rely"
 	"fmt"
 	handler2 "github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -34,7 +34,7 @@ func NewHttpServer(handler *handler.Handler, graphqlHandler *handler2.Server, m 
 	return &HttpServer{handler: handler, middleware: m, graphqlHandler: graphqlHandler}
 }
 
-func (h *HttpServer) RunHTTPServer(cfg config.HTTP, logger *zap.Logger) {
+func (h *HttpServer) RunHTTPServer(cfg rely.HTTP, logger *zap.Logger) {
 	h.app = fiber.New(fiber.Config{
 		ErrorHandler: response.ErrorHandler,
 		JSONEncoder:  jsoniter.Marshal,

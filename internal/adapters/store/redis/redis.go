@@ -3,7 +3,7 @@ package redis_store
 import (
 	"context"
 	"ddd-template/internal/adapters/store"
-	"ddd-template/internal/config"
+	"ddd-template/internal/rely"
 	"fmt"
 	"log"
 	"time"
@@ -12,7 +12,7 @@ import (
 )
 
 // NewRedisStore 创建基于redis存储实例
-func NewRedisStore(cfg *config.Configs) store.Store {
+func NewRedisStore(cfg *rely.Configs) store.Store {
 	cli := redis.NewClient(&redis.Options{
 		Addr:     cfg.Redis.Addr,
 		DB:       cfg.Redis.DB,

@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"ddd-template/internal/adapters/repository/db_iface"
-	"ddd-template/internal/config"
+	"ddd-template/internal/rely"
 	"fmt"
 	"github.com/olongfen/toolkit/err_mul"
 	"github.com/olongfen/toolkit/scontext"
@@ -69,7 +69,7 @@ func NewData(db *gorm.DB, logger *zap.Logger) (ret db_iface.DBData) {
 }
 
 // InitDBConnect init database connect
-func InitDBConnect(c *config.Configs, logger *zap.Logger) (res *gorm.DB) {
+func InitDBConnect(c *rely.Configs, logger *zap.Logger) (res *gorm.DB) {
 	var (
 		err        error
 		db         *gorm.DB
@@ -108,7 +108,7 @@ func InitDBConnect(c *config.Configs, logger *zap.Logger) (res *gorm.DB) {
 		}
 	}
 	// debug 打开数据库debug打印模式
-	if config.Get().Database.Debug {
+	if rely.Get().Database.Debug {
 		db = db.Debug()
 	}
 

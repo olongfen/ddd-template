@@ -10,18 +10,18 @@ import (
 	"ddd-template/internal/adapters/repository"
 	"ddd-template/internal/adapters/store/redis"
 	"ddd-template/internal/application"
-	"ddd-template/internal/config"
 	"ddd-template/internal/ports/controller"
 	"ddd-template/internal/ports/controller/handler"
 	"ddd-template/internal/ports/controller/middleware"
 	"ddd-template/internal/ports/graph"
+	"ddd-template/internal/rely"
 	"ddd-template/internal/service"
 	"go.uber.org/zap"
 )
 
 // Injectors from wire.go:
 
-func NewServer(configs *config.Configs, logger *zap.Logger) (*service.Server, func()) {
+func NewServer(configs *rely.Configs, logger *zap.Logger) (*service.Server, func()) {
 	mutations := app.SetMutations()
 	queries := app.SetQueries()
 	db := repository.InitDBConnect(configs, logger)

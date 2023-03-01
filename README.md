@@ -4,21 +4,25 @@
 ## 项目结构
 - docs 文档
 - configs 配置文件
+- graphql graphql文件
 - internal
     - adapters 适配器代码
-        - handler api处理
         - mock mock代码
         - repository 存储器
+        - store 缓存
     - application 应用层
       - mutation 写入操作
       - query 查询操作
       - transform 实体转成返回对象
       - schema api返回表单
-    - config 配置
+    - domain 领域层 
     - ports 端口
       - controller 控制器
-        - middleware http中间件
-- pkg 可提取公用包
+          - handler 接口处理
+          - middleware http中间件
+      - graph graphQL入口
+    - rely 项目启动依赖配置和系统变量
+    - service 服务入口
 ## 运行
 ```shell
 go run . --config configs/config.yaml
@@ -44,10 +48,6 @@ sh run_unit_test.sh
 make -f ./makefile mockgen
 ```
 
-## 生成grpc代码
-```shell
-make -f makefile grpcgen
-```
 
 ## 生成EC256
 ```shell

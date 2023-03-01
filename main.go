@@ -1,11 +1,9 @@
 package main
 
 import (
-	"ddd-template/internal/config"
+	"ddd-template/internal/rely"
 	"ddd-template/internal/service"
-	"github.com/olongfen/toolkit/xlog"
 	"github.com/spf13/cobra"
-	"go.uber.org/zap"
 	"log"
 	"os"
 	"os/signal"
@@ -25,22 +23,19 @@ import (
 // @name Authorization
 func main() {
 	var (
-		server    *service.Server
-		logger, _ = zap.NewProduction()
-		cleanup   func()
-		wg        = sync.WaitGroup{}
-		done      = make(chan struct{})
+		server  *service.Server
+		cleanup func()
+		wg      = sync.WaitGroup{}
+		done    = make(chan struct{})
 	)
 	// 监听关闭
 	setupCloseHandler(done)
 	execute()
-	cfg := config.InitConfigs(configFile)
-	if cfg.Log.Debug {
-		logger = xlog.NewDevelopment()
-	} else {
-		logger = xlog.NewProduceLogger()
-	}
-	xlog.Log = logger
+	// 初始化配置
+	cfg := rely.InitConfigs(configFile)
+	// 创建日志
+	logger := rely.NewLogger(cfg)
+	// 创建服务
 	server, cleanup = NewServer(cfg, logger)
 	go func() {
 		for range done {
