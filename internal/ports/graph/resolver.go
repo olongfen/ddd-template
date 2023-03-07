@@ -29,7 +29,7 @@ func NewResolver(app *app.Application, logger *zap.Logger) *Resolver {
 func (r *Resolver) Process(group fiber.Router) {
 	c := Config{Resolvers: r}
 	srv := handler.NewDefaultServer(NewExecutableSchema(c))
-	group.All("/", HTTPHandler2FastHTTPHandler(playground.Handler("GraphQL playground", "/query")))
+	group.All("/graphql", HTTPHandler2FastHTTPHandler(playground.Handler("GraphQL playground", "/query")))
 	group.All("/query", HTTPHandler2FastHTTPHandler(srv))
 }
 
