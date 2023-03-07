@@ -3,13 +3,11 @@ package service
 import "ddd-template/internal/ports/controller"
 
 type Server struct {
-	Http *controller.HttpServer
+	Http *controller.HTTPServer
 }
 
-func NewServer(h *controller.HttpServer) (*Server, func()) {
+func NewServer(h *controller.HTTPServer) *Server {
 	return &Server{
-			Http: h,
-		}, func() {
-			h.Close()
-		}
+		Http: h,
+	}
 }

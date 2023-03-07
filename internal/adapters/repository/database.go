@@ -21,10 +21,10 @@ import (
 // GormSpanKey 包内静态变量
 const GormSpanKey = "__gorm_span"
 const (
-	tableNamePrefix        = ""
-	RepositoryMethodCtxTag = "repository_method"
-	CallBackBeforeName     = "opentracing:before"
-	CallBackAfterName      = "opentracing:after"
+	// tableNamePrefix 表格头部，需要自己定义
+	tableNamePrefix    = ""
+	CallBackBeforeName = "opentracing:before"
+	CallBackAfterName  = "opentracing:after"
 )
 
 type Data struct {
@@ -32,12 +32,15 @@ type Data struct {
 	log *zap.Logger
 }
 
+// contextTxKey 事务上下文 key
 type contextTxKey struct{}
 
+// NewTransaction new 事务
 func NewTransaction(d db_iface.DBData) db_iface.ITransaction {
 	return d
 }
 
+// ExecTx 执行事务
 func (d *Data) ExecTx(ctx context.Context, fc func(context.Context) error) error {
 	return d.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		ctx = context.WithValue(ctx, contextTxKey{}, tx)
@@ -45,6 +48,7 @@ func (d *Data) ExecTx(ctx context.Context, fc func(context.Context) error) error
 	})
 }
 
+// DB 获取db
 func (d *Data) DB(ctx context.Context) *gorm.DB {
 	tx, ok := ctx.Value(contextTxKey{}).(*gorm.DB)
 	if ok {
@@ -53,6 +57,7 @@ func (d *Data) DB(ctx context.Context) *gorm.DB {
 	return d.db.WithContext(ctx)
 }
 
+// Close 关闭db连接
 func (d *Data) Close() error {
 	sqlDB, err := d.db.DB()
 	if err != nil {
@@ -61,11 +66,19 @@ func (d *Data) Close() error {
 	return sqlDB.Close()
 }
 
-func NewData(db *gorm.DB, logger *zap.Logger) (ret db_iface.DBData) {
-	return &Data{
+// NewData new database
+func NewData(db *gorm.DB, logger *zap.Logger) (ret db_iface.DBData, cleanup func()) {
+	ret = &Data{
 		db:  db,
 		log: logger,
 	}
+	cleanup = func() {
+		logger.Info("db close")
+		if err := ret.Close(); err != nil {
+			logger.Error("db close error", zap.Error(err))
+		}
+	}
+	return
 }
 
 // InitDBConnect init database connect
@@ -115,6 +128,7 @@ func InitDBConnect(c *rely.Configs, logger *zap.Logger) (res *gorm.DB) {
 	return db
 }
 
+// OpentracingPlugin 追踪插件
 type OpentracingPlugin struct {
 }
 

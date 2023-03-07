@@ -8,8 +8,9 @@ package main
 
 import (
 	"ddd-template/internal/adapters/repository"
-	"ddd-template/internal/adapters/store/redis"
 	"ddd-template/internal/application"
+	"ddd-template/internal/application/mutation"
+	"ddd-template/internal/application/query"
 	"ddd-template/internal/ports/controller"
 	"ddd-template/internal/ports/controller/handler"
 	"ddd-template/internal/ports/controller/middleware"
@@ -22,19 +23,20 @@ import (
 // Injectors from wire.go:
 
 func NewServer(configs *rely.Configs, logger *zap.Logger) (*service.Server, func()) {
-	mutations := app.SetMutations()
-	queries := app.SetQueries()
 	db := repository.InitDBConnect(configs, logger)
-	dbData := repository.NewData(db, logger)
-	store := redis_store.NewRedisStore(configs)
-	appClose := app.SetClose(dbData, store)
-	application, cleanup := app.NewApplication(mutations, queries, appClose)
+	dbData, cleanup := repository.NewData(db, logger)
+	iDemoRepo := repository.NewDemo(dbData)
+	iDemoService := mutation.NewDemo(iDemoRepo)
+	appMutation := app.SetMutation(iDemoService)
+	query_ifaceIDemoService := query.NewDemo(iDemoRepo)
+	appQuery := app.SetQuery(query_ifaceIDemoService)
+	application := app.NewApplication(appMutation, appQuery)
 	handlerHandler := handler.NewHandler(application)
-	server := graph.NewResolver(application, logger)
+	resolver := graph.NewResolver(application, logger)
 	middlewareMiddleware := middleware.NewMiddleware(logger)
-	httpServer := controller.NewHttpServer(handlerHandler, server, middlewareMiddleware)
-	serviceServer, cleanup2 := service.NewServer(httpServer)
-	return serviceServer, func() {
+	httpServer, cleanup2 := controller.NewHTTPServer(handlerHandler, resolver, middlewareMiddleware)
+	server := service.NewServer(httpServer)
+	return server, func() {
 		cleanup2()
 		cleanup()
 	}

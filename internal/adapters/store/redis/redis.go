@@ -5,6 +5,7 @@ import (
 	"ddd-template/internal/adapters/store"
 	"ddd-template/internal/rely"
 	"fmt"
+	"go.uber.org/zap"
 	"log"
 	"time"
 
@@ -12,7 +13,7 @@ import (
 )
 
 // NewRedisStore 创建基于redis存储实例
-func NewRedisStore(cfg *rely.Configs) store.Store {
+func NewRedisStore(cfg *rely.Configs, logger *zap.Logger) (store.Store, func()) {
 	cli := redis.NewClient(&redis.Options{
 		Addr:     cfg.Redis.Addr,
 		DB:       cfg.Redis.DB,
@@ -23,9 +24,13 @@ func NewRedisStore(cfg *rely.Configs) store.Store {
 			log.Fatalln(err)
 		}
 	}
-	return &Store{
+	sto := &Store{
 		cli:    cli,
 		prefix: cfg.Redis.KeyPrefix,
+	}
+	return sto, func() {
+		logger.Info("redis client close")
+		_ = sto.Close()
 	}
 }
 

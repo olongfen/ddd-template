@@ -6,4 +6,4 @@ import (
 	"github.com/google/wire"
 )
 
-var Set = wire.NewSet(NewHttpServer, handler.Set, middleware.NewMiddleware)
+var Set = wire.NewSet(NewHTTPServer, handler.Set, middleware.NewMiddleware)

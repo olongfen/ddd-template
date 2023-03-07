@@ -2,4 +2,4 @@ package mutation
 
 import "github.com/google/wire"
 
-var Set = wire.NewSet()
+var Set = wire.NewSet(NewDemo)

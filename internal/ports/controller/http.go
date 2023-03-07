@@ -4,61 +4,51 @@ import (
 	_ "ddd-template/docs"
 	"ddd-template/internal/ports/controller/handler"
 	"ddd-template/internal/ports/controller/middleware"
+	"ddd-template/internal/ports/graph"
 	"ddd-template/internal/rely"
 	"fmt"
-	handler2 "github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/olongfen/toolkit/response"
 	fiberSwagger "github.com/swaggo/fiber-swagger"
-	"github.com/valyala/fasthttp/fasthttpadaptor"
 	"go.uber.org/zap"
 	"log"
-	"net/http"
 )
 
-type HttpServer struct {
-	handler        *handler.Handler
-	app            *fiber.App
-	middleware     middleware.Middleware
-	graphqlHandler *handler2.Server
+// HTTPServer http server
+type HTTPServer struct {
+	handler       *handler.Handler
+	app           *fiber.App
+	middleware    middleware.Middleware
+	graphResolver *graph.Resolver
 }
 
-func (h *HttpServer) Close() (err error) {
-	log.Println("http handler close")
-	return h.app.Shutdown()
-}
-
-func NewHttpServer(handler *handler.Handler, graphqlHandler *handler2.Server, m middleware.Middleware) *HttpServer {
-	return &HttpServer{handler: handler, middleware: m, graphqlHandler: graphqlHandler}
-}
-
-func (h *HttpServer) RunHTTPServer(cfg rely.HTTP, logger *zap.Logger) {
+// NewHTTPServer new http server
+func NewHTTPServer(handler *handler.Handler, graphResolver *graph.Resolver, m middleware.Middleware) (*HTTPServer, func()) {
+	h := &HTTPServer{handler: handler, middleware: m, graphResolver: graphResolver}
+	// new app
 	h.app = fiber.New(fiber.Config{
 		ErrorHandler: response.ErrorHandler,
 		JSONEncoder:  jsoniter.Marshal,
 		JSONDecoder:  jsoniter.Unmarshal,
 	})
+	return h, func() {
+		log.Println("http handler close")
+		_ = h.app.Shutdown()
+
+	}
+}
+
+// Run run http server
+func (h *HTTPServer) Run(cfg rely.HTTP, logger *zap.Logger) {
+	// http restful
 	h.app.Use(h.middleware.Languages(), h.middleware.Log())
+	var v1 = h.app.Group("/api/v1")
+	h.handler.Process(v1)
+	v1.Get("/docs/*", fiberSwagger.WrapHandler)
+	// graphql
+	h.graphResolver.Process(h.app.Group("/"))
 	logger.Info("HTTP Start", zap.String("addr", fmt.Sprintf(`%s:%s`, cfg.Host, cfg.Port)))
 	logger.Fatal("HTTP START ERROR", zap.Error(h.app.Listen(fmt.Sprintf(`%s:%s`, cfg.Host, cfg.Port))))
 
-}
-
-func (h *HttpServer) handlerFromMux() {
-	var a = h.app.Group("/api/v1")
-	a.Get("/docs/*", fiberSwagger.WrapHandler)
-	groupGraphql := a.Group("/")
-	groupGraphql.All("/", HTTPHandler(playground.Handler("GraphQL playground", "/query")))
-	groupGraphql.All("/query", HTTPHandler(h.graphqlHandler))
-
-}
-
-func HTTPHandler(h http.Handler) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		fastHTTPHandler := fasthttpadaptor.NewFastHTTPHandler(h)
-		fastHTTPHandler(c.Context())
-		return nil
-	}
 }

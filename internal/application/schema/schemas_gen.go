@@ -2,10 +2,19 @@
 
 package schema
 
-// User 用户信息
+type NewTodo struct {
+	Text   string `json:"text"`
+	UserID string `json:"userId"`
+}
+
+type Todo struct {
+	ID   string `json:"id"`
+	Text string `json:"text"`
+	Done bool   `json:"done"`
+	User *User  `json:"user"`
+}
+
 type User struct {
-	// 用户uuid
-	UUID string `json:"uuid"`
-	// 用户名
-	Username string `json:"username"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }

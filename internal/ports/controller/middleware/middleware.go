@@ -37,8 +37,8 @@ type middleware struct {
 func (m middleware) Languages() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// 以后如果拓展语言再说
-		// val := ctx.GetReqHeaders()["X-Language"]
-		val := ctx.GetReqHeaders()["Accept-Language"]
+		val := ctx.GetReqHeaders()["X-Language"]
+		//val := ctx.GetReqHeaders()["Accept-Language"]
 		if len(val) == 0 {
 			val = "zh-cn"
 		}

@@ -50,7 +50,7 @@ func main() {
 				done <- struct{}{}
 			}
 		}()
-		server.Http.RunHTTPServer(cfg.HTTP, logger)
+		server.Http.Run(cfg.HTTP, logger)
 	}()
 
 	wg.Wait()

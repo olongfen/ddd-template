@@ -7,17 +7,17 @@ package graph
 import (
 	"context"
 	"ddd-template/internal/application/schema"
-	"github.com/satori/go.uuid"
+	"fmt"
 )
 
-// User is the resolver for the User field.
-func (r *mutationResolver) User(ctx context.Context, username string) (*schema.User, error) {
-	return &schema.User{UUID: uuid.NewV4().String(), Username: username}, nil
+// CreateTodo is the resolver for the createTodo field.
+func (r *mutationResolver) CreateTodo(ctx context.Context, input schema.NewTodo) (*schema.Todo, error) {
+	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
 }
 
-// User is the resolver for the User field.
-func (r *queryResolver) User(ctx context.Context, uuid string) (*schema.User, error) {
-	return &schema.User{UUID: uuid, Username: "hello graphql"}, nil
+// Todos is the resolver for the todos field.
+func (r *queryResolver) Todos(ctx context.Context) ([]*schema.Todo, error) {
+	return nil, nil
 }
 
 // Mutation returns MutationResolver implementation.

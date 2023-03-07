@@ -1,52 +1,64 @@
 package app
 
 import (
-	"ddd-template/internal/adapters/repository/db_iface"
-	"ddd-template/internal/adapters/store"
-	"log"
+	"ddd-template/internal/application/mutation/mutat_iface"
+	"ddd-template/internal/application/query/query_iface"
 )
 
+// Application 应用层入口
 type Application struct {
-	Mutations Mutations
-	Queries   Queries
-	Cleanup   func()
+	// exec 执行操作入口
+	exec Mutation
+	// query 查询操作入口
+	query Query
 }
 
-type Close struct {
-	data  db_iface.DBData
-	store store.Store
+// Mutation 操作变动的数据
+type Mutation struct {
+	demo mutat_iface.IDemoService
 }
 
-// Mutations 操作变动的数据
-type Mutations struct {
+// Demo 获取demo的写入服务
+func (m *Mutation) Demo() mutat_iface.IDemoService {
+	return m.demo
 }
 
-// Queries 查询的数据
-type Queries struct {
+// Query 查询的数据
+type Query struct {
+	demo query_iface.IDemoService
 }
 
-func SetQueries() Queries {
-	return Queries{}
+// Demo 获取demo的查询服务
+func (q *Query) Demo() query_iface.IDemoService {
+	return q.demo
 }
 
-func SetMutations() Mutations {
-	return Mutations{}
-}
-
-func SetClose(data db_iface.DBData, store store.Store) Close {
-	return Close{data: data, store: store}
-}
-
-func NewApplication(mut Mutations, que Queries, close Close) (*Application, func()) {
-	app := &Application{}
-	app.Queries = que
-	app.Mutations = mut
-	app.Cleanup = func() {
-
-		err := close.data.Close()
-		log.Println("db data close", err)
-		err = close.store.Close()
-		log.Println("cache store close", err)
+// SetQuery  设置query,
+func SetQuery(demo query_iface.IDemoService) Query {
+	return Query{
+		demo: demo,
 	}
-	return app, app.Cleanup
+}
+
+// SetMutation set mutation
+func SetMutation(demo mutat_iface.IDemoService) Mutation {
+	return Mutation{demo: demo}
+}
+
+// NewApplication 新建一个应用服务
+func NewApplication(mut Mutation, que Query) *Application {
+	app := &Application{}
+	app.query = que
+	app.exec = mut
+	return app
+}
+
+// Exec application exec
+func (a *Application) Exec() Mutation {
+	return a.exec
+}
+
+// Query application query
+func (a *Application) Query() Query {
+	return a.query
 }
