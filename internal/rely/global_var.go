@@ -25,7 +25,14 @@ var (
 // NewLogger new log
 func NewLogger(cfg *Configs) *zap.Logger {
 	if !cfg.Log.Debug {
-		GlobalLogger = xlog.NewProduceLogger()
+		GlobalLogger = xlog.NewProduceLogger(xlog.Config{
+			InfoFile:   cfg.Log.Filename,
+			ErrorFile:  cfg.Log.ErrorFile,
+			MaxSize:    cfg.Log.MaxSize,
+			MaxBackups: cfg.Log.MaxBackups,
+			MaxAge:     cfg.Log.MaxAges,
+			Compress:   cfg.Log.Compress,
+		})
 
 	}
 	return GlobalLogger
