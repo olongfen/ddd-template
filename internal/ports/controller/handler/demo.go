@@ -27,7 +27,6 @@ func (h *demo) hello(c *fiber.Ctx) error {
 		lan  = scontext.GetLanguage(ctx)
 		resp = response.NewResponse(lan)
 	)
-	q := h.app.Query()
-	return resp.Success(c, q.Demo().Hello(ctx))
+	return resp.Success(c, h.app.Query().Demo().Hello(ctx))
 
 }

@@ -8,9 +8,9 @@ import (
 // Application 应用层入口
 type Application struct {
 	// exec 执行操作入口
-	exec Mutation
+	exec *Mutation
 	// query 查询操作入口
-	query Query
+	query *Query
 }
 
 // Mutation 操作变动的数据
@@ -34,19 +34,19 @@ func (q *Query) Demo() query_iface.IDemoService {
 }
 
 // SetQuery  设置query,
-func SetQuery(demo query_iface.IDemoService) Query {
-	return Query{
+func SetQuery(demo query_iface.IDemoService) *Query {
+	return &Query{
 		demo: demo,
 	}
 }
 
 // SetMutation set mutation
-func SetMutation(demo mutat_iface.IDemoService) Mutation {
-	return Mutation{demo: demo}
+func SetMutation(demo mutat_iface.IDemoService) *Mutation {
+	return &Mutation{demo: demo}
 }
 
 // NewApplication 新建一个应用服务
-func NewApplication(mut Mutation, que Query) *Application {
+func NewApplication(mut *Mutation, que *Query) *Application {
 	app := &Application{}
 	app.query = que
 	app.exec = mut
@@ -54,11 +54,11 @@ func NewApplication(mut Mutation, que Query) *Application {
 }
 
 // Exec application exec
-func (a *Application) Exec() Mutation {
+func (a *Application) Exec() *Mutation {
 	return a.exec
 }
 
 // Query application query
-func (a *Application) Query() Query {
+func (a *Application) Query() *Query {
 	return a.query
 }
