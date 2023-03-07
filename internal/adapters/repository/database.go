@@ -15,6 +15,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
+	"log"
 	"strings"
 )
 
@@ -73,7 +74,7 @@ func NewData(db *gorm.DB, logger *zap.Logger) (ret db_iface.DBData, cleanup func
 		log: logger,
 	}
 	cleanup = func() {
-		logger.Info("db close")
+		log.Println("db close")
 		if err := ret.Close(); err != nil {
 			logger.Error("db close error", zap.Error(err))
 		}

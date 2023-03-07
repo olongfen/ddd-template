@@ -40,6 +40,7 @@ func main() {
 	go func() {
 		for range done {
 			cleanup()
+			log.Println("end of process ")
 		}
 	}()
 	wg.Add(2)

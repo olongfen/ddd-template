@@ -33,7 +33,7 @@ func NewHTTPServer(handler *handler.Handler, graphResolver *graph.Resolver, m mi
 		JSONDecoder:  jsoniter.Unmarshal,
 	})
 	return h, func() {
-		log.Println("http handler close")
+		log.Println("http server close")
 		_ = h.app.Shutdown()
 
 	}
