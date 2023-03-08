@@ -5,7 +5,7 @@ import (
 	"ddd-template/internal/adapters/repository/db_iface"
 	"ddd-template/internal/rely"
 	"fmt"
-	"github.com/olongfen/toolkit/err_mul"
+	"github.com/olongfen/toolkit/multi/xerror"
 	"github.com/olongfen/toolkit/scontext"
 	"github.com/pkg/errors"
 	"go.opentelemetry.io/otel"
@@ -219,7 +219,7 @@ func after(db *gorm.DB) {
 func handlerDBError(db *gorm.DB) {
 	lang := scontext.GetLanguage(db.Statement.Context)
 	if errors.Is(db.Error, gorm.ErrRecordNotFound) {
-		db.Error = err_mul.NewError(err_mul.RecordNotFound, lang)
+		db.Error = xerror.NewError(xerror.RecordNotFound, lang)
 		return
 	}
 	msg := db.Error.Error()
@@ -231,8 +231,8 @@ func handlerDBError(db *gorm.DB) {
 		if strings.Contains(msg, code23505) && strings.Contains(msg, v) {
 			field := db.Statement.Schema.FieldsByDBName[v]
 			name := strings.ToLower(field.Name[:1]) + field.Name[1:]
-			var errs = err_mul.DBErrorResponse{}
-			errs[name] = err_mul.NewError(err_mul.AlreadyExists, lang)
+			var errs = xerror.DBErrorResponse{}
+			errs[name] = xerror.NewError(xerror.AlreadyExists, lang)
 			db.Error = errs
 		}
 	}

@@ -16,10 +16,10 @@ var (
 //)
 
 //func init() {
-//	err_mul.DefaultErrorMul.Set(ProjectNotBelongToPlatform, "zh", "项目不属于该平台")
-//	err_mul.DefaultErrorMul.Set(ProjectNotBelongToPlatform, "en", "item does not belong to this platform")
-//	err_mul.DefaultErrorMul.Set(GenPDFFailed, "zh", "生成pdf失败")
-//	err_mul.DefaultErrorMul.Set(GenPDFFailed, "en", "gen pdf failed")
+//	xerror.DefaultErrorMul.Set(ProjectNotBelongToPlatform, "zh", "项目不属于该平台")
+//	xerror.DefaultErrorMul.Set(ProjectNotBelongToPlatform, "en", "item does not belong to this platform")
+//	xerror.DefaultErrorMul.Set(GenPDFFailed, "zh", "生成pdf失败")
+//	xerror.DefaultErrorMul.Set(GenPDFFailed, "en", "gen pdf failed")
 //}
 
 // NewLogger new log

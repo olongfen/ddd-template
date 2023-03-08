@@ -7,7 +7,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translation "github.com/go-playground/validator/v10/translations/en"
 	zh_translation "github.com/go-playground/validator/v10/translations/zh"
-	"github.com/olongfen/toolkit/err_mul"
+	"github.com/olongfen/toolkit/multi/xerror"
 	"strings"
 )
 
@@ -39,7 +39,7 @@ func translate(language string) ut.Translator {
 
 func ValidateForm(c interface{}, language string) error {
 	var (
-		errs = err_mul.ValidateError{}
+		errs = xerror.ValidateError{}
 	)
 	err := validate.Struct(c)
 	if err != nil {
@@ -69,7 +69,7 @@ type QueryOptions struct {
 
 func (q QueryOptions) Validate(language string) (err error) {
 	if len(q.Sort) != len(q.Order) {
-		err = err_mul.NewError(err_mul.SortParameterMismatch, language)
+		err = xerror.NewError(xerror.SortParameterMismatch, language)
 		return
 	}
 	return
