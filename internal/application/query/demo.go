@@ -12,8 +12,8 @@ type demo struct {
 }
 
 // Hello  world
-func (d *demo) Hello(ctx context.Context) string {
-	return "hello world"
+func (d *demo) Hello(ctx context.Context, msg string) string {
+	return "hello, " + msg
 }
 
 // NewDemo new

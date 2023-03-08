@@ -30,6 +30,14 @@ const docTemplate = `{
                     "Demo"
                 ],
                 "summary": "hello world",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "msg 信息",
+                        "name": "msg",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

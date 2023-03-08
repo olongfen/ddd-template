@@ -10,14 +10,14 @@ import (
 	"fmt"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input schema.NewTodo) (*schema.Todo, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
+// CreateDemo is the resolver for the createDemo field.
+func (r *mutationResolver) CreateDemo(ctx context.Context, input schema.NewDemo) (*schema.Demo, error) {
+	panic(fmt.Errorf("not implemented: CreateDemo - createDemo"))
 }
 
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*schema.Todo, error) {
-	return nil, nil
+// Hello is the resolver for the hello field.
+func (r *queryResolver) Hello(ctx context.Context, msg string) (string, error) {
+	return r.app.Query().Demo().Hello(ctx, msg), nil
 }
 
 // Mutation returns MutationResolver implementation.

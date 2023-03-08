@@ -3,3 +3,6 @@ mockgen:
 		echo $$file ; \
 		cd .. && mockgen -destination="./internal/adapters/mock/$$file" -source="./internal/$$file" && cd ./internal ; \
 	done
+
+gqlgen:
+	 gqlgen generate  --config gqlgen.yml

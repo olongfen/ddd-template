@@ -16,6 +16,7 @@ type demo struct {
 // @tags Demo
 // @Summary hello world
 // @Description
+// @Param msg query string false "msg 信息" example msg=tom
 // @router /api/v1/demo [get]
 // @Success 200 {object} response.Response{}
 // @Security ApiKeyAuth
@@ -27,6 +28,7 @@ func (h *demo) hello(c *fiber.Ctx) error {
 		lan  = scontext.GetLanguage(ctx)
 		resp = response.NewResponse(lan)
 	)
-	return resp.Success(c, h.app.Query().Demo().Hello(ctx))
+
+	return resp.Success(c, h.app.Query().Demo().Hello(ctx, c.Query("msg")))
 
 }

@@ -21,6 +21,11 @@ info:
 paths:
   /api/v1/demo:
     get:
+      parameters:
+      - description: msg 信息
+        in: query
+        name: msg
+        type: string
       responses:
         "200":
           description: OK
