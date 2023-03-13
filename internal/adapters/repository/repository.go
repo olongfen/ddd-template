@@ -4,7 +4,7 @@ import (
 	"context"
 	"ddd-template/internal/domain"
 	"github.com/olongfen/toolkit/db_data"
-	"github.com/olongfen/toolkit/utils"
+	"github.com/olongfen/toolkit/tools"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -46,9 +46,9 @@ func newOption(o domain.OtherCond) *option {
 	for i := 0; i < len(o.Sort) && i < len(o.Order); i++ {
 		switch o.Order[i] {
 		case "asc":
-			opt.order[utils.SnakeString(o.Sort[i])] = false
+			opt.order[tools.SnakeString(o.Sort[i])] = false
 		default:
-			opt.order[utils.SnakeString(o.Sort[i])] = true
+			opt.order[tools.SnakeString(o.Sort[i])] = true
 
 		}
 	}

@@ -1,10 +1,12 @@
 package domain
 
-import "github.com/olongfen/toolkit/utils"
+import (
+	"github.com/olongfen/toolkit/tools"
+)
 
 // Demo demo
 type Demo struct {
-	utils.Model
+	tools.Model
 	Name string
 }
 

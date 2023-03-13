@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/olongfen/toolkit/utils"
+	"github.com/olongfen/toolkit/tools"
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
 	"log"
@@ -222,7 +222,7 @@ func InitConfigs(confPath string) *Configs {
 		if originalBytes, err = os.ReadFile(confPath); err != nil {
 			log.Fatalln("ReadFile", err)
 		}
-		if err = utils.Copier(viper.AllSettings(), globalCfg); err != nil {
+		if err = tools.Copier(viper.AllSettings(), globalCfg); err != nil {
 			log.Fatalln("Copier", err)
 		}
 		if err = yaml.Unmarshal(originalBytes, globalCfg); err != nil {
