@@ -13,7 +13,6 @@ import (
 	"ddd-template/internal/application/query"
 	"ddd-template/internal/ports/controller"
 	"ddd-template/internal/ports/controller/handler"
-	"ddd-template/internal/ports/controller/middleware"
 	"ddd-template/internal/ports/graph"
 	"ddd-template/internal/rely"
 	"ddd-template/internal/service"
@@ -30,13 +29,13 @@ func NewServer(configFile2 string) (*service.Server, func()) {
 	iDemoRepo := repository.NewDemo(dbData)
 	iDemoService := mutation.NewDemo(iDemoRepo)
 	mutationMutation := mutation.SetMutation(iDemoService)
-	query_ifaceIDemoService := query.NewDemo(iDemoRepo)
-	queryQuery := query.SetQuery(query_ifaceIDemoService)
+	queryIDemoService := query.NewDemo(iDemoRepo)
+	queryQuery := query.SetQuery(queryIDemoService)
 	application := app.NewApplication(mutationMutation, queryQuery)
 	handlerHandler := handler.NewHandler(application)
 	resolver := graph.NewResolver(application, logger)
-	middlewareMiddleware := middleware.NewMiddleware(logger)
-	httpServer, cleanup2 := controller.NewHTTPServer(handlerHandler, resolver, middlewareMiddleware, configs, logger)
+	middleware := controller.NewMiddleware(logger)
+	httpServer, cleanup2 := controller.NewHTTPServer(handlerHandler, resolver, middleware, configs, logger)
 	server := service.NewServer(httpServer)
 	return server, func() {
 		cleanup2()

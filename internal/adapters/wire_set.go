@@ -2,8 +2,8 @@ package adapters
 
 import (
 	"ddd-template/internal/adapters/repository"
-	redis_store "ddd-template/internal/adapters/store/redis"
+	"ddd-template/internal/adapters/store"
 	"github.com/google/wire"
 )
 
-var Set = wire.NewSet(redis_store.Set, repository.Set)
+var Set = wire.NewSet(store.Set, repository.Set)

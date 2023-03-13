@@ -1,7 +1,6 @@
 package mutation
 
 import (
-	"ddd-template/internal/application/mutation/mutat_iface"
 	"ddd-template/internal/domain"
 )
 
@@ -11,6 +10,6 @@ type demo struct {
 }
 
 // NewDemo new
-func NewDemo(repo domain.IDemoRepo) mutat_iface.IDemoService {
+func NewDemo(repo domain.IDemoRepo) IDemoService {
 	return &demo{repo: repo}
 }

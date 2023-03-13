@@ -1,4 +1,4 @@
-package redis_store
+package store
 
 import (
 	"github.com/google/wire"

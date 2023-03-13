@@ -1,4 +1,4 @@
-package query_iface
+package query
 
 import "context"
 

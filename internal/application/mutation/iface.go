@@ -1,4 +1,4 @@
-package mutat_iface
+package mutation
 
 // IDemoService demo exec service
 type IDemoService interface {

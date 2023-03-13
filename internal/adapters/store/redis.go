@@ -1,8 +1,7 @@
-package redis_store
+package store
 
 import (
 	"context"
-	"ddd-template/internal/adapters/store"
 	"ddd-template/internal/rely"
 	"fmt"
 	"go.uber.org/zap"
@@ -13,7 +12,7 @@ import (
 )
 
 // NewRedisStore 创建基于redis存储实例
-func NewRedisStore(cfg *rely.Configs, logger *zap.Logger) (store.Store, func()) {
+func NewRedisStore(cfg *rely.Configs, logger *zap.Logger) (Store, func()) {
 	cli := redis.NewClient(&redis.Options{
 		Addr:     cfg.Redis.Addr,
 		DB:       cfg.Redis.DB,
@@ -24,7 +23,7 @@ func NewRedisStore(cfg *rely.Configs, logger *zap.Logger) (store.Store, func()) 
 			log.Fatalln(err)
 		}
 	}
-	sto := &Store{
+	sto := &storeRedis{
 		cli:    cli,
 		prefix: cfg.Redis.KeyPrefix,
 	}
@@ -34,28 +33,28 @@ func NewRedisStore(cfg *rely.Configs, logger *zap.Logger) (store.Store, func()) 
 	}
 }
 
-// Store redis存储
-type Store struct {
+// storeRedis redis存储
+type storeRedis struct {
 	cli    *redis.Client
 	prefix string
 }
 
-func (s *Store) wrapperKey(key string) string {
+func (s *storeRedis) wrapperKey(key string) string {
 	return fmt.Sprintf("%s|%s", s.prefix, key)
 }
 
-func (s *Store) Get(ctx context.Context, key string) (string, error) {
+func (s *storeRedis) Get(ctx context.Context, key string) (string, error) {
 	return s.cli.Get(ctx, s.wrapperKey(key)).Result()
 }
 
 // Set ...
-func (s *Store) Set(ctx context.Context, uuid string, val string, expiration time.Duration) error {
+func (s *storeRedis) Set(ctx context.Context, uuid string, val string, expiration time.Duration) error {
 	cmd := s.cli.Set(ctx, s.wrapperKey(uuid), val, expiration)
 	return cmd.Err()
 }
 
 // Delete ...
-func (s *Store) Delete(ctx context.Context, tokenString string) (bool, error) {
+func (s *storeRedis) Delete(ctx context.Context, tokenString string) (bool, error) {
 	cmd := s.cli.Del(ctx, s.wrapperKey(tokenString))
 	if err := cmd.Err(); err != nil {
 		return false, err
@@ -64,7 +63,7 @@ func (s *Store) Delete(ctx context.Context, tokenString string) (bool, error) {
 }
 
 // Check ...
-func (s *Store) Check(ctx context.Context, tokenString string) (bool, error) {
+func (s *storeRedis) Check(ctx context.Context, tokenString string) (bool, error) {
 	cmd := s.cli.Exists(ctx, s.wrapperKey(tokenString))
 	if err := cmd.Err(); err != nil {
 		return false, err
@@ -72,15 +71,15 @@ func (s *Store) Check(ctx context.Context, tokenString string) (bool, error) {
 	return cmd.Val() > 0, nil
 }
 
-func (s *Store) SetNX(ctx context.Context, key string, value interface{}, expiration time.Duration) error {
+func (s *storeRedis) SetNX(ctx context.Context, key string, value interface{}, expiration time.Duration) error {
 	return s.cli.SetNX(ctx, s.wrapperKey(key), value, expiration).Err()
 }
 
-func (s *Store) Del(ctx context.Context, key string) error {
+func (s *storeRedis) Del(ctx context.Context, key string) error {
 	return s.cli.Del(ctx, s.wrapperKey(key)).Err()
 }
 
-func (s *Store) DelByKeyPrefix(ctx context.Context, keyPrefix string) error {
+func (s *storeRedis) DelByKeyPrefix(ctx context.Context, keyPrefix string) error {
 	var cursor uint64
 	var keys []string
 	var err error
@@ -105,11 +104,11 @@ func (s *Store) DelByKeyPrefix(ctx context.Context, keyPrefix string) error {
 	return nil
 }
 
-func (s *Store) Exists(ctx context.Context, key string) bool {
+func (s *storeRedis) Exists(ctx context.Context, key string) bool {
 	return s.cli.Exists(ctx, s.wrapperKey(key)).Val() == 1
 }
 
 // Close ...
-func (s *Store) Close() error {
+func (s *storeRedis) Close() error {
 	return s.cli.Close()
 }

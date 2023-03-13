@@ -1,19 +1,17 @@
 package query
 
-import "ddd-template/internal/application/query/query_iface"
-
 // Query 查询的数据
 type Query struct {
-	demo query_iface.IDemoService
+	demo IDemoService
 }
 
 // Demo 获取demo的查询服务
-func (q *Query) Demo() query_iface.IDemoService {
+func (q *Query) Demo() IDemoService {
 	return q.demo
 }
 
 // SetQuery  设置query,
-func SetQuery(demo query_iface.IDemoService) *Query {
+func SetQuery(demo IDemoService) *Query {
 	return &Query{
 		demo: demo,
 	}

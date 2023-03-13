@@ -1,18 +1,16 @@
 package mutation
 
-import "ddd-template/internal/application/mutation/mutat_iface"
-
 // Mutation 操作变动的数据
 type Mutation struct {
-	demo mutat_iface.IDemoService
+	demo IDemoService
 }
 
 // Demo 获取demo的写入服务
-func (m *Mutation) Demo() mutat_iface.IDemoService {
+func (m *Mutation) Demo() IDemoService {
 	return m.demo
 }
 
 // SetMutation set mutation
-func SetMutation(demo mutat_iface.IDemoService) *Mutation {
+func SetMutation(demo IDemoService) *Mutation {
 	return &Mutation{demo: demo}
 }

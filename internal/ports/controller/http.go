@@ -3,7 +3,6 @@ package controller
 import (
 	_ "ddd-template/docs"
 	"ddd-template/internal/ports/controller/handler"
-	"ddd-template/internal/ports/controller/middleware"
 	"ddd-template/internal/ports/graph"
 	"ddd-template/internal/rely"
 	"fmt"
@@ -19,14 +18,14 @@ import (
 type HTTPServer struct {
 	handler       *handler.Handler
 	app           *fiber.App
-	middleware    middleware.Middleware
+	middleware    Middleware
 	graphResolver *graph.Resolver
 	logger        *zap.Logger
 	cfg           *rely.Configs
 }
 
 // NewHTTPServer new http server
-func NewHTTPServer(handler *handler.Handler, graphResolver *graph.Resolver, m middleware.Middleware,
+func NewHTTPServer(handler *handler.Handler, graphResolver *graph.Resolver, m Middleware,
 	cfg *rely.Configs,
 	logger *zap.Logger) (*HTTPServer, func()) {
 	h := &HTTPServer{handler: handler, middleware: m, graphResolver: graphResolver, logger: logger, cfg: cfg}
