@@ -1,7 +1,6 @@
 package main
 
 import (
-	"ddd-template/internal/rely"
 	"ddd-template/internal/service"
 	"github.com/spf13/cobra"
 	"log"
@@ -31,8 +30,6 @@ func main() {
 	// 监听关闭
 	setupCloseHandler(done)
 	execute()
-	// 初始化配置
-	cfg := rely.InitConfigs(configFile)
 	// 创建服务
 	server, cleanup = NewServer(configFile)
 	go func() {
@@ -49,7 +46,7 @@ func main() {
 				done <- struct{}{}
 			}
 		}()
-		server.Http.Run(cfg.HTTP)
+		server.Http.Run()
 	}()
 
 	wg.Wait()

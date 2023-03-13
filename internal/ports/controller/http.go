@@ -22,12 +22,14 @@ type HTTPServer struct {
 	middleware    middleware.Middleware
 	graphResolver *graph.Resolver
 	logger        *zap.Logger
+	cfg           *rely.Configs
 }
 
 // NewHTTPServer new http server
 func NewHTTPServer(handler *handler.Handler, graphResolver *graph.Resolver, m middleware.Middleware,
+	cfg *rely.Configs,
 	logger *zap.Logger) (*HTTPServer, func()) {
-	h := &HTTPServer{handler: handler, middleware: m, graphResolver: graphResolver, logger: logger}
+	h := &HTTPServer{handler: handler, middleware: m, graphResolver: graphResolver, logger: logger, cfg: cfg}
 	// new app
 	h.app = fiber.New(fiber.Config{
 		ErrorHandler: response.ErrorHandler,
@@ -42,7 +44,7 @@ func NewHTTPServer(handler *handler.Handler, graphResolver *graph.Resolver, m mi
 }
 
 // Run run http server
-func (h *HTTPServer) Run(cfg rely.HTTP) {
+func (h *HTTPServer) Run() {
 	// http restful
 	h.app.Use(h.middleware.Languages(), h.middleware.Log())
 	var v1 = h.app.Group("/api/v1")
@@ -50,7 +52,7 @@ func (h *HTTPServer) Run(cfg rely.HTTP) {
 	v1.Get("/docs/*", fiberSwagger.WrapHandler)
 	// graphql
 	h.graphResolver.Process(h.app.Group("/"))
-	h.logger.Info("HTTP Start", zap.String("addr", fmt.Sprintf(`%s:%s`, cfg.Host, cfg.Port)))
-	h.logger.Fatal("HTTP START ERROR", zap.Error(h.app.Listen(fmt.Sprintf(`%s:%s`, cfg.Host, cfg.Port))))
+	h.logger.Info("HTTP Start", zap.String("addr", fmt.Sprintf(`%s:%s`, h.cfg.HTTP.Host, h.cfg.HTTP.Port)))
+	h.logger.Fatal("HTTP START ERROR", zap.Error(h.app.Listen(fmt.Sprintf(`%s:%s`, h.cfg.HTTP.Host, h.cfg.HTTP.Port))))
 
 }

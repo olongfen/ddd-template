@@ -36,7 +36,7 @@ func NewServer(configFile2 string) (*service.Server, func()) {
 	handlerHandler := handler.NewHandler(application)
 	resolver := graph.NewResolver(application, logger)
 	middlewareMiddleware := middleware.NewMiddleware(logger)
-	httpServer, cleanup2 := controller.NewHTTPServer(handlerHandler, resolver, middlewareMiddleware, logger)
+	httpServer, cleanup2 := controller.NewHTTPServer(handlerHandler, resolver, middlewareMiddleware, configs, logger)
 	server := service.NewServer(httpServer)
 	return server, func() {
 		cleanup2()
