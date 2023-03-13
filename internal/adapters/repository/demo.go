@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"ddd-template/internal/adapters/repository/db_iface"
 	"ddd-template/internal/domain"
+	"github.com/olongfen/toolkit/db_data"
 )
 
 // demo demo
@@ -11,6 +11,6 @@ type demo struct {
 }
 
 // NewDemo new demo repo
-func NewDemo(db db_iface.DBData) domain.IDemoRepo {
+func NewDemo(db db_data.DBData) domain.IDemoRepo {
 	return &demo{repository[domain.Demo]{data: db}}
 }

@@ -4,7 +4,6 @@ import (
 	app "ddd-template/internal/application"
 	"github.com/gofiber/fiber/v2"
 	"github.com/olongfen/toolkit/response"
-	"github.com/olongfen/toolkit/scontext"
 )
 
 // demo demo handler
@@ -25,8 +24,7 @@ type demo struct {
 func (h *demo) hello(c *fiber.Ctx) error {
 	var (
 		ctx  = c.UserContext()
-		lan  = scontext.GetLanguage(ctx)
-		resp = response.NewResponse(lan)
+		resp = response.NewResponse()
 	)
 
 	return resp.Success(c, h.app.Query().Demo().Hello(ctx, c.Query("msg")))

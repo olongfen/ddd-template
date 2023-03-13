@@ -33,10 +33,8 @@ func main() {
 	execute()
 	// 初始化配置
 	cfg := rely.InitConfigs(configFile)
-	// 创建日志
-	logger := rely.NewLogger(cfg)
 	// 创建服务
-	server, cleanup = NewServer(cfg, logger)
+	server, cleanup = NewServer(configFile)
 	go func() {
 		for range done {
 			cleanup()
@@ -51,7 +49,7 @@ func main() {
 				done <- struct{}{}
 			}
 		}()
-		server.Http.Run(cfg.HTTP, logger)
+		server.Http.Run(cfg.HTTP)
 	}()
 
 	wg.Wait()

@@ -17,14 +17,16 @@ import (
 	"ddd-template/internal/ports/graph"
 	"ddd-template/internal/rely"
 	"ddd-template/internal/service"
-	"go.uber.org/zap"
+	"github.com/olongfen/toolkit/db_data"
 )
 
 // Injectors from wire.go:
 
-func NewServer(configs *rely.Configs, logger *zap.Logger) (*service.Server, func()) {
-	db := repository.InitDBConnect(configs, logger)
-	dbData, cleanup := repository.NewData(db, logger)
+func NewServer(configFile2 string) (*service.Server, func()) {
+	configs := rely.InitConfigs(configFile2)
+	logger := rely.NewLogger(configs)
+	db := rely.InitDBConnect(configs, logger)
+	dbData, cleanup := db_data.NewData(db, logger)
 	iDemoRepo := repository.NewDemo(dbData)
 	iDemoService := mutation.NewDemo(iDemoRepo)
 	mutationMutation := mutation.SetMutation(iDemoService)
@@ -34,7 +36,7 @@ func NewServer(configs *rely.Configs, logger *zap.Logger) (*service.Server, func
 	handlerHandler := handler.NewHandler(application)
 	resolver := graph.NewResolver(application, logger)
 	middlewareMiddleware := middleware.NewMiddleware(logger)
-	httpServer, cleanup2 := controller.NewHTTPServer(handlerHandler, resolver, middlewareMiddleware)
+	httpServer, cleanup2 := controller.NewHTTPServer(handlerHandler, resolver, middlewareMiddleware, logger)
 	server := service.NewServer(httpServer)
 	return server, func() {
 		cleanup2()

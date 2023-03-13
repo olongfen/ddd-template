@@ -2,57 +2,12 @@ package repository
 
 import (
 	"context"
-	"ddd-template/internal/adapters/repository/db_iface"
 	"ddd-template/internal/domain"
+	"github.com/olongfen/toolkit/db_data"
+	"github.com/olongfen/toolkit/utils"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
-
-// ILike ilike
-type ILike clause.Eq
-
-// Build builder sql
-func (like ILike) Build(builder clause.Builder) {
-	builder.WriteQuoted(like.Column)
-	_, err := builder.WriteString(" ILIKE ")
-	if err != nil {
-		panic(err)
-	}
-	builder.AddVar(builder, like.Value)
-}
-
-// NegationBuild builder sql
-func (like ILike) NegationBuild(builder clause.Builder) {
-	builder.WriteQuoted(like.Column)
-	_, err := builder.WriteString(" NOT LIKE ")
-	if err != nil {
-		panic(err)
-	}
-	builder.AddVar(builder, like.Value)
-}
-
-// fieldWhere process field symbol
-func fieldWhere(field domain.Field) clause.Expression {
-	column := snakeString(field.Column)
-	switch field.Symbol {
-	case ">":
-		return clause.Gt{Column: column, Value: field.Value}
-	case ">=":
-		return clause.Gte{Column: column, Value: field.Value}
-	case "<":
-		return clause.Lt{Column: column, Value: field.Value}
-	case "<=":
-		return clause.Lte{Column: column, Value: field.Value}
-	case "like":
-		return clause.Like{Column: column, Value: field.Value}
-	case "ilike":
-		return ILike{Column: column, Value: field.Value}
-	case "in":
-		return clause.IN{Column: column, Values: []interface{}{field.Value}}
-	default:
-		return clause.Eq{Column: column, Value: field.Value}
-	}
-}
 
 // option query conditions
 type option struct {
@@ -69,7 +24,7 @@ type TFields []domain.Field
 // process handler db.Where()
 func (f TFields) process(db *gorm.DB) *gorm.DB {
 	for _, v := range f {
-		db = db.Where(fieldWhere(v))
+		db = db.Where(db_data.ProcessDBWhere(v.Column, v.Value, v.Symbol))
 	}
 	return db
 }
@@ -91,9 +46,9 @@ func newOption(o domain.OtherCond) *option {
 	for i := 0; i < len(o.Sort) && i < len(o.Order); i++ {
 		switch o.Order[i] {
 		case "asc":
-			opt.order[snakeString(o.Sort[i])] = false
+			opt.order[utils.SnakeString(o.Sort[i])] = false
 		default:
-			opt.order[snakeString(o.Sort[i])] = true
+			opt.order[utils.SnakeString(o.Sort[i])] = true
 
 		}
 	}
@@ -155,7 +110,7 @@ func findPage(db *gorm.DB, opt *option, out interface{}) (pagination *domain.Pag
 
 // repository 增删改查泛型
 type repository[T any] struct {
-	data db_iface.DBData
+	data db_data.DBData
 }
 
 // FindOne  get one

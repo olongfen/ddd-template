@@ -10,9 +10,8 @@ import (
 	"ddd-template/internal/rely"
 	"ddd-template/internal/service"
 	"github.com/google/wire"
-	"go.uber.org/zap"
 )
 
-func NewServer(configs *rely.Configs, logger *zap.Logger) (s *service.Server, fc func()) {
-	panic(wire.Build(service.Set, ports.Set, app.Set, adapters.Set))
+func NewServer(configFile string) (s *service.Server, fc func()) {
+	panic(wire.Build(service.Set, ports.Set, app.Set, adapters.Set, rely.Set))
 }
