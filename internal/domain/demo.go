@@ -7,7 +7,7 @@ import (
 // Demo demo
 type Demo struct {
 	tools.Model
-	Name string
+	Name string `gorm:"uniqueIndex"`
 }
 
 type IDemoRepo interface {

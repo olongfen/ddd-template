@@ -1,7 +1,10 @@
 package rely
 
 import (
+	"ddd-template/internal/domain"
+	"errors"
 	"fmt"
+	"github.com/jackc/pgconn"
 	"github.com/olongfen/toolkit/db_data"
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
@@ -15,9 +18,8 @@ const (
 )
 
 // InitDBConnect init database connect
-func InitDBConnect(c *Configs, logger *zap.Logger) (res *gorm.DB) {
+func InitDBConnect(c *Configs, logger *zap.Logger) (res *gorm.DB, err error) {
 	var (
-		err        error
 		db         *gorm.DB
 		gormConfig = &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
@@ -32,31 +34,36 @@ func InitDBConnect(c *Configs, logger *zap.Logger) (res *gorm.DB) {
 		dns := fmt.Sprintf(`host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s`, dbCfg.Host,
 			dbCfg.User, dbCfg.Password, dbCfg.DBName, dbCfg.Port, dbCfg.SSLMode, dbCfg.TimeZone)
 		if db, err = gorm.Open(postgres.Open(dns), gormConfig); err != nil {
-			logger.Fatal(err.Error())
+			return
 		}
 
 	}
 
 	if db == nil {
-		logger.Sugar().Fatal("data do not init")
+		err = errors.New("db dose not init")
 		return
-	}
-	err = db.Use(&db_data.OpentracingPlugin{})
-	if err != nil {
-		logger.Fatal(err.Error())
-
 	}
 	// true 自动迁移
 	if c.Database.AutoMigrate {
-		err = db.AutoMigrate()
-		if err != nil {
-			logger.Fatal(err.Error())
+		err = db.AutoMigrate(&domain.Demo{})
+		if v, ok := err.(*pgconn.PgError); ok {
+			if v.Code == "42P07" {
+				err = nil
+			}
 		}
+		if err != nil {
+			return
+		}
+	}
+	err = db.Use(&db_data.OpentracingPlugin{})
+	if err != nil {
+		return
+
 	}
 	// debug 打开数据库debug打印模式
 	if c.Database.Debug {
 		db = db.Debug()
 	}
 
-	return db
+	return db, nil
 }

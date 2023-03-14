@@ -21,10 +21,16 @@ import (
 
 // Injectors from wire.go:
 
-func NewServer(configFile2 string) (*service.Server, func()) {
-	configs := rely.InitConfigs(configFile2)
+func NewServer(configFile2 string) (*service.Server, func(), error) {
+	configs, err := rely.InitConfigs(configFile2)
+	if err != nil {
+		return nil, nil, err
+	}
 	logger := rely.NewLogger(configs)
-	db := rely.InitDBConnect(configs, logger)
+	db, err := rely.InitDBConnect(configs, logger)
+	if err != nil {
+		return nil, nil, err
+	}
 	dbData, cleanup := db_data.NewData(db, logger)
 	iDemoRepo := repository.NewDemo(dbData)
 	iDemoService := mutation.NewDemo(iDemoRepo)
@@ -40,5 +46,5 @@ func NewServer(configFile2 string) (*service.Server, func()) {
 	return server, func() {
 		cleanup2()
 		cleanup()
-	}
+	}, nil
 }

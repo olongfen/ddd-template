@@ -5,22 +5,21 @@ import (
 	"ddd-template/internal/rely"
 	"fmt"
 	"go.uber.org/zap"
-	"log"
 	"time"
 
 	"github.com/go-redis/redis/v8"
 )
 
 // NewRedisStore 创建基于redis存储实例
-func NewRedisStore(cfg *rely.Configs, logger *zap.Logger) (Store, func()) {
+func NewRedisStore(cfg *rely.Configs, logger *zap.Logger) (ret Store, fc func(), err error) {
 	cli := redis.NewClient(&redis.Options{
 		Addr:     cfg.Redis.Addr,
 		DB:       cfg.Redis.DB,
 		Password: cfg.Redis.Password,
 	})
 	if cfg.Redis.Use {
-		if err := cli.Ping(context.Background()).Err(); err != nil {
-			log.Fatalln(err)
+		if err = cli.Ping(context.Background()).Err(); err != nil {
+			return
 		}
 	}
 	sto := &storeRedis{
@@ -30,7 +29,7 @@ func NewRedisStore(cfg *rely.Configs, logger *zap.Logger) (Store, func()) {
 	return sto, func() {
 		logger.Info("redis client close")
 		_ = sto.Close()
-	}
+	}, nil
 }
 
 // storeRedis redis存储

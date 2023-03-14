@@ -6,6 +6,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/olongfen/toolkit/tools"
+	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
 	"log"
@@ -195,9 +196,8 @@ func set() {
 
 }
 
-func InitConfigs(confPath string) *Configs {
+func InitConfigs(confPath string) (cfg *Configs, err error) {
 	var (
-		err       error
 		globalCfg = Get()
 	)
 	setDefault()
@@ -208,10 +208,10 @@ func InitConfigs(confPath string) *Configs {
 	// 配置文件不存在自动读取默认配置然后创建创建
 	if err != nil {
 		if err = viper.WriteConfigAs(confPath); err != nil {
-			log.Fatalln(err)
+			return
 		}
 		if err = viper.Unmarshal(globalCfg); err != nil {
-			log.Fatal(err)
+			return
 		}
 	} else {
 		var (
@@ -220,22 +220,28 @@ func InitConfigs(confPath string) *Configs {
 		)
 		// 读取旧文件含有的配置
 		if originalBytes, err = os.ReadFile(confPath); err != nil {
-			log.Fatalln("ReadFile", err)
+			err = errors.WithMessage(err, "ReadFile")
+			return
 		}
 		if err = tools.Copier(viper.AllSettings(), globalCfg); err != nil {
-			log.Fatalln("Copier", err)
+			err = errors.WithMessage(err, "Copier")
+			return
 		}
 		if err = yaml.Unmarshal(originalBytes, globalCfg); err != nil {
-			log.Fatalln("Unmarshal", err)
+			err = errors.WithMessage(err, "Unmarshal")
+			return
 		}
 		if changeBytes, err = jsoniter.Marshal(globalCfg); err != nil {
-			log.Fatalln("Marshal", err)
+			err = errors.WithMessage(err, "Marshal")
+			return
 		}
 		if err = viper.ReadConfig(bytes.NewBuffer(changeBytes)); err != nil {
-			log.Fatalln("ReadConfig from changeBytes", err)
+			err = errors.WithMessage(err, "ReadConfig from changeBytes")
+			return
 		}
 		if err = viper.WriteConfig(); err != nil {
-			log.Fatalln("WriteConfig", err)
+			err = errors.WithMessage(err, "WriteConfig")
+			return
 		}
 
 	}
@@ -250,5 +256,5 @@ func InitConfigs(confPath string) *Configs {
 	}
 
 	log.Println("config init success")
-	return globalCfg
+	return globalCfg, nil
 }

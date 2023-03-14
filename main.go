@@ -24,6 +24,7 @@ func main() {
 	var (
 		server  *service.Server
 		cleanup func()
+		err     error
 		wg      = sync.WaitGroup{}
 		done    = make(chan struct{})
 	)
@@ -31,7 +32,9 @@ func main() {
 	setupCloseHandler(done)
 	execute()
 	// 创建服务
-	server, cleanup = NewServer(configFile)
+	if server, cleanup, err = NewServer(configFile); err != nil {
+		log.Fatalln("NewServer", err)
+	}
 	go func() {
 		for range done {
 			cleanup()
