@@ -4,7 +4,6 @@ import (
 	"ddd-template/internal/domain"
 	"errors"
 	"fmt"
-	"github.com/jackc/pgconn"
 	"github.com/olongfen/toolkit/db_data"
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
@@ -46,11 +45,11 @@ func InitDBConnect(c *Configs, logger *zap.Logger) (res *gorm.DB, err error) {
 	// true 自动迁移
 	if c.Database.AutoMigrate {
 		err = db.AutoMigrate(&domain.Demo{})
-		if v, ok := err.(*pgconn.PgError); ok {
-			if v.Code == "42P07" {
-				err = nil
-			}
-		}
+		/*		if v, ok := err.(*pgconn.PgError); ok {
+				if v.Code == "42P07" {
+					err = nil
+				}
+			}*/
 		if err != nil {
 			return
 		}
