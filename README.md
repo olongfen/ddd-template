@@ -16,13 +16,12 @@
       - transform 实体转成返回对象
       - schema api返回表单
     - domain 领域层 
-    - ports 端口
+    - service 服务入口
       - controller 控制器
           - handler 接口处理
           - middleware http中间件
       - graph graphQL入口
     - rely 项目启动依赖配置和系统变量
-    - service 服务入口
 ## 运行
 ```shell
 go run . --config configs/config.yaml

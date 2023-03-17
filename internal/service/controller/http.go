@@ -2,9 +2,9 @@ package controller
 
 import (
 	_ "ddd-template/docs"
-	"ddd-template/internal/ports/controller/handler"
-	"ddd-template/internal/ports/graph"
 	"ddd-template/internal/rely"
+	"ddd-template/internal/service/controller/handler"
+	"ddd-template/internal/service/graph"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"

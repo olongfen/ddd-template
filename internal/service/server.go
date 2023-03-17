@@ -1,6 +1,6 @@
 package service
 
-import "ddd-template/internal/ports/controller"
+import "ddd-template/internal/service/controller"
 
 type Server struct {
 	Http *controller.HTTPServer

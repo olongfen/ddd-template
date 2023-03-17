@@ -11,11 +11,11 @@ import (
 	"ddd-template/internal/application"
 	"ddd-template/internal/application/mutation"
 	"ddd-template/internal/application/query"
-	"ddd-template/internal/ports/controller"
-	"ddd-template/internal/ports/controller/handler"
-	"ddd-template/internal/ports/graph"
 	"ddd-template/internal/rely"
 	"ddd-template/internal/service"
+	"ddd-template/internal/service/controller"
+	"ddd-template/internal/service/controller/handler"
+	"ddd-template/internal/service/graph"
 	"github.com/olongfen/toolkit/db_data"
 )
 

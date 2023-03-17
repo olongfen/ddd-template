@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"ddd-template/internal/ports/controller/handler"
+	"ddd-template/internal/service/controller/handler"
 	"github.com/google/wire"
 )
 
