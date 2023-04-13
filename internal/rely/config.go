@@ -11,6 +11,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"log"
 	"os"
+	"path"
 )
 
 type Configs struct {
@@ -18,21 +19,9 @@ type Configs struct {
 	HTTP        HTTP
 	RPC         RPC
 	Database    Database
-	Languages   []string
 	Log         Log
 	Redis       Redis
-	JWT         JWT
 	Nacos       Nacos
-	RabbitMQ    RabbitMQ
-}
-
-type RabbitMQ struct {
-	URI          string
-	Exchange     string
-	ExchangeType string
-	ConsumerTag  string
-	QueueName    string
-	Key          string
 }
 
 type Nacos struct {
@@ -45,18 +34,6 @@ type Nacos struct {
 type RPC struct {
 	Host string
 	Port uint
-}
-
-type JWT struct {
-	Auth                   bool
-	AccessTokenPrivateKey  string
-	AccessTokenPublicKey   string
-	RefreshTokenPrivateKey string
-	RefreshTokenPublicKey  string
-	AccessTokenExpiresIn   int // 单位分钟
-	RefreshTokenExpiresIn  int // 单位分钟
-	AccessTokenMaxAge      int
-	RefreshTokenMaxAge     int
 }
 
 type Log struct {
@@ -113,15 +90,7 @@ func setDefault() {
 		Port:    "8818",
 		BaseURL: fmt.Sprintf(`%s:%d`, "0.0.0.0", 8818),
 	})
-	viper.SetDefault("rabbitmq", RabbitMQ{
-		URI:          "amqp://admin:123456@192.168.3.42:5682/",
-		Exchange:     "data-management-exchange",
-		ExchangeType: "fanout",
-		ConsumerTag:  "system-manage",
-		QueueName:    "data-management-queue",
-		Key:          "system-manage",
-	})
-	viper.SetDefault("languages", []string{"cn", "en"})
+
 	viper.SetDefault("database", Database{
 		Driver:      "postgresql",
 		Host:        "127.0.0.1",
@@ -156,32 +125,6 @@ func setDefault() {
 		Port: 9060,
 	})
 
-	viper.SetDefault("jwt", JWT{
-		AccessTokenPrivateKey: `-----BEGIN EC PRIVATE KEY-----
-MHcCAQEEIM/VQnvP/2h9De/P5GyLcpk8VjcQKwBGSn873vu5orOyoAoGCCqGSM49
-AwEHoUQDQgAE3hXUV+yvG0aq+NMOiU/LqSdSwBuMyIkOBonfL6885mW+1nE7cC2J
-HfwkUPILMgLePSnSldMFTij2fb6m2ABjQA==
------END EC PRIVATE KEY-----`,
-		AccessTokenPublicKey: `-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE3hXUV+yvG0aq+NMOiU/LqSdSwBuM
-yIkOBonfL6885mW+1nE7cC2JHfwkUPILMgLePSnSldMFTij2fb6m2ABjQA==
------END PUBLIC KEY-----`,
-		RefreshTokenPrivateKey: `-----BEGIN EC PRIVATE KEY-----
-MHcCAQEEIBn0pbZ6veqGJRC88IR1cRWbIYXLK/bQV3D3WBgipexRoAoGCCqGSM49
-AwEHoUQDQgAEUgryp8sKrfu1et3nxObupVLoS5l+RedxwsjkH3EvaTY120g0MA1e
-kwAPdEQ8NVBZ/e2Rulm7pPAesPhstdonZg==
------END EC PRIVATE KEY-----
-`,
-		RefreshTokenPublicKey: `-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEUgryp8sKrfu1et3nxObupVLoS5l+
-RedxwsjkH3EvaTY120g0MA1ekwAPdEQ8NVBZ/e2Rulm7pPAesPhstdonZg==
------END PUBLIC KEY-----
-`,
-		AccessTokenExpiresIn:  15,
-		RefreshTokenExpiresIn: 60,
-		AccessTokenMaxAge:     15,
-		RefreshTokenMaxAge:    60,
-	})
 	viper.SetDefault("nacos", Nacos{
 		Register:   false,
 		ClientName: "127.0.0.1",
@@ -199,8 +142,12 @@ func set() {
 func InitConfigs(confPath string) (cfg *Configs, err error) {
 	var (
 		globalCfg = Get()
+		base, _   = path.Split(confPath)
 	)
 	setDefault()
+	if _, _err := os.Stat(base); _err != nil {
+		_ = os.MkdirAll(base, os.ModePerm)
+	}
 	// 载入配置
 	viper.SetConfigFile(confPath)
 	viper.SetConfigType("yaml")
