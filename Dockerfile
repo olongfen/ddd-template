@@ -11,6 +11,7 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 WORKDIR /app
 COPY start.sh /app/start.sh
 RUN go env -w GOPROXY="https://goproxy.io,direct"
+RUN chmod +x ./start.sh
 ENTRYPOINT ["./start.sh"]
 #RUN GOOS=linux GOPROXY="https://goproxy.io,direct" go build  -o server ./
 
