@@ -52,6 +52,8 @@ func (h *HTTPServer) Run() {
 	// graphql
 	h.graphResolver.Process(h.app.Group("/"))
 	h.logger.Info("HTTP Start", zap.String("addr", fmt.Sprintf(`%s:%s`, h.cfg.HTTP.Host, h.cfg.HTTP.Port)))
-	h.logger.Fatal("HTTP START ERROR", zap.Error(h.app.Listen(fmt.Sprintf(`%s:%s`, h.cfg.HTTP.Host, h.cfg.HTTP.Port))))
+	if err := h.app.Listen(fmt.Sprintf(`%s:%s`, h.cfg.HTTP.Host, h.cfg.HTTP.Port)); err != nil {
+		log.Fatalln(err)
+	}
 
 }
