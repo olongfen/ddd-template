@@ -21,6 +21,8 @@ services:
     working_dir: /app
     container_name: ddd-template
     restart: always
+    env_file:
+      - .env
     depends_on:
       - db
     ports:
