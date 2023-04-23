@@ -1,35 +1,15 @@
 version: "3"
 
 services:
-  db:
-    image: postgres:13
-    container_name: db_ddd
-    restart: always
-    healthcheck:
-      test: "exit 0"
-    ports:
-      - "54328:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=business
-      - POSTGRES_DB=business
-      - TZ=Asia/Shanghai
-      - PGTZ=Asia/Shanghai
-      - ALLOW_IP_RANGE=0.0.0.0/0
   app:
-    build: .
+    image: ddd-template/server
     working_dir: /app
-    container_name: ddd-template
-    restart: always
+    restart: on-failure
     env_file:
       - .env
-    depends_on:
-      - db
     ports:
       - "8818:8818"
     volumes:
-      - ./:/app
-      - ./.go/pkg:/go/pkg
-      - ./.go-cache:/go-cache
+      - ./configs/:/app/configs
       - ./log:/app/log
-      - ${DT_STATIC:-./static}/:/app/static/
+      - ${RESOURCE:-./resource}/:/app/resource/
