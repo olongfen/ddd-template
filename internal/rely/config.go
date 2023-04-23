@@ -15,13 +15,12 @@ import (
 )
 
 type Configs struct {
-	WatchConfig bool
-	HTTP        HTTP
-	RPC         RPC
-	Database    Database
-	Log         Log
-	Redis       Redis
-	Nacos       Nacos
+	HTTP     HTTP
+	RPC      RPC
+	Database Database
+	Log      Log
+	Redis    Redis
+	Nacos    Nacos
 }
 
 type Nacos struct {
@@ -192,15 +191,14 @@ func InitConfigs(confPath string) (cfg *Configs, err error) {
 		}
 
 	}
-	if globalCfg.WatchConfig {
-		viper.WatchConfig()
-		viper.OnConfigChange(func(e fsnotify.Event) {
-			log.Printf("Config file:%s Op:%s\n", e.Name, e.Op)
-			if err = viper.Unmarshal(globalCfg); err != nil {
-				log.Fatal(err)
-			}
-		})
-	}
+
+	viper.WatchConfig()
+	viper.OnConfigChange(func(e fsnotify.Event) {
+		log.Printf("Config file:%s Op:%s\n", e.Name, e.Op)
+		if err = viper.Unmarshal(globalCfg); err != nil {
+			log.Fatal(err)
+		}
+	})
 
 	log.Println("config init success")
 	return globalCfg, nil
