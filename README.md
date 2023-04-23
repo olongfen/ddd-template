@@ -27,15 +27,11 @@
 go run . --config configs/config.yaml
 ```
 
-## docker 部署
+##  部署
 ```shell
-docker-compose up -d 
+sh deploy.sh
 ```
 
-## docker 更新
-```shell
-    docker-compose restart app
-```
 
 ## 单元测试
 ```shell
