@@ -5,7 +5,7 @@ schema:
 
 # Where should the generated server code go?
 exec:
-  filename: internal/ports/graph/generated.go
+  filename: internal/service/graph/generated.go
   package: graph
 
 # Uncomment to enable federation
@@ -21,7 +21,7 @@ model:
 # Where should the resolver implementations go?
 resolver:
   layout: follow-schema
-  dir:  internal/ports/graph
+  dir:  internal/service/graph
   package: graph
 
 # Optional: turn on use ` + "`" + `gqlgen:"fieldName"` + "`" + ` tags in your models
@@ -43,7 +43,7 @@ resolver:
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-#  - "ddd-template/internal/ports/graphql/graph/model"
+#  - "ddd-template/internal/service/graphql/graph/model"
 
 # This section declares type mapping between the GraphQL and go type systems
 #
