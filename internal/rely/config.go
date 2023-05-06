@@ -15,12 +15,13 @@ import (
 )
 
 type Configs struct {
-	HTTP     HTTP
-	RPC      RPC
-	Database Database
-	Log      Log
-	Redis    Redis
-	Nacos    Nacos
+	HTTP        HTTP
+	RPC         RPC
+	Database    Database
+	Log         Log
+	Redis       Redis
+	Nacos       Nacos
+	EnableGraph bool
 }
 
 type Nacos struct {
@@ -131,6 +132,7 @@ func setDefault() {
 		Port:       10948,
 		Weight:     0,
 	})
+	viper.SetDefault("enablegraph", false)
 }
 
 // set 设置一些固定不可改变的配置
