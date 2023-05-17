@@ -9,7 +9,6 @@ database:
     sslmode: disable
     timezone: Asia/Shanghai
     user: postgres
-enablegraph: true
 http:
     baseurl: 0.0.0.0:8818
     host: 0.0.0.0

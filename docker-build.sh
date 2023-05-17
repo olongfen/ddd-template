@@ -1,3 +1,5 @@
 #!/bin/bash
 
-docker build -f Dockerfile ./ -t ddd-template/server
+DIR_NAME=$(basename "$PWD")
+
+docker build -f Dockerfile ./ -t  ${DIR_NAME}/server
