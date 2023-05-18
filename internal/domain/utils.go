@@ -26,14 +26,41 @@ type OtherCond struct {
 	PageSize int
 	// CurrentPage 当前页
 	CurrentPage int
-	// Sort 排序字段
-	Sort []string
-	// Order 排序值 desc和asc,长度跟sort一样，index一一对应
-	Order []string
+	// SortBy 排序字段 true->asc  false->desc
+	SortBy map[string]bool
 	// All true获取全部数据
 	All bool
 	// NoCount 不需要执行count 查询
 	NoCount bool
+}
+
+func NewOtherCond() OtherCond {
+	return OtherCond{
+		PageSize:    0,
+		CurrentPage: 0,
+		SortBy:      map[string]bool{},
+		All:         false,
+		NoCount:     false,
+	}
+}
+
+func (o *OtherCond) SetSortBy(sorts []string, orders []string) {
+	if o.SortBy == nil {
+		o.SortBy = map[string]bool{}
+	}
+	ordersLen := len(orders)
+	for i := 0; i < len(sorts); i++ {
+		if i < ordersLen {
+			switch orders[i] {
+			case "asc":
+				o.SortBy[sorts[i]] = false
+			default:
+				o.SortBy[sorts[i]] = true
+			}
+		} else {
+			o.SortBy[sorts[i]] = true
+		}
+	}
 }
 
 // Pagination 页码数据

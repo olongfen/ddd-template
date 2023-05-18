@@ -43,14 +43,8 @@ func newOption(o domain.OtherCond) *option {
 	if opt.pageSize == 0 {
 		opt.pageSize = 10
 	}
-	for i := 0; i < len(o.Sort) && i < len(o.Order); i++ {
-		switch o.Order[i] {
-		case "asc":
-			opt.order[tools.SnakeString(o.Sort[i])] = false
-		default:
-			opt.order[tools.SnakeString(o.Sort[i])] = true
-
-		}
+	for k, v := range o.SortBy {
+		opt.order[tools.SnakeString(k)] = v
 	}
 	return opt
 }
