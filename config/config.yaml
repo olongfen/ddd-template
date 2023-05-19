@@ -1,39 +1,33 @@
-database:
-    automigrate: true
-    dbname: business
-    debug: true
+# 数据库连接
+db:
     driver: postgresql
-    host: 127.0.0.1
-    password: business
-    port: "5432"
-    sslmode: disable
-    timezone: Asia/Shanghai
-    user: postgres
+    dsn: host=localhost user=postgres password=business dbname=business port=5432 sslmode=disable TimeZone=Asia/Shanghai
+    debug: true
+    automigrate: true
 enablegraph: false
 http:
-    baseurl: ""
     host: 0.0.0.0
     port: "8818"
 log:
+    filename: ./log/server.log
+    errorfile: ./log/server-err.log
+    maxsize: 20
+    maxbackups: 50
+    maxages: 30
     compress: true
     debug: true
-    errorfile: ./log/server-err.log
-    filename: ./log/server.log
-    maxages: 30
-    maxbackups: 50
-    maxsize: 20
 nacos:
-    clientname: ""
+    register: false
+    clientname: 127.0.0.1
     host: 127.0.0.1
     port: 10948
-    register: false
     weight: 0
 redis:
+    use: false
     addr: 127.0.0.1:6379
+    password: "123456"
     db: 1
     keyprefix: system_manage
-    password: "123456"
-    use: true
 rpc:
     host: 0.0.0.0
     port: 9060

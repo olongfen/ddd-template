@@ -3,7 +3,6 @@ package rely
 import (
 	"ddd-template/internal/domain"
 	"errors"
-	"fmt"
 	"github.com/olongfen/toolkit/db_data"
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
@@ -27,12 +26,12 @@ func InitDBConnect(c *Configs, logger *zap.Logger) (res *gorm.DB, err error) {
 			//Logger: utils.New(lg,utils.Config{Colorful: true}),
 		}
 	)
-	switch c.Database.Driver {
+	switch c.DB.Driver {
 	case "postgresql":
-		dbCfg := c.Database
-		dns := fmt.Sprintf(`host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s`, dbCfg.Host,
-			dbCfg.User, dbCfg.Password, dbCfg.DBName, dbCfg.Port, dbCfg.SSLMode, dbCfg.TimeZone)
-		if db, err = gorm.Open(postgres.Open(dns), gormConfig); err != nil {
+		//dbCfg := c.DB
+		//dns := fmt.Sprintf(`host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s`, dbCfg.IP,
+		//	dbCfg.User, dbCfg.Password, dbCfg.DBName, dbCfg.Port, dbCfg.SSLMode, dbCfg.TimeZone)
+		if db, err = gorm.Open(postgres.Open(c.DB.DSN), gormConfig); err != nil {
 			return
 		}
 
@@ -43,7 +42,7 @@ func InitDBConnect(c *Configs, logger *zap.Logger) (res *gorm.DB, err error) {
 		return
 	}
 	// true 自动迁移
-	if c.Database.AutoMigrate {
+	if c.DB.AutoMigrate {
 		err = db.AutoMigrate(&domain.Demo{})
 		/*		if v, ok := err.(*pgconn.PgError); ok {
 				if v.Code == "42P07" {
@@ -60,7 +59,7 @@ func InitDBConnect(c *Configs, logger *zap.Logger) (res *gorm.DB, err error) {
 
 	}
 	// debug 打开数据库debug打印模式
-	if c.Database.Debug {
+	if c.DB.Debug {
 		db = db.Debug()
 	}
 

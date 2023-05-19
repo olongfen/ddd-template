@@ -21,8 +21,8 @@ import (
 
 // Injectors from wire.go:
 
-func NewServer(configFile2 string) (*service.Server, func(), error) {
-	configs, err := rely.InitConfigs(configFile2)
+func NewServer() (*service.Server, func(), error) {
+	configs, err := rely.InitConfigs()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -34,10 +34,10 @@ func NewServer(configFile2 string) (*service.Server, func(), error) {
 	dbData, cleanup := db_data.NewData(db, logger)
 	iDemoRepo := repository.NewDemo(dbData)
 	iDemoService := command.NewDemo(iDemoRepo)
-	mutationMutation := command.SetMutation(iDemoService)
+	commandCommand := command.SetMutation(iDemoService)
 	queryIDemoService := query.NewDemo(iDemoRepo)
 	queryQuery := query.SetQuery(queryIDemoService)
-	application := app.NewApplication(mutationMutation, queryQuery)
+	application := app.NewApplication(commandCommand, queryQuery)
 	handlerHandler := handler.NewHandler(application)
 	resolver := graph.NewResolver(application, logger)
 	middleware := controller.NewMiddleware(logger)

@@ -1,20 +1,19 @@
 package rely
 
 import (
-	"bytes"
 	"github.com/fsnotify/fsnotify"
-	jsoniter "github.com/json-iterator/go"
-	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"log"
 	"os"
 	"path"
+	"strings"
 )
 
 type Configs struct {
 	HTTP        HTTP
 	RPC         RPC
-	Database    Database
+	DB          DB
 	Log         Log
 	Redis       Redis
 	Nacos       Nacos
@@ -22,11 +21,11 @@ type Configs struct {
 }
 
 type Nacos struct {
-	Register   bool   // true 注册网关
-	ClientName string // 客户端地址
-	Host       string // 网关host
-	Port       uint64 // 网关port
-	Weight     float64
+	Register bool   // true 注册网关
+	ClientIP string // 客户端地址
+	Host     string // 网关host
+	Port     uint64 // 网关port
+	Weight   float64
 }
 type RPC struct {
 	Host string
@@ -43,23 +42,16 @@ type Log struct {
 	Debug      bool
 }
 
-type Database struct {
+type DB struct {
 	Driver      string
-	Host        string
-	Port        string
-	User        string
-	Password    string
-	DBName      string
-	TimeZone    string
-	SSLMode     string
+	DSN         string
 	Debug       bool
 	AutoMigrate bool
 }
 
 type HTTP struct {
-	Host    string
-	Port    string
-	BaseURL string
+	IP   string
+	Port string
 }
 
 type Redis struct {
@@ -83,19 +75,13 @@ var conf *Configs
 func setDefault() {
 	viper.SetDefault("watchconfig", false)
 	viper.SetDefault("http", HTTP{
-		Host: "0.0.0.0",
+		IP:   "0.0.0.0",
 		Port: "8818",
 	})
 
-	viper.SetDefault("database", Database{
+	viper.SetDefault("db", DB{
 		Driver:      "postgresql",
-		Host:        "127.0.0.1",
-		Port:        "5432",
-		User:        "postgres",
-		Password:    "business",
-		DBName:      "business",
-		TimeZone:    "Asia/Shanghai",
-		SSLMode:     "disable",
+		DSN:         "host=localhost user=postgres password=business dbname=business port=5432 sslmode=disable TimeZone=Asia/Shanghai",
 		Debug:       true,
 		AutoMigrate: true,
 	})
@@ -112,7 +98,7 @@ func setDefault() {
 		Addr:      "127.0.0.1:6379",
 		Password:  "123456",
 		DB:        1,
-		Use:       true,
+		Use:       false,
 		KeyPrefix: "system_manage",
 	})
 
@@ -122,11 +108,11 @@ func setDefault() {
 	})
 
 	viper.SetDefault("nacos", Nacos{
-		Register:   false,
-		ClientName: "127.0.0.1",
-		Host:       "127.0.0.1",
-		Port:       10948,
-		Weight:     0,
+		Register: false,
+		ClientIP: "127.0.0.1",
+		Host:     "127.0.0.1",
+		Port:     10948,
+		Weight:   0,
 	})
 	viper.SetDefault("enablegraph", false)
 }
@@ -136,52 +122,61 @@ func set() {
 
 }
 
-func InitConfigs(confPath string) (cfg *Configs, err error) {
-	var (
-		globalCfg = Get()
-		base, _   = path.Split(confPath)
-	)
-	setDefault()
-	if _, _err := os.Stat(base); _err != nil {
-		_ = os.MkdirAll(base, os.ModePerm)
+// doFlagConfig 绑定终端输入
+func doFlagConfig() (configPath string) {
+	// 配置文件路径
+	pflag.StringVarP(&configPath, "config", "c", "config/config.yaml", "")
+	pflag.String("http.ip", "localhost", "")
+	pflag.Int("http.port", 8818, "")
+	// 数据库
+	pflag.String("db.driver", "postgresql", "")
+	pflag.String("db.dsn", "host=localhost user=postgres password=business dbname=business port=5432 sslmode=disable TimeZone=Asia/Shanghai", "")
+	pflag.Parse()
+	if err := viper.BindPFlags(pflag.CommandLine); err != nil {
+		panic(err)
 	}
-	// 载入配置
-	viper.SetConfigFile(confPath)
-	viper.SetConfigType("yaml")
-	_, err = os.Stat(confPath)
-	// 配置文件不存在自动读取默认配置然后创建创建
-	if err != nil {
-		if err = viper.WriteConfigAs(confPath); err != nil {
-			return
+	return
+}
+
+// doEnvConfig 	// 绑定环境变量
+func doEnvConfig() {
+	viper.AutomaticEnv()
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
+}
+
+func InitConfigs() (cfg *Configs, err error) {
+	var (
+		confPath        = doFlagConfig()
+		globalCfg       = Get()
+		existConfigFile bool
+	)
+
+	doEnvConfig()
+	setDefault()
+	if _, _err := os.Stat(confPath); _err != nil {
+		base, _ := path.Split(confPath)
+		if _, _err := os.Stat(base); _err != nil {
+			_ = os.MkdirAll(base, os.ModePerm)
 		}
-		if err = viper.Unmarshal(globalCfg); err != nil {
-			return
-		}
+
 	} else {
-		var (
-			changeBytes []byte
-		)
+		// 载入配置
+		viper.SetConfigFile(confPath)
+		viper.SetConfigType("yaml")
+		existConfigFile = true
+		//搜索配置文件，获取配置
 		if err = viper.ReadInConfig(); err != nil {
 			return
 		}
-		if err = viper.Unmarshal(globalCfg); err != nil {
-			return
-		}
-		if changeBytes, err = jsoniter.Marshal(globalCfg); err != nil {
-			err = errors.WithMessage(err, "Marshal")
-			return
-		}
-		if err = viper.ReadConfig(bytes.NewBuffer(changeBytes)); err != nil {
-			err = errors.WithMessage(err, "ReadConfig from changeBytes")
-			return
-		}
-		if err = viper.WriteConfig(); err != nil {
-			err = errors.WithMessage(err, "WriteConfig")
-			return
-		}
-
 	}
-
+	if err = viper.Unmarshal(globalCfg); err != nil {
+		return
+	}
+	if !existConfigFile {
+		if err = viper.SafeWriteConfigAs(confPath); err != nil {
+			return
+		}
+	}
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
 		log.Printf("Config file:%s Op:%s\n", e.Name, e.Op)

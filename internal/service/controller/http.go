@@ -53,8 +53,8 @@ func (h *HTTPServer) Run() {
 	if h.cfg.EnableGraph {
 		h.graphResolver.Process(h.app.Group("/"))
 	}
-	h.logger.Info("HTTP Start", zap.String("addr", fmt.Sprintf(`%s:%s`, h.cfg.HTTP.Host, h.cfg.HTTP.Port)))
-	if err := h.app.Listen(fmt.Sprintf(`%s:%s`, h.cfg.HTTP.Host, h.cfg.HTTP.Port)); err != nil {
+	h.logger.Info("HTTP Start", zap.String("addr", fmt.Sprintf(`%s:%s`, h.cfg.HTTP.IP, h.cfg.HTTP.Port)))
+	if err := h.app.Listen(fmt.Sprintf(`%s:%s`, h.cfg.HTTP.IP, h.cfg.HTTP.Port)); err != nil {
 		log.Fatalln(err)
 	}
 

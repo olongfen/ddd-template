@@ -2,7 +2,6 @@ package main
 
 import (
 	"ddd-template/internal/service"
-	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"os/signal"
@@ -30,9 +29,8 @@ func main() {
 	)
 	// 监听关闭
 	setupCloseHandler(done)
-	execute()
 	// 创建服务
-	if server, cleanup, err = NewServer(configFile); err != nil {
+	if server, cleanup, err = NewServer(); err != nil {
 		log.Fatalln("NewServer", err)
 	}
 	go func() {
@@ -64,24 +62,4 @@ func setupCloseHandler(done chan struct{}) {
 		done <- struct{}{}
 		log.Println("Ctrl+C pressed in Terminal")
 	}()
-}
-
-var configFile string
-
-var rootCmd = &cobra.Command{
-	Use:   "system-manage",
-	Short: "system-manage command",
-	Long:  "system-manage command,exec some action",
-}
-
-func init() {
-	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "./config/config.yaml", "config file "+
-		"(default is ./config/config.yaml)")
-
-}
-
-func execute() {
-	if err := rootCmd.Execute(); err != nil {
-		log.Fatal(err.Error())
-	}
 }

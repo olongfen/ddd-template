@@ -16,7 +16,7 @@ const docTemplate = `{
         },
         "version": "{{.Version}}"
     },
-    "host": "{{.Host}}",
+    "host": "{{.IP}}",
     "basePath": "{{.BasePath}}",
     "paths": {
         "/api/v1/demo": {

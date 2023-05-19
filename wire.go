@@ -11,6 +11,6 @@ import (
 	"github.com/google/wire"
 )
 
-func NewServer(configFile string) (s *service.Server, fc func(), err error) {
+func NewServer() (s *service.Server, fc func(), err error) {
 	panic(wire.Build(service.Set, app.Set, adapters.Set, rely.Set))
 }
