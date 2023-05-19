@@ -75,8 +75,8 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "./configs/config.yaml", "config file "+
-		"(default is ./configs/config.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "./config/config.yaml", "config file "+
+		"(default is ./config/config.yaml)")
 
 }
 
