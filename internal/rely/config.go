@@ -2,13 +2,10 @@ package rely
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/fsnotify/fsnotify"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/olongfen/toolkit/tools"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-	"gopkg.in/yaml.v2"
 	"log"
 	"os"
 	"path"
@@ -86,9 +83,8 @@ var conf *Configs
 func setDefault() {
 	viper.SetDefault("watchconfig", false)
 	viper.SetDefault("http", HTTP{
-		Host:    "0.0.0.0",
-		Port:    "8818",
-		BaseURL: fmt.Sprintf(`%s:%d`, "0.0.0.0", 8818),
+		Host: "0.0.0.0",
+		Port: "8818",
 	})
 
 	viper.SetDefault("database", Database{
@@ -163,20 +159,12 @@ func InitConfigs(confPath string) (cfg *Configs, err error) {
 		}
 	} else {
 		var (
-			originalBytes []byte
-			changeBytes   []byte
+			changeBytes []byte
 		)
-		// 读取旧文件含有的配置
-		if originalBytes, err = os.ReadFile(confPath); err != nil {
-			err = errors.WithMessage(err, "ReadFile")
+		if err = viper.ReadInConfig(); err != nil {
 			return
 		}
-		if err = tools.Copier(viper.AllSettings(), globalCfg); err != nil {
-			err = errors.WithMessage(err, "Copier")
-			return
-		}
-		if err = yaml.Unmarshal(originalBytes, globalCfg); err != nil {
-			err = errors.WithMessage(err, "Unmarshal")
+		if err = viper.Unmarshal(globalCfg); err != nil {
 			return
 		}
 		if changeBytes, err = jsoniter.Marshal(globalCfg); err != nil {

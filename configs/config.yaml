@@ -11,7 +11,7 @@ database:
     user: postgres
 enablegraph: false
 http:
-    baseurl: 0.0.0.0:8818
+    baseurl: ""
     host: 0.0.0.0
     port: "8818"
 log:
