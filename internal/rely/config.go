@@ -75,17 +75,14 @@ var conf *Configs
 // setDefault 默认配置，文件改变会改变
 func setDefault() {
 	viper.SetDefault("watchconfig", false)
-	viper.SetDefault("http", HTTP{
-		IP:   "0.0.0.0",
-		Port: "8818",
-	})
+	// 使用多种配置必须使用这种格式定义默认值，不然反序列话数据错误
+	viper.SetDefault("http.ip", "0.0.0.0")
+	viper.SetDefault("http.port", "8818")
+	viper.SetDefault("db.driver", "postgresql")
+	viper.SetDefault("db.dsn", "host=localhost user=postgres password=business dbname=business port=5432 sslmode=disable TimeZone=Asia/Shanghai")
+	viper.SetDefault("db.debug", "true")
+	viper.SetDefault("db.automigrate", "false")
 
-	viper.SetDefault("db", DB{
-		Driver:      "postgresql",
-		DSN:         "host=localhost user=postgres password=business dbname=business port=5432 sslmode=disable TimeZone=Asia/Shanghai",
-		Debug:       true,
-		AutoMigrate: true,
-	})
 	viper.SetDefault("log", Log{
 		Filename:   "./log/server.log",
 		ErrorFile:  "./log/server-err.log",
@@ -142,6 +139,7 @@ func doFlagConfig() {
 // doEnvConfig 	// 绑定环境变量
 func doEnvConfig() {
 	_ = godotenv.Load()
+	viper.SetEnvPrefix("app")
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
 }
