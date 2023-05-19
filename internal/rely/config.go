@@ -2,6 +2,7 @@ package rely
 
 import (
 	"github.com/fsnotify/fsnotify"
+	"github.com/joho/godotenv"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"log"
@@ -123,9 +124,9 @@ func set() {
 }
 
 // doFlagConfig 绑定终端输入
-func doFlagConfig() (configPath string) {
+func doFlagConfig() {
 	// 配置文件路径
-	pflag.StringVarP(&configPath, "config", "c", "config/config.yaml", "")
+	pflag.StringP("config", "c", "config/config.yaml", "")
 	pflag.String("http.ip", "localhost", "")
 	pflag.Int("http.port", 8818, "")
 	// 数据库
@@ -140,19 +141,20 @@ func doFlagConfig() (configPath string) {
 
 // doEnvConfig 	// 绑定环境变量
 func doEnvConfig() {
+	_ = godotenv.Load()
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
 }
 
 func InitConfigs() (cfg *Configs, err error) {
 	var (
-		confPath        = doFlagConfig()
 		globalCfg       = Get()
 		existConfigFile bool
 	)
-
+	doFlagConfig()
 	doEnvConfig()
 	setDefault()
+	confPath := viper.GetString("config")
 	if _, _err := os.Stat(confPath); _err != nil {
 		base, _ := path.Split(confPath)
 		if _, _err := os.Stat(base); _err != nil {
