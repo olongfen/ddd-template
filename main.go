@@ -39,6 +39,7 @@ func main() {
 		for range done {
 			cleanup()
 			log.Println("end of process ")
+			os.Exit(0)
 		}
 	}()
 	wg.Add(2)

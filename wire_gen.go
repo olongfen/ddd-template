@@ -9,7 +9,7 @@ package main
 import (
 	"ddd-template/internal/adapters/repository"
 	"ddd-template/internal/application"
-	"ddd-template/internal/application/mutation"
+	"ddd-template/internal/application/command"
 	"ddd-template/internal/application/query"
 	"ddd-template/internal/rely"
 	"ddd-template/internal/service"
@@ -33,8 +33,8 @@ func NewServer(configFile2 string) (*service.Server, func(), error) {
 	}
 	dbData, cleanup := db_data.NewData(db, logger)
 	iDemoRepo := repository.NewDemo(dbData)
-	iDemoService := mutation.NewDemo(iDemoRepo)
-	mutationMutation := mutation.SetMutation(iDemoService)
+	iDemoService := command.NewDemo(iDemoRepo)
+	mutationMutation := command.SetMutation(iDemoService)
 	queryIDemoService := query.NewDemo(iDemoRepo)
 	queryQuery := query.SetQuery(queryIDemoService)
 	application := app.NewApplication(mutationMutation, queryQuery)

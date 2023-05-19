@@ -1,20 +1,20 @@
 package app
 
 import (
-	"ddd-template/internal/application/mutation"
+	"ddd-template/internal/application/command"
 	"ddd-template/internal/application/query"
 )
 
 // Application 应用层入口
 type Application struct {
 	// exec 执行操作入口
-	exec *mutation.Mutation
+	exec *command.Command
 	// query 查询操作入口
 	query *query.Query
 }
 
 // NewApplication 新建一个应用服务
-func NewApplication(mut *mutation.Mutation, que *query.Query) *Application {
+func NewApplication(mut *command.Command, que *query.Query) *Application {
 	app := &Application{}
 	app.query = que
 	app.exec = mut
@@ -22,7 +22,7 @@ func NewApplication(mut *mutation.Mutation, que *query.Query) *Application {
 }
 
 // Exec application exec
-func (a *Application) Exec() *mutation.Mutation {
+func (a *Application) Exec() *command.Command {
 	return a.exec
 }
 

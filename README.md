@@ -11,7 +11,7 @@
         - repository 存储器
         - store 缓存
     - application 应用层
-      - mutation 写入操作
+      - command 写入操作
       - query 查询操作
       - transform 实体转成返回对象
       - schema api返回表单

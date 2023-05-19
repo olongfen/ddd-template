@@ -1,4 +1,4 @@
-package mutation
+package command
 
 import "github.com/google/wire"
 

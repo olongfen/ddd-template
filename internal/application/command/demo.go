@@ -1,4 +1,4 @@
-package mutation
+package command
 
 import (
 	"ddd-template/internal/domain"
